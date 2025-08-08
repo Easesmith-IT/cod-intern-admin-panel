@@ -43,7 +43,7 @@ export const Sidebar = () => {
   return (
     <div
       className={cn(
-        "bg-white shadow-lg transition-all duration-300 flex flex-col border-r",
+        "bg-white shadow-lg h-screen sticky top-0 overflow-y-auto transition-all duration-300 flex flex-col border-r",
         collapsed ? "w-20" : "w-52"
       )}
     >
@@ -69,11 +69,6 @@ export const Sidebar = () => {
         <ul className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            console.log(
-              "pathname.includes(item.id)",
-              pathname.includes(item.id)
-            );
-
             return (
               <li key={item.id}>
                 <Button

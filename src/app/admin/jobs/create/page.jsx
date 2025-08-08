@@ -1,247 +1,394 @@
 "use client";
+import dynamic from "next/dynamic";
 
+import DatePicker from "@/components/shared/DatePicker";
 import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { permissions } from "@/constants/permissions";
-import { AddSubAdminSchema } from "@/schemas/AddSubAdminSchema";
+import { updatePreview } from "@/lib/updatePreview";
+import { AddJobSchema } from "@/schemas/AddJobSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, ImagePlus, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { Textarea } from "@/components/ui/textarea";
+import TiptapEditor from "@/components/tiptap-editor";
 
 const CreateJob = () => {
- const router = useRouter();
-   const form = useForm({
-     resolver: zodResolver(AddSubAdminSchema),
-     defaultValues: {
-       position: "manager",
-       role: "subadmin",
-       name: "",
-       phoneNumber: "",
-       email: "",
-       password: "",
-       cityName: "",
-       permissions: {
-         dashboard: "none",
-         admins: "none",
-         review: "none",
-       },
-     },
-   });
- 
-   const { control, reset, handleSubmit } = form;
-   const [isShowPassword, setIsShowPassword] = useState(false);
- 
-   const onSubmit = (data) => {
-     console.log("data", data);
-   };
- 
-   return (
-     <div className="space-y-5">
-       <button
-         onClick={() => router.push("/admin/jobs")}
-         className="flex gap-1 items-center mb-4"
-       >
-         <ArrowLeft className="text-3xl cursor-pointer" />
-         <TypographyH2 heading="Add Job" />
-       </button>
+  const router = useRouter();
+  const form = useForm({
+    resolver: zodResolver(AddJobSchema),
+    defaultValues: {
+      title: "",
+      postingDate: new Date(),
+      status: "active",
+      category: "fresher",
+      city: "",
+      state: "",
+      country: "",
+      jobImage: "",
+      jobImagePreview: "",
+      education: [],
+      aboutCompany: "",
+      aboutJob: "",
+      rolesAndReponsibilities: "",
+      goodToHave: "",
+    },
+  });
 
-       <Form {...form}>
-         <form
-           onSubmit={handleSubmit(onSubmit)}
-           className="mx-auto w-full border rounded-xl bg-white px-5 py-4"
-         >
-           <div className="grid grid-cols-3 gap-6">
-             <FormField
-               control={control}
-               name="title"
-               render={({ field }) => (
-                 <FormItem>
-                   <FormLabel>Job Title</FormLabel>
-                   <FormControl>
-                     <Input placeholder="Job Title" {...field} />
-                   </FormControl>
-                   <FormMessage />
-                 </FormItem>
-               )}
-             />
-             <FormField
-               control={control}
-               name="postingDate"
-               render={({ field }) => (
-                 <FormItem>
-                   <FormLabel>Posting Date</FormLabel>
-                   <FormControl>
-                     <Calendar
-                       mode="single"
-                    //    selected={value}
-                    //    onSelect={handleDateSelect}
-                       initialFocus
-                     />
-                   </FormControl>
-                   <FormMessage />
-                 </FormItem>
-               )}
-             />
+  const { control, reset, handleSubmit, watch, register, setValue, getValues } =
+    form;
 
-             <FormField
-               control={control}
-               name="name"
-               render={({ field }) => (
-                 <FormItem>
-                   <FormLabel>Name</FormLabel>
-                   <FormControl>
-                     <Input placeholder="Full Name" {...field} />
-                   </FormControl>
-                   <FormMessage />
-                 </FormItem>
-               )}
-             />
+  const jobImageRef = register("jobImage");
+  const jobImage = watch("jobImage");
 
-             <FormField
-               control={control}
-               name="phoneNumber"
-               render={({ field }) => (
-                 <FormItem>
-                   <FormLabel>Phone number</FormLabel>
-                   <FormControl>
-                     <Input
-                       type="number"
-                       placeholder="10- digit number"
-                       {...field}
-                     />
-                   </FormControl>
-                   <FormMessage />
-                 </FormItem>
-               )}
-             />
+  const [newEducation, setNewEducation] = useState("");
 
-             <FormField
-               control={control}
-               name="email"
-               render={({ field }) => (
-                 <FormItem>
-                   <FormLabel>Email</FormLabel>
-                   <FormControl>
-                     <Input
-                       type="email"
-                       placeholder="Email address"
-                       {...field}
-                     />
-                   </FormControl>
-                   <FormMessage />
-                 </FormItem>
-               )}
-             />
+  const { fields, append, remove } = useFieldArray({
+    name: "education",
+    control: control,
+  });
 
-             <FormField
-               control={control}
-               name="password"
-               render={({ field }) => (
-                 <FormItem>
-                   <FormLabel>Password</FormLabel>
-                   <FormControl>
-                     <div className="relative">
-                       <Input
-                         type={isShowPassword ? "text" : "password"}
-                         placeholder="*************"
-                         {...field}
-                       />
-                       <button
-                         type="button"
-                         onClick={() => setIsShowPassword(!isShowPassword)}
-                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                       >
-                         {isShowPassword ? (
-                           <EyeOff className="h-4 w-4 cursor-pointer" />
-                         ) : (
-                           <Eye className="h-4 w-4 cursor-pointer" />
-                         )}
-                       </button>
-                     </div>
-                   </FormControl>
-                   <FormMessage />
-                 </FormItem>
-               )}
-             />
-           </div>
+  useEffect(() => {
+    updatePreview(jobImage, "jobImagePreview", setValue);
+  }, [form, jobImage]);
 
-           <Label className="text-base font-medium inline-block mt-5">
-             Permissions
-           </Label>
+  const handleAddEducation = () => {
+    const trimmed = newEducation.trim();
 
-           <div className="grid grid-cols-6 gap-3 mt-1">
-             {permissions.map((permission) => (
-               <FormField
-                 key={permission.value}
-                 control={control}
-                 name={`permissions.${permission.value}`}
-                 render={({ field }) => (
-                   <FormItem>
-                     <FormLabel className="text-sm font-medium capitalize">
-                       {permission.label}
-                     </FormLabel>
-                     <FormControl>
-                       <Select
-                         onValueChange={field.onChange}
-                         value={field.value}
-                       >
-                         <FormControl>
-                           <SelectTrigger className="w-full text-[#6B7280] text-sm font-normal font-inter">
-                             <SelectValue />
-                           </SelectTrigger>
-                         </FormControl>
-                         <SelectContent>
-                           <SelectGroup>
-                             <SelectItem value="none">None</SelectItem>
-                             <SelectItem value="read">Read</SelectItem>
-                             <SelectItem value="read&write">
-                               Read and Write
-                             </SelectItem>
-                           </SelectGroup>
-                         </SelectContent>
-                       </Select>
-                     </FormControl>
-                   </FormItem>
-                 )}
-               />
-             ))}
-           </div>
+    const isDuplicate = fields.some((f) => f.title === trimmed);
+    if (isDuplicate) {
+      return toast.error("Education already added.");
+    }
 
-           <div className="flex justify-end">
-             <Button
-               type="submit"
-               variant="codIntern"
-               size=""
-               className="px-10"
-             >
-               Add
-             </Button>
-           </div>
-         </form>
-       </Form>
-     </div>
-   );
-}
+    append({ title: trimmed }); // add to form array
+    setNewEducation(""); // clear input
+  };
 
-export default CreateJob
+  const onSubmit = (data) => {
+    console.log("data", data);
+  };
+
+  return (
+    <div className="space-y-5">
+      <button
+        onClick={() => router.push("/admin/jobs")}
+        className="flex gap-1 items-center mb-4"
+      >
+        <ArrowLeft className="text-3xl cursor-pointer" />
+        <TypographyH2 heading="Add Job" />
+      </button>
+
+      <Form {...form}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="mx-auto w-full border rounded-xl bg-white px-5 py-4"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-[180px_1fr_1fr_1fr] gap-6 items-start">
+            <FormField
+              control={control}
+              name="jobImage"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="w-40">
+                    <FormLabel className="cursor-pointer">
+                      {!watch("jobImagePreview") && (
+                        <div className="border-2 border-dashed border-[#C2CDD6] w-40 h-40 rounded-lg flex flex-col justify-center items-center">
+                          <div className="flex flex-col items-center primary-color border-dashed rounded px-5">
+                            <ImagePlus className="h-8 w-8 text-neutral-700" />
+                            <p className="font-bold text-neutral-700 mt-2 text-center primary-color text-sm">
+                              Add Photo
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      {watch("jobImagePreview") && (
+                        <div className="relative">
+                          <div
+                            type="button"
+                            className="size-7 absolute top-1 right-1 p-1.5 rounded-full bg-white flex justify-center items-center"
+                          >
+                            <Pencil />
+                          </div>
+                          <img
+                            className="w-40 h-40"
+                            src={getValues("jobImagePreview")}
+                            alt=""
+                          />
+                        </div>
+                      )}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        className="placeholder:text-[#3B3B3B] hidden w-full"
+                        {...jobImageRef}
+                      />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 col-span-3 gap-6 items-start">
+              <FormField
+                control={control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Job Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Job Title" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="postingDate"
+                render={({ field }) => (
+                  <FormItem className="col-span-2 lg:col-span-1">
+                    <FormLabel>Posting Date</FormLabel>
+                    <FormControl>
+                      <DatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem className="col-span-2 lg:col-span-1">
+                    <FormLabel>Status</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="flex justify-between w-full items-center h-10 text-sm font-normal font-sans border">
+                          <SelectValue placeholder="Select Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="inactive">Inactive</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem className="col-span-2 lg:col-span-1">
+                    <FormLabel>Job Category</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="flex justify-between w-full items-center h-10 text-sm font-normal font-sans border">
+                          <SelectValue placeholder="Select Job Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="fresher">Fresher</SelectItem>
+                          <SelectItem value="experienced">
+                            Experienced
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem className="col-span-2 lg:col-span-1">
+                    <FormLabel>City</FormLabel>
+                    <FormControl>
+                      <Input placeholder="City" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem className="col-span-2 lg:col-span-1">
+                    <FormLabel>State</FormLabel>
+                    <FormControl>
+                      <Input placeholder="State" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem className="col-span-2 lg:col-span-1">
+                    <FormLabel>Country</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Country" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          <div className="max-w-2xl mt-10">
+            <FormLabel className="mt-3">Education</FormLabel>
+
+            {/* Input to enter a new pincode */}
+            <div className="flex items-center gap-2 mt-2">
+              <Input
+                value={newEducation}
+                onChange={(e) => setNewEducation(e.target.value)}
+                placeholder="Enter Education"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleAddEducation}
+              >
+                Add
+              </Button>
+            </div>
+
+            {/* Show Zod validation message */}
+            <FormMessage>
+              {form.formState.errors?.education?.message}
+            </FormMessage>
+
+            {/* List of added pincodes */}
+            {fields.length > 0 && (
+              <div className="mt-4 flex gap-3 items-center flex-wrap">
+                {fields.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className="flex items-center justify-between gap-8 px-3 py-2 border rounded-md"
+                  >
+                    <span>{field.title}</span>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => remove(index)}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <FormField
+            control={control}
+            name="aboutCompany"
+            render={({ field }) => (
+              <FormItem className="mt-5">
+                <FormLabel>About the Company</FormLabel>
+                <FormControl>
+                  <TiptapEditor
+                    onChange={field.onChange}
+                    initialContent={field.value}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="aboutJob"
+            render={({ field }) => (
+              <FormItem className="mt-5">
+                <FormLabel>About the Job</FormLabel>
+                <FormControl>
+                  <TiptapEditor
+                    onChange={field.onChange}
+                    initialContent={field.value}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="rolesAndReponsibilities"
+            render={({ field }) => (
+              <FormItem className="mt-5">
+                <FormLabel>Roles & Reponsibilities</FormLabel>
+                <FormControl>
+                  <TiptapEditor
+                    onChange={field.onChange}
+                    initialContent={field.value}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="goodToHave"
+            render={({ field }) => (
+              <FormItem className="mt-5">
+                <FormLabel>Good to Have</FormLabel>
+                <FormControl>
+                  <TiptapEditor
+                    onChange={field.onChange}
+                    initialContent={field.value}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex justify-end mt-10">
+            <Button type="submit" variant="codIntern" size="" className="px-10">
+              Add
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
+};
+
+export default CreateJob;

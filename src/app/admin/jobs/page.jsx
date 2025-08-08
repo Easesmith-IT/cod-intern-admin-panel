@@ -1,54 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { Job } from "@/components/jobs/job";
+import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Plus,
-  Search,
-  MoreHorizontal,
-  Edit,
-  Trash2,
-  Eye,
-  MapPin,
-  Clock,
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Job } from "@/components/jobs/job";
+import { Plus, Search } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 const jobs = [
   {
@@ -59,7 +24,7 @@ const jobs = [
     type: "Full-time",
     salary: "$120k - $150k",
     applications: 45,
-    status: "Active",
+    status: "active",
     postedDate: "2024-01-15",
     logo: "/placeholder.svg?height=40&width=40",
   },
@@ -71,7 +36,7 @@ const jobs = [
     type: "Full-time",
     salary: "$100k - $130k",
     applications: 67,
-    status: "Active",
+    status: "active",
     postedDate: "2024-01-12",
     logo: "/placeholder.svg?height=40&width=40",
   },
@@ -83,7 +48,7 @@ const jobs = [
     type: "Contract",
     salary: "$80k - $100k",
     applications: 23,
-    status: "Paused",
+    status: "inactive",
     postedDate: "2024-01-10",
     logo: "/placeholder.svg?height=40&width=40",
   },
@@ -95,7 +60,7 @@ const jobs = [
     type: "Full-time",
     salary: "$110k - $140k",
     applications: 34,
-    status: "Active",
+    status: "active",
     postedDate: "2024-01-08",
     logo: "/placeholder.svg?height=40&width=40",
   },
@@ -103,7 +68,6 @@ const jobs = [
 
 const Jobs = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const filteredJobs = jobs.filter(
     (job) =>
@@ -115,12 +79,7 @@ const Jobs = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2
-            className="text-3xl font-bold tracking-tight"
-            style={{ color: "#9237E3" }}
-          >
-            Job Management
-          </h2>
+          <TypographyH2 heading="Job Management" />
           <p className="text-muted-foreground">
             Manage job postings, applications, and employer accounts
           </p>

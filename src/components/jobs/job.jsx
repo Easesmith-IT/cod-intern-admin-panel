@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { TableCell, TableRow } from "@/components/ui/table";
 import {
-    Clock,
+  Clock,
   Currency,
   Edit,
   IndianRupee,
@@ -62,7 +62,10 @@ export const Job = ({ job }) => {
         <Badge variant="secondary">{job.applications} applications</Badge>
       </TableCell>
       <TableCell>
-        <Badge variant={job.status === "Active" ? "success" : "inPrgress"}>
+        <Badge
+          className="capitalize"
+          variant={job.status === "active" ? "success" : "inPrgress"}
+        >
           {job.status}
         </Badge>
       </TableCell>
