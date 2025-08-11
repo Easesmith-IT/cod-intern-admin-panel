@@ -92,8 +92,8 @@ const Jobs = () => {
   });
 
   useEffect(() => {
-    if (data) {
-      setPageCount(() => data.pagination.totalPages);
+    if (data?.pagination) {
+      setPageCount(() => data?.pagination?.totalPages);
     }
   }, [data]);
 
