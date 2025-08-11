@@ -1,7 +1,8 @@
 "use client";
-import dynamic from "next/dynamic";
 
 import DatePicker from "@/components/shared/DatePicker";
+import Spinner from "@/components/shared/Spinner";
+import TiptapEditor from "@/components/tiptap-editor";
 import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +21,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { POST } from "@/constants/apiMethods";
+import { useApiMutation } from "@/hooks/useApiMutation";
 import { updatePreview } from "@/lib/updatePreview";
 import { AddJobSchema } from "@/schemas/AddJobSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,8 +30,6 @@ import { ArrowLeft, ImagePlus, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { Textarea } from "@/components/ui/textarea";
-import TiptapEditor from "@/components/tiptap-editor";
 
 const CreateJob = () => {
   const router = useRouter();
@@ -45,6 +46,7 @@ const CreateJob = () => {
       jobImage: "",
       jobImagePreview: "",
       education: [],
+      company: "",
       aboutCompany: "",
       aboutJob: "",
       rolesAndReponsibilities: "",
@@ -81,9 +83,43 @@ const CreateJob = () => {
     setNewEducation(""); // clear input
   };
 
-  const onSubmit = (data) => {
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: "/admin/jobs/create",
+    method: POST,
+    invalidateKey: ["job"],
+    // isToast: false,
+  });
+
+  const onSubmit = async (data) => {
     console.log("data", data);
+    const updatedEducation = data.education.map((item) => item.title);
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("postingDate", data.postingDate);
+    formData.append("status", data.status);
+    formData.append("category", data.category);
+    formData.append("city", data.city);
+    formData.append("state", data.state);
+    formData.append("country", data.country);
+    formData.append("education", JSON.stringify(updatedEducation));
+    formData.append("company", data.company);
+    formData.append("aboutCompany", data.aboutCompany);
+    formData.append("aboutJob", data.aboutJob);
+    formData.append("rolesAndReponsibilities", data.rolesAndReponsibilities);
+    formData.append("goodToHave", data.goodToHave);
+    formData.append("image", data.jobImage[0]);
+
+    await submitForm(formData);
   };
+
+  if (result) {
+    console.log("result", result);
+    router.push("/admin/jobs");
+  }
 
   return (
     <div className="space-y-5">
@@ -122,7 +158,7 @@ const CreateJob = () => {
                         <div className="relative">
                           <div
                             type="button"
-                            className="size-7 absolute top-1 right-1 p-1.5 rounded-full bg-white flex justify-center items-center"
+                            className="size-7 absolute shadow top-1 right-1 p-1.5 rounded-full bg-white flex justify-center items-center"
                           >
                             <Pencil />
                           </div>
@@ -268,51 +304,66 @@ const CreateJob = () => {
             </div>
           </div>
 
-          <div className="max-w-2xl mt-10">
-            <FormLabel className="mt-3">Education</FormLabel>
+          <div className="grid grid-cols-1 lg:grid-cols-2 items-start gap-6 mt-10">
+            <div className="">
+              <FormLabel>Education</FormLabel>
 
-            {/* Input to enter a new pincode */}
-            <div className="flex items-center gap-2 mt-2">
-              <Input
-                value={newEducation}
-                onChange={(e) => setNewEducation(e.target.value)}
-                placeholder="Enter Education"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleAddEducation}
-              >
-                Add
-              </Button>
-            </div>
-
-            {/* Show Zod validation message */}
-            <FormMessage>
-              {form.formState.errors?.education?.message}
-            </FormMessage>
-
-            {/* List of added pincodes */}
-            {fields.length > 0 && (
-              <div className="mt-4 flex gap-3 items-center flex-wrap">
-                {fields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className="flex items-center justify-between gap-8 px-3 py-2 border rounded-md"
-                  >
-                    <span>{field.title}</span>
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => remove(index)}
-                    >
-                      <Trash2 />
-                    </Button>
-                  </div>
-                ))}
+              {/* Input to enter a new pincode */}
+              <div className="flex items-center gap-2 mt-2">
+                <Input
+                  value={newEducation}
+                  onChange={(e) => setNewEducation(e.target.value)}
+                  placeholder="Enter Education"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleAddEducation}
+                >
+                  Add
+                </Button>
               </div>
-            )}
+
+              {/* Show Zod validation message */}
+              <FormMessage>
+                {form.formState.errors?.education?.message}
+              </FormMessage>
+
+              {/* List of added pincodes */}
+              {fields.length > 0 && (
+                <div className="mt-4 flex gap-3 items-center flex-wrap">
+                  {fields.map((field, index) => (
+                    <div
+                      key={field.id}
+                      className="flex items-center justify-between gap-8 px-3 py-2 border rounded-md"
+                    >
+                      <span>{field.title}</span>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => remove(index)}
+                      >
+                        <Trash2 />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <FormField
+              control={control}
+              name="company"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Company Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Company Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
           <FormField
@@ -382,7 +433,11 @@ const CreateJob = () => {
 
           <div className="flex justify-end mt-10">
             <Button type="submit" variant="codIntern" size="" className="px-10">
-              Add
+              {isSubmitFormLoading ? (
+                <Spinner spinnerClassName="size-6" />
+              ) : (
+                "Add"
+              )}
             </Button>
           </div>
         </form>

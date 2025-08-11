@@ -7,6 +7,7 @@ import { Placeholder } from "@tiptap/extensions"
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import { Bold, Italic, List, ListOrdered, Pilcrow } from 'lucide-react'
+import { useEffect } from "react"
 
 function ToolbarButton({ onClick, active, disabled, label, children }) {
   return (
@@ -27,6 +28,7 @@ function ToolbarButton({ onClick, active, disabled, label, children }) {
 }
 
 export default function TiptapEditor({ initialContent = "<p>Start typing...</p>",onChange,className }) {
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -51,6 +53,13 @@ export default function TiptapEditor({ initialContent = "<p>Start typing...</p>"
       onChange(editor.getHTML())
     },
   })
+
+   useEffect(() => {
+     if (editor && initialContent) {
+       setTimeout(() => editor.commands.setContent(initialContent));
+     }
+   }, [editor, initialContent]);
+
 
   const isReady = !!editor
 

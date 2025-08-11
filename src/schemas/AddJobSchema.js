@@ -17,10 +17,11 @@ export const AddJobSchema = z.object({
       })
     )
     .min(1, "At least one value is required"),
+  company: z.string().min(1, "Company is required"),
   aboutCompany: z.string().min(1, "About company is required"),
   aboutJob: z.string().min(1, "About job is required"),
   rolesAndReponsibilities: z
-  .string()
-  .min(1, "Roles & Reponsibilities is required"),
+    .string()
+    .min(1, "Roles & Reponsibilities is required"),
   goodToHave: z.string().min(1, "Good to have is required"),
 });

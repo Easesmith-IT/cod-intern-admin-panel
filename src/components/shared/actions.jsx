@@ -13,7 +13,7 @@ export const Actions = ({
   onDelete = () => {},
   onEdit = () => {},
   onView = () => {},
-  showViewAction = false,
+  showViewAction = true,
 }) => {
   return (
     <DropdownMenu>
@@ -30,7 +30,7 @@ export const Actions = ({
         {showViewAction && (
           <DropdownMenuItem onClick={onView}>
             <Eye className="mr-2 h-4 w-4" />
-            View Applications
+            View
           </DropdownMenuItem>
         )}
         <DropdownMenuItem onClick={onEdit}>

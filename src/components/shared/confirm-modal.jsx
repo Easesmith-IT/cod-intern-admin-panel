@@ -18,13 +18,15 @@ export const ConfirmModal = ({
   description = "This will delete the item and all of its contents.",
   onConfirm = () => {},
   disabled,
+  isModalOpen,
+  setIsModalOpen,
 }) => {
   const handleConfirm = () => {
     onConfirm();
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -33,7 +35,11 @@ export const ConfirmModal = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction disabled={disabled} onClick={handleConfirm}>
+          <AlertDialogAction
+            className="bg-main hover:bg-main/90"
+            disabled={disabled}
+            onClick={handleConfirm}
+          >
             Confirm
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -13,7 +13,18 @@ import {
 } from "@/components/ui/table";
 import { Plus, Search } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useApiQuery } from "@/hooks/useApiQuery";
+import { JobSkeleton } from "@/components/jobs/job-skeleton";
+import DataNotFound from "@/components/shared/DataNotFound";
+import { PaginationComp } from "@/components/shared/PaginationComp";
 
 const jobs = [
   {
@@ -68,13 +79,24 @@ const jobs = [
 
 const Jobs = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [status, setStatus] = useState("all");
+  const [category, setCategory] = useState("all");
+  const [page, setPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
 
-  const filteredJobs = jobs.filter(
-    (job) =>
-      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.location.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const { data, isLoading, error } = useApiQuery({
+    url: `/admin/jobs/get?status=${status === "all" ? "" : status}&category=${
+      category === "all" ? "" : category
+    }&page=${page}&search=${searchTerm}`,
+    queryKeys: ["job", status, category, page, searchTerm],
+  });
+
+  useEffect(() => {
+    if (data) {
+      setPageCount(() => data.pagination.totalPages);
+    }
+  }, [data]);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -84,105 +106,7 @@ const Jobs = () => {
             Manage job postings, applications, and employer accounts
           </p>
         </div>
-        {/* <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button
-              style={{ backgroundColor: "#9237E3" }}
-              className="hover:opacity-90"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add Job
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle style={{ color: "#9237E3" }}>
-                Add New Job Posting
-              </DialogTitle>
-              <DialogDescription>
-                Create a new job posting. Fill in the details below.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="job-title" className="text-right">
-                  Job Title
-                </Label>
-                <Input
-                  id="job-title"
-                  className="col-span-3"
-                  placeholder="e.g. Senior Developer"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="company" className="text-right">
-                  Company
-                </Label>
-                <Input
-                  id="company"
-                  className="col-span-3"
-                  placeholder="Company name"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
-                  Location
-                </Label>
-                <Input
-                  id="location"
-                  className="col-span-3"
-                  placeholder="e.g. San Francisco, CA"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="job-type" className="text-right">
-                  Type
-                </Label>
-                <Select>
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select job type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="full-time">Full-time</SelectItem>
-                    <SelectItem value="part-time">Part-time</SelectItem>
-                    <SelectItem value="contract">Contract</SelectItem>
-                    <SelectItem value="internship">Internship</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="salary" className="text-right">
-                  Salary Range
-                </Label>
-                <Input
-                  id="salary"
-                  className="col-span-3"
-                  placeholder="e.g. $80k - $120k"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-start gap-4">
-                <Label htmlFor="job-description" className="text-right">
-                  Description
-                </Label>
-                <Textarea
-                  id="job-description"
-                  className="col-span-3"
-                  placeholder="Job description and requirements..."
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                onClick={() => setIsDialogOpen(false)}
-                style={{ backgroundColor: "#9237E3" }}
-                className="hover:opacity-90"
-              >
-                Create Job Posting
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog> */}
+
         <Button variant="codIntern" asChild className="bg-main">
           <Link href="/admin/jobs/create">
             <Plus className="mr-2 h-4 w-4" />
@@ -191,7 +115,7 @@ const Jobs = () => {
         </Button>
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center justify-between space-x-2">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
@@ -201,28 +125,64 @@ const Jobs = () => {
             className="pl-10"
           />
         </div>
+        <div className="flex gap-4 items-center">
+          <Select value={status} onValueChange={(value) => setStatus(value)}>
+            <SelectTrigger className="flex justify-between bg-white w-32 items-center h-10 text-sm font-normal font-sans border">
+              <SelectValue placeholder="Select Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="inactive">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={category}
+            onValueChange={(value) => setCategory(value)}
+          >
+            <SelectTrigger className="flex justify-between bg-white w-44 items-center h-10 text-sm font-normal font-sans border">
+              <SelectValue placeholder="Select Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="fresher">Fresher</SelectItem>
+              <SelectItem value="experienced">Experienced</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="table-container">
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Job ID</TableHead>
               <TableHead>Job</TableHead>
               <TableHead>Company</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Type</TableHead>
-              {/* <TableHead>Salary</TableHead> */}
-              <TableHead>Applications</TableHead>
-              <TableHead>Status</TableHead>
+              {/* <TableHead>Applications</TableHead> */}
+              <TableHead className="w-20">Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredJobs.map((job) => (
-              <Job key={job.id} job={job} />
+            {data?.jobs?.map((job) => (
+              <Job key={job._id} job={job} />
             ))}
+
+            {isLoading && <JobSkeleton />}
           </TableBody>
         </Table>
+
+        {data?.jobs?.length === 0 && !isLoading && <DataNotFound name="Jobs" />}
+
+        <PaginationComp
+          page={page}
+          pageCount={pageCount}
+          setPage={setPage}
+          className="mt-8 mb-5"
+        />
       </div>
     </div>
   );
