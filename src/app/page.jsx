@@ -25,29 +25,52 @@ import {
 import { Input } from "@/components/ui/input";
 import { AdminLoginSchema } from "@/schemas/AdminLoginShcema";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
+import { setAuthCookies } from "@/lib/setCookies";
+import Spinner from "@/components/shared/Spinner";
 
 const Login = () => {
   const router = useRouter();
-   const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(AdminLoginSchema),
     defaultValues: {
-      email: "admin@codintern.com",
-      password: "1234567890",
+      email: "testadmin@codintern.com",
+      password: "Test@Admin#2025",
       rememberMe: false,
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values) {
-    console.log(values);
-    toast("Login Successful");
+  const { reset, handleSubmit, control } = form;
 
-    router.push("/admin/dashboard");
-  }
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: "/admin/admins/login",
+    method: POST,
+    invalidateKey: ["admin-login"],
+    // isToast: false,
+  });
+
+  const onSubmit = async (values) => {
+    await submitForm(values);
+  };
+
+  useEffect(() => {
+    if (result) {
+      const { accessToken, refreshToken, userInfo } = result.cookies;
+      setAuthCookies({ accessToken, refreshToken, userInfo });
+      // login();
+      reset();
+      router.push("/admin/dashboard");
+    }
+  }, [result]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-main to-para-3 p-4">
@@ -62,9 +85,9 @@ const Login = () => {
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <FormField
-                control={form.control}
+                control={control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -86,7 +109,7 @@ const Login = () => {
                 )}
               />
               <FormField
-                control={form.control}
+                control={control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
@@ -128,7 +151,7 @@ const Login = () => {
                 )}
               />
               <FormField
-                control={form.control}
+                control={control}
                 name="rememberMe"
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-start space-x-2 space-y-0">
@@ -156,9 +179,13 @@ const Login = () => {
                 variant="codIntern"
                 size="lg"
                 className="w-full rounded"
-                disabled={form.formState.isSubmitting}
+                disabled={isSubmitFormLoading}
               >
-                {form.formState.isSubmitting ? "Logging in..." : "Login"}
+                {isSubmitFormLoading ? (
+                  <Spinner spinnerClassName="size-6" />
+                ) : (
+                  "Log in"
+                )}
               </Button>
             </form>
           </Form>

@@ -30,6 +30,7 @@ import { ArrowLeft, ImagePlus, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const CreateJob = () => {
   const router = useRouter();
@@ -74,6 +75,10 @@ const CreateJob = () => {
   const handleAddEducation = () => {
     const trimmed = newEducation.trim();
 
+    if(!trimmed){
+      return toast.error("Field is empty")
+    }
+
     const isDuplicate = fields.some((f) => f.title === trimmed);
     if (isDuplicate) {
       return toast.error("Education already added.");
@@ -116,10 +121,12 @@ const CreateJob = () => {
     await submitForm(formData);
   };
 
-  if (result) {
-    console.log("result", result);
-    router.push("/admin/jobs");
-  }
+  useEffect(() => {
+    if (result) {
+      console.log("result", result);
+      router.push("/admin/jobs");
+    }
+  }, [result]);
 
   return (
     <div className="space-y-5">
@@ -325,7 +332,7 @@ const CreateJob = () => {
               </div>
 
               {/* Show Zod validation message */}
-              <FormMessage>
+              <FormMessage className="mt-1.5">
                 {form.formState.errors?.education?.message}
               </FormMessage>
 

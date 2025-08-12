@@ -1,6 +1,8 @@
 "use client";
 
 import { Admin } from "@/components/admins/admin";
+import { AdminSkeleton } from "@/components/admins/admin-skeleton";
+import DataNotFound from "@/components/shared/DataNotFound";
 import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,62 +30,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useApiQuery } from "@/hooks/useApiQuery";
 import { Plus, Search } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-
-const admins = [
-  {
-    id: 1,
-    name: "Alice Johnson",
-    email: "alice.j@example.com",
-    role: "Super Admin",
-    status: "Active",
-    lastLogin: "2024-07-30",
-    avatar: "/placeholder.svg?height=32&width=32",
-    phone: "2346846092",
-  },
-  {
-    id: 2,
-    name: "Bob Williams",
-    email: "bob.w@example.com",
-    role: "Editor",
-    status: "Active",
-    lastLogin: "2024-07-29",
-    avatar: "/placeholder.svg?height=32&width=32",
-    phone: "2346846092",
-  },
-  {
-    id: 3,
-    name: "Charlie Brown",
-    email: "charlie.b@example.com",
-    role: "Moderator",
-    status: "Inactive",
-    lastLogin: "2024-07-25",
-    avatar: "/placeholder.svg?height=32&width=32",
-    phone: "2346846092",
-  },
-  {
-    id: 4,
-    name: "Diana Prince",
-    email: "diana.p@example.com",
-    role: "Editor",
-    status: "Active",
-    lastLogin: "2024-07-30",
-    avatar: "/placeholder.svg?height=32&width=32",
-    phone: "2346846092",
-  },
-];
+import { useEffect, useState } from "react";
 
 const Admins = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [status, setStatus] = useState("all");
+  const [category, setCategory] = useState("all");
+  const [page, setPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
 
-  const filteredAdmins = admins.filter(
-    (admin) =>
-      admin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      admin.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      admin.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const { data, isLoading, error } = useApiQuery({
+    url: `/admin/admins/get?status=${status === "all" ? "" : status}&category=${
+      category === "all" ? "" : category
+    }&page=${page}&search=${searchTerm}`,
+    queryKeys: ["job", status, category, page, searchTerm],
+  });
+
+  useEffect(() => {
+    if (data?.pagination) {
+      setPageCount(() => data?.pagination?.totalPages);
+    }
+  }, [data]);
+
+  console.log("data", data);
 
   return (
     <div className="space-y-6">
@@ -102,7 +74,7 @@ const Admins = () => {
         </Button>
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center justify-between space-x-2">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
@@ -111,6 +83,19 @@ const Admins = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
           />
+        </div>
+        <div className="flex gap-4 items-center">
+          <Select value={status} onValueChange={(value) => setStatus(value)}>
+            <SelectTrigger className="flex justify-between bg-white w-32 items-center h-10 text-sm font-normal font-sans border">
+              <SelectValue placeholder="Select Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="inactive">Inactive</SelectItem>
+              <SelectItem value="blocked">Blocked</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -124,16 +109,21 @@ const Admins = () => {
               <TableHead>Mobile Number</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Position</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead className="w-20 text-center">Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredAdmins.map((admin) => (
-              <Admin key={admin.id} admin={admin} />
+            {data?.admins?.map((admin) => (
+              <Admin key={admin._id} admin={admin} />
             ))}
+            {isLoading && <AdminSkeleton />}
           </TableBody>
         </Table>
+
+        {data?.admins?.length === 0 && !isLoading && (
+          <DataNotFound name="Admins" />
+        )}
       </div>
     </div>
   );

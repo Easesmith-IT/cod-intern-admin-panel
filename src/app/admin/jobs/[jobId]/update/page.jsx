@@ -32,6 +32,7 @@ import { ArrowLeft, ImagePlus, Pencil, Trash2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const UpdateJob = () => {
   const router = useRouter();
@@ -96,7 +97,7 @@ const UpdateJob = () => {
         city,
         state,
         country,
-        jobImagePreview: image && previewImage(image),
+        jobImagePreview: image,
         education: education.map((item) => ({ title: item })),
         company,
         aboutCompany,
@@ -123,6 +124,10 @@ const UpdateJob = () => {
 
   const handleAddEducation = () => {
     const trimmed = newEducation.trim();
+
+    if (!trimmed) {
+      return toast.error("Field is empty");
+    }
 
     const isDuplicate = fields.some((f) => f.title === trimmed);
     if (isDuplicate) {
@@ -360,7 +365,7 @@ const UpdateJob = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 items-start gap-6 mt-10">
-            <div className="">
+            <div>
               <FormLabel>Education</FormLabel>
 
               {/* Input to enter a new pincode */}
@@ -380,7 +385,7 @@ const UpdateJob = () => {
               </div>
 
               {/* Show Zod validation message */}
-              <FormMessage>
+              <FormMessage className="mt-1.5">
                 {form.formState.errors?.education?.message}
               </FormMessage>
 

@@ -70,7 +70,7 @@ const JobDetails = () => {
             <CardContent>
               <div className="overflow-hidden rounded-lg border">
                 <img
-                  src={previewImage(image) || "/placeholder.svg"}
+                  src={image || "/user-placeholder.png"}
                   alt="Job cover"
                   width={600}
                   height={440}

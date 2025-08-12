@@ -2,9 +2,15 @@ import { z } from "zod";
 
 export const AddSubAdminSchema = z.object({
   position: z.string().min(1, "Position is required"),
+  profileImage: z
+    .any()
+    .refine((files) => files instanceof FileList && files.length > 0, {
+      message: "Job image is required",
+    }),
+  jobImagePreview: z.string().optional(),
   role: z.string().min(1, "Role is required"),
   name: z.string().min(1, "Name is required"),
-  cityName: z.string().min(1, "CityName is required"),
+  status: z.string().optional(),
   phoneNumber: z
     .string()
     .length(10, "Phone number must be exactly 10 digits")
@@ -22,7 +28,13 @@ export const AddSubAdminSchema = z.object({
       required_error: "Please select an access level for dashboard.",
     }),
     admins: z.enum(["none", "read", "read&write"], {
-      required_error: "Please select an access level for subAdmin.",
+      required_error: "Please select an access level for admin.",
+    }),
+    job: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for job.",
+    }),
+    student: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for student.",
     }),
     review: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for review.",

@@ -26,57 +26,6 @@ import { JobSkeleton } from "@/components/jobs/job-skeleton";
 import DataNotFound from "@/components/shared/DataNotFound";
 import { PaginationComp } from "@/components/shared/PaginationComp";
 
-const jobs = [
-  {
-    id: 1,
-    title: "Senior Frontend Developer",
-    company: "TechCorp Inc.",
-    location: "San Francisco, CA",
-    type: "Full-time",
-    salary: "$120k - $150k",
-    applications: 45,
-    status: "active",
-    postedDate: "2024-01-15",
-    logo: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: 2,
-    title: "Data Scientist",
-    company: "DataFlow Solutions",
-    location: "Remote",
-    type: "Full-time",
-    salary: "$100k - $130k",
-    applications: 67,
-    status: "active",
-    postedDate: "2024-01-12",
-    logo: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: 3,
-    title: "UX Designer",
-    company: "Creative Studio",
-    location: "New York, NY",
-    type: "Contract",
-    salary: "$80k - $100k",
-    applications: 23,
-    status: "inactive",
-    postedDate: "2024-01-10",
-    logo: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: 4,
-    title: "DevOps Engineer",
-    company: "CloudTech",
-    location: "Austin, TX",
-    type: "Full-time",
-    salary: "$110k - $140k",
-    applications: 34,
-    status: "active",
-    postedDate: "2024-01-08",
-    logo: "/placeholder.svg?height=40&width=40",
-  },
-];
-
 const Jobs = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [status, setStatus] = useState("all");

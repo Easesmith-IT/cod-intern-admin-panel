@@ -72,7 +72,7 @@ export const Job = ({ job }) => {
           <div className="flex items-center space-x-3">
             <Avatar className="h-8 w-8">
               <AvatarImage
-                src={previewImage(job.jobImage) || "/placeholder.svg"}
+                src={job.jobImage || "/user-placeholder.png"}
                 alt={job.company}
               />
               <AvatarFallback>{job.company.charAt(0)}</AvatarFallback>

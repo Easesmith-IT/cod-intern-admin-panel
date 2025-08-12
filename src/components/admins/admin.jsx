@@ -4,9 +4,12 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
 import { Actions } from "../shared/actions";
 import { Switch } from "../ui/switch";
+import { useState } from "react";
 
 export const Admin = ({ admin }) => {
   const router = useRouter();
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [status, setStatus] = useState(admin.status || "");
 
   const onDelete = () => {};
 
@@ -14,9 +17,15 @@ export const Admin = ({ admin }) => {
     router.push("/admin/admins/update");
   };
 
+  const handleStatus = async (value) => {
+    const currentStatus = value ? "active" : "inactive";
+    setStatus(() => currentStatus);
+    //  await updateStatus({ status: currentStatus });
+  };
+
   return (
     <TableRow>
-      <TableCell>ADMIN-ID-5339-1158-74-25</TableCell>
+      <TableCell>{admin.customId}</TableCell>
       <TableCell className="font-medium">
         <div className="flex items-center space-x-3">
           {/* <Avatar className="h-8 w-8">
@@ -34,19 +43,32 @@ export const Admin = ({ admin }) => {
       <TableCell>{admin.email}</TableCell>
       <TableCell>{admin.phone}</TableCell>
       <TableCell>
-        <Badge variant={admin.role === "Super Admin" ? "default" : "secondary"}>
+        <Badge
+          className="uppercase"
+          variant={admin.role === "superAdmin" ? "default" : "secondary"}
+        >
           {admin.role}
         </Badge>
       </TableCell>
-      <TableCell>manager</TableCell>
-      <TableCell>
+      <TableCell className="capitalize">{admin.position}</TableCell>
+      <TableCell className="w-20">
         <div className="flex flex-col gap-2 items-center">
           <Badge
-            variant={admin.status === "Active" ? "success" : "destructive"}
+            variant={
+              status === "active"
+                ? "success"
+                : status === "inactive"
+                ? "inPrgress"
+                : "destructive"
+            }
+            className="capitalize h-6"
           >
-            {admin.status}
+            {status}
           </Badge>
-          <Switch />
+          <Switch
+            checked={status === "active"}
+            onCheckedChange={handleStatus}
+          />
         </div>
       </TableCell>
       <TableCell className="text-right">

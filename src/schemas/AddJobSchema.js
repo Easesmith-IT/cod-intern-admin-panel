@@ -1,7 +1,11 @@
 import { z } from "zod";
 
 export const AddJobSchema = z.object({
-  jobImage: z.any(),
+  jobImage: z
+    .any()
+    .refine((files) => files instanceof FileList && files.length > 0, {
+      message: "Job image is required",
+    }),
   jobImagePreview: z.string().optional(),
   title: z.string().min(1, "Job title is required"),
   postingDate: z.date().default(new Date()),
