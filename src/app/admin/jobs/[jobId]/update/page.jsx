@@ -2,7 +2,7 @@
 
 import DatePicker from "@/components/shared/DatePicker";
 import Spinner from "@/components/shared/Spinner";
-import TiptapEditor from "@/components/tiptap-editor";
+import { RichTextEditor } from "@/components/tiptap-editor";
 import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,8 +25,7 @@ import { PATCH } from "@/constants/apiMethods";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import { updatePreview } from "@/lib/updatePreview";
-import { previewImage } from "@/lib/utils";
-import { AddJobSchema } from "@/schemas/AddJobSchema";
+import { EditJobSchema } from "@/schemas/AddJobSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ImagePlus, Pencil, Trash2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -64,7 +63,7 @@ const UpdateJob = () => {
   } = data?.job || {};
 
   const form = useForm({
-    resolver: zodResolver(AddJobSchema),
+    resolver: zodResolver(EditJobSchema),
     defaultValues: {
       title: title || "",
       postingDate: new Date(),
@@ -433,9 +432,9 @@ const UpdateJob = () => {
               <FormItem className="mt-5">
                 <FormLabel>About the Company</FormLabel>
                 <FormControl>
-                  <TiptapEditor
+                  <RichTextEditor
+                    value={field.value}
                     onChange={field.onChange}
-                    initialContent={field.value}
                   />
                 </FormControl>
                 <FormMessage />
@@ -449,9 +448,9 @@ const UpdateJob = () => {
               <FormItem className="mt-5">
                 <FormLabel>About the Job</FormLabel>
                 <FormControl>
-                  <TiptapEditor
+                  <RichTextEditor
+                    value={field.value}
                     onChange={field.onChange}
-                    initialContent={field.value}
                   />
                 </FormControl>
                 <FormMessage />
@@ -465,9 +464,9 @@ const UpdateJob = () => {
               <FormItem className="mt-5">
                 <FormLabel>Roles & Reponsibilities</FormLabel>
                 <FormControl>
-                  <TiptapEditor
+                  <RichTextEditor
+                    value={field.value}
                     onChange={field.onChange}
-                    initialContent={field.value}
                   />
                 </FormControl>
                 <FormMessage />
@@ -481,9 +480,9 @@ const UpdateJob = () => {
               <FormItem className="mt-5">
                 <FormLabel>Good to Have</FormLabel>
                 <FormControl>
-                  <TiptapEditor
+                  <RichTextEditor
+                    value={field.value}
                     onChange={field.onChange}
-                    initialContent={field.value}
                   />
                 </FormControl>
                 <FormMessage />

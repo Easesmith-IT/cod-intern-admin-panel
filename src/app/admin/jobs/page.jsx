@@ -38,7 +38,7 @@ const Jobs = () => {
     url: `/admin/jobs/get?status=${status === "all" ? "" : status}&category=${
       category === "all" ? "" : category
     }&page=${page}&limit=${limit}&search=${searchTerm}`,
-    queryKeys: ["job", status, category, page, searchTerm],
+    queryKeys: ["job", status, category, page, searchTerm,limit],
   });
 
   useEffect(() => {

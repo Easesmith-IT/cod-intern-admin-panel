@@ -235,3 +235,12 @@
     @apply rounded-md border bg-white px-4;
   }
 }
+
+.my-editor ol,
+.my-editor ul {
+  list-style: revert;
+}
+
+.my-editor pre{
+  background: transparent !important;
+}

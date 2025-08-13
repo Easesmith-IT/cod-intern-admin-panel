@@ -2,7 +2,7 @@
 
 import DatePicker from "@/components/shared/DatePicker";
 import Spinner from "@/components/shared/Spinner";
-import TiptapEditor from "@/components/tiptap-editor";
+import { RichTextEditor } from "@/components/tiptap-editor";
 import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
 import { Button } from "@/components/ui/button";
 import {
@@ -75,8 +75,8 @@ const CreateJob = () => {
   const handleAddEducation = () => {
     const trimmed = newEducation.trim();
 
-    if(!trimmed){
-      return toast.error("Field is empty")
+    if (!trimmed) {
+      return toast.error("Field is empty");
     }
 
     const isDuplicate = fields.some((f) => f.title === trimmed);
@@ -380,9 +380,9 @@ const CreateJob = () => {
               <FormItem className="mt-5">
                 <FormLabel>About the Company</FormLabel>
                 <FormControl>
-                  <TiptapEditor
+                  <RichTextEditor
+                    value={field.value}
                     onChange={field.onChange}
-                    initialContent={field.value}
                   />
                 </FormControl>
                 <FormMessage />
@@ -396,9 +396,9 @@ const CreateJob = () => {
               <FormItem className="mt-5">
                 <FormLabel>About the Job</FormLabel>
                 <FormControl>
-                  <TiptapEditor
+                  <RichTextEditor
+                    value={field.value}
                     onChange={field.onChange}
-                    initialContent={field.value}
                   />
                 </FormControl>
                 <FormMessage />
@@ -412,9 +412,9 @@ const CreateJob = () => {
               <FormItem className="mt-5">
                 <FormLabel>Roles & Reponsibilities</FormLabel>
                 <FormControl>
-                  <TiptapEditor
+                  <RichTextEditor
+                    value={field.value}
                     onChange={field.onChange}
-                    initialContent={field.value}
                   />
                 </FormControl>
                 <FormMessage />
@@ -428,9 +428,9 @@ const CreateJob = () => {
               <FormItem className="mt-5">
                 <FormLabel>Good to Have</FormLabel>
                 <FormControl>
-                  <TiptapEditor
+                  <RichTextEditor
+                    value={field.value}
                     onChange={field.onChange}
-                    initialContent={field.value}
                   />
                 </FormControl>
                 <FormMessage />

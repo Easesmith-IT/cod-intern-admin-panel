@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { DELETE, PATCH } from "@/constants/apiMethods";
 import { useApiMutation } from "@/hooks/useApiMutation";
-import { previewImage } from "@/lib/utils";
 import { format } from "date-fns";
 import { Clock, MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";

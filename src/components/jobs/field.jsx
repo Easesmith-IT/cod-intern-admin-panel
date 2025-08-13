@@ -13,7 +13,7 @@ export const Field = ({
   className = "",
 }) => {
   return (
-    <div className={cn("flex gap-1 items-center",className)}>
+    <div className={cn("flex gap-1 items-center", className)}>
       <LabelText>{label}:</LabelText>
       <div
         className="flex items-center gap-2 px-2 text-sm"
@@ -34,23 +34,21 @@ export const Field = ({
 };
 
 export const LabelText = ({ children }) => {
-  return (
-    <div className="text-sm font-medium">{children}</div>
-  );
+  return <div className="text-sm font-medium">{children}</div>;
 };
 
 export const ReadOnlyBlock = ({ title, text }) => {
-const options = {
-  replace: (domNode) => {
-    if (domNode.name === "code") {
-      return (
-        <pre className="whitespace-pre-wrap">
-          {domToReact(domNode.children)}
-        </pre>
-      );
-    }
-  },
-};
+  const options = {
+    replace: (domNode) => {
+      if (domNode.name === "code") {
+        return (
+          <pre className="whitespace-pre-wrap">
+            {domToReact(domNode.children)}
+          </pre>
+        );
+      }
+    },
+  };
 
   return (
     <Card className="gap-1 border-none shadow-none py-0">

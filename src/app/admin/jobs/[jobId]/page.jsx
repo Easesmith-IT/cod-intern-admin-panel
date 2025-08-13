@@ -3,11 +3,9 @@
 import { Field, LabelText, ReadOnlyBlock } from "@/components/jobs/field";
 import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useApiQuery } from "@/hooks/useApiQuery";
-import { previewImage } from "@/lib/utils";
 import { format } from "date-fns";
 import {
   ArrowLeft,
@@ -19,7 +17,6 @@ import {
   MapPin,
   Tags,
 } from "lucide-react";
-import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 
 const JobDetails = () => {
