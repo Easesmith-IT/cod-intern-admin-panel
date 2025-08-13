@@ -14,6 +14,7 @@ export const Actions = ({
   onEdit = () => {},
   onView = () => {},
   showViewAction = true,
+  disabled=false,
 }) => {
   return (
     <DropdownMenu>
@@ -21,7 +22,7 @@ export const Actions = ({
         {children ? (
           children
         ) : (
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button disabled={disabled} variant="ghost" className="h-8 w-8 p-0">
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         )}

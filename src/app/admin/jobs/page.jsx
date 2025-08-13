@@ -32,11 +32,12 @@ const Jobs = () => {
   const [category, setCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
+  const [limit, setLimit] = useState(10);
 
   const { data, isLoading, error } = useApiQuery({
     url: `/admin/jobs/get?status=${status === "all" ? "" : status}&category=${
       category === "all" ? "" : category
-    }&page=${page}&search=${searchTerm}`,
+    }&page=${page}&limit=${limit}&search=${searchTerm}`,
     queryKeys: ["job", status, category, page, searchTerm],
   });
 
@@ -120,7 +121,10 @@ const Jobs = () => {
               <Job key={job._id} job={job} />
             ))}
 
-            {isLoading && <JobSkeleton />}
+            {isLoading &&
+              Array.from({ length: 5 }).map((_, index) => (
+                <JobSkeleton key={index} />
+              ))}
           </TableBody>
         </Table>
 

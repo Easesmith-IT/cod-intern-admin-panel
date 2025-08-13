@@ -3,6 +3,7 @@
 import { Admin } from "@/components/admins/admin";
 import { AdminSkeleton } from "@/components/admins/admin-skeleton";
 import DataNotFound from "@/components/shared/DataNotFound";
+import { PaginationComp } from "@/components/shared/PaginationComp";
 import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,12 +42,13 @@ const Admins = () => {
   const [category, setCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
+  const [limit, setLimit] = useState(10);
 
   const { data, isLoading, error } = useApiQuery({
     url: `/admin/admins/get?status=${status === "all" ? "" : status}&category=${
       category === "all" ? "" : category
-    }&page=${page}&search=${searchTerm}`,
-    queryKeys: ["job", status, category, page, searchTerm],
+    }&page=${page}&limit=${limit}&search=${searchTerm}`,
+    queryKeys: ["admin", status, category, page, searchTerm, limit],
   });
 
   useEffect(() => {
@@ -117,13 +119,23 @@ const Admins = () => {
             {data?.admins?.map((admin) => (
               <Admin key={admin._id} admin={admin} />
             ))}
-            {isLoading && <AdminSkeleton />}
+            {isLoading &&
+              Array.from({ length: 5 }).map((_, index) => (
+                <AdminSkeleton key={index} />
+              ))}
           </TableBody>
         </Table>
 
         {data?.admins?.length === 0 && !isLoading && (
           <DataNotFound name="Admins" />
         )}
+
+        <PaginationComp
+          page={page}
+          pageCount={pageCount}
+          setPage={setPage}
+          className="mt-8 mb-5"
+        />
       </div>
     </div>
   );

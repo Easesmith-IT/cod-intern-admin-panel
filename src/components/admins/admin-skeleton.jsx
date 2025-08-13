@@ -28,6 +28,7 @@ export const AdminSkeleton = () => {
       </TableCell>
       <TableCell className="text-right">
         <Skeleton className="w-full h-5" />
+        <Skeleton className="w-10 mx-auto h-5 mt-2" />
       </TableCell>
       <TableCell className="text-right">
         <Skeleton className="w-full h-5" />

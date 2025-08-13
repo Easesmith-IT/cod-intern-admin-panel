@@ -7,7 +7,7 @@ export const AddSubAdminSchema = z.object({
     .refine((files) => files instanceof FileList && files.length > 0, {
       message: "Job image is required",
     }),
-  jobImagePreview: z.string().optional(),
+  profileImagePreview: z.string().optional(),
   role: z.string().min(1, "Role is required"),
   name: z.string().min(1, "Name is required"),
   status: z.string().optional(),
@@ -27,7 +27,7 @@ export const AddSubAdminSchema = z.object({
     dashboard: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for dashboard.",
     }),
-    admins: z.enum(["none", "read", "read&write"], {
+    admin: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for admin.",
     }),
     job: z.enum(["none", "read", "read&write"], {
@@ -44,8 +44,11 @@ export const AddSubAdminSchema = z.object({
 
 export const EditSubAdminSchema = z.object({
   position: z.string().min(1, "Position is required"),
+  profileImage: z.any(),
+  profileImagePreview: z.string().optional(),
+  role: z.string().min(1, "Role is required"),
   name: z.string().min(1, "Name is required"),
-  cityName: z.string().min(1, "CityName is required"),
+  status: z.string().optional(),
   phoneNumber: z
     .string()
     .length(10, "Phone number must be exactly 10 digits")
@@ -55,32 +58,17 @@ export const EditSubAdminSchema = z.object({
     dashboard: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for dashboard.",
     }),
-    subAdmin: z.enum(["none", "read", "read&write"], {
-      required_error: "Please select an access level for subAdmin.",
+    admin: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for admin.",
     }),
-    customer: z.enum(["none", "read", "read&write"], {
-      required_error: "Please select an access level for customer.",
+    job: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for job.",
     }),
-    restaurant: z.enum(["none", "read", "read&write"], {
-      required_error: "Please select an access level for restaurant.",
-    }),
-    vendor: z.enum(["none", "read", "read&write"], {
-      required_error: "Please select an access level for vendor.",
-    }),
-    deliveryAgent: z.enum(["none", "read", "read&write"], {
-      required_error: "Please select an access level for deliveryAgent.",
-    }),
-    order: z.enum(["none", "read", "read&write"], {
-      required_error: "Please select an access level for order.",
+    student: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for student.",
     }),
     review: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for review.",
-    }),
-    offer: z.enum(["none", "read", "read&write"], {
-      required_error: "Please select an access level for offer.",
-    }),
-    applicationRequest: z.enum(["none", "read", "read&write"], {
-      required_error: "Please select an access level for applicationRequest.",
     }),
   }),
 });

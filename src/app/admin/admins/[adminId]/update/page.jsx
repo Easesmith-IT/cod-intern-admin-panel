@@ -1,5 +1,6 @@
 "use client";
 
+import { ChangePassword } from "@/components/admins/ChangePassword";
 import Spinner from "@/components/shared/Spinner";
 import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
 import { Button } from "@/components/ui/button";
@@ -21,31 +22,54 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { POST } from "@/constants/apiMethods";
+import { PATCH } from "@/constants/apiMethods";
 import { permissions } from "@/constants/permissions";
 import { useApiMutation } from "@/hooks/useApiMutation";
+import { useApiQuery } from "@/hooks/useApiQuery";
 import { updatePreview } from "@/lib/updatePreview";
-import { AddSubAdminSchema } from "@/schemas/AddSubAdminSchema";
+import { EditSubAdminSchema } from "@/schemas/AddSubAdminSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Eye, EyeOff, ImagePlus, Pencil } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { ArrowLeft, ImagePlus, Pencil } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-const CreateAdmin = () => {
+const UpdateAdmin = () => {
   const router = useRouter();
+  const params = useParams();
+
+  const { data, isLoading, error } = useApiQuery({
+    url: `/admin/admins/get-details/${params?.adminId}`,
+    queryKeys: ["admin"],
+  });
+
+  console.log("data", data);
+
+  const {
+    name,
+    email,
+    role,
+    position,
+    phone,
+    permissions: dbPermissions,
+    _id,
+    status,
+    profileImage: image,
+  } = data?.admin || {};
+
   const form = useForm({
-    resolver: zodResolver(AddSubAdminSchema),
+    resolver: zodResolver(EditSubAdminSchema),
     defaultValues: {
       position: "manager",
       role: "subadmin",
       name: "",
+      status: "",
+      phoneNumber: "",
       profileImage: "",
       profileImagePreview: "",
-      phoneNumber: "",
       email: "",
-      status: "",
       password: "",
+      cityName: "",
       permissions: {
         dashboard: "none",
         admin: "none",
@@ -56,9 +80,11 @@ const CreateAdmin = () => {
     },
   });
 
-  const { control, reset, handleSubmit, setValue, getValues, watch, register } =
+  const { control, reset, handleSubmit, register, watch, setValue, getValues } =
     form;
-  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isChangePassword, setIsChangePassword] = useState(false);
+
+  console.log("getValues", getValues());
 
   const profileImageRef = register("profileImage");
   const profileImage = watch("profileImage");
@@ -67,13 +93,28 @@ const CreateAdmin = () => {
     updatePreview(profileImage, "profileImagePreview", setValue);
   }, [form, profileImage]);
 
+  useEffect(() => {
+    if (data?.admin) {
+      reset({
+        name,
+        email,
+        permissions: dbPermissions,
+        phoneNumber: phone,
+        position,
+        profileImagePreview: image,
+        status,
+        // role,
+      });
+    }
+  }, [data]);
+
   const {
     mutateAsync: submitForm,
     isPending: isSubmitFormLoading,
     data: result,
   } = useApiMutation({
-    url: "/admin/admins/create",
-    method: POST,
+    url: `/admin/admins/update/${_id}`,
+    method: PATCH,
     invalidateKey: ["admin"],
     // isToast: false,
   });
@@ -85,6 +126,7 @@ const CreateAdmin = () => {
     formData.append("name", data.name);
     formData.append("email", data.email);
     formData.append("phone", data.phoneNumber);
+    formData.append("status", data.status);
     formData.append("password", data.password);
     formData.append("position", data.position);
     formData.append("permissions", JSON.stringify(data.permissions));
@@ -110,7 +152,7 @@ const CreateAdmin = () => {
         className="flex gap-1 items-center mb-4"
       >
         <ArrowLeft className="text-3xl cursor-pointer" />
-        <TypographyH2 heading="Add Admin" />
+        <TypographyH2 heading="Update Admin" />
       </button>
 
       <Form {...form}>
@@ -205,7 +247,8 @@ const CreateAdmin = () => {
                           <SelectValue placeholder="Select Role" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="subadmin">Subadmin</SelectItem>
+                          {/* <SelectItem value="superAdmin">Super Admin</SelectItem> */}
+                          <SelectItem value="subadmin">Sub Admin</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -266,29 +309,24 @@ const CreateAdmin = () => {
 
               <FormField
                 control={control}
-                name="password"
+                name="status"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Status</FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <Input
-                          type={isShowPassword ? "text" : "password"}
-                          placeholder="*************"
-                          {...field}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setIsShowPassword(!isShowPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                        >
-                          {isShowPassword ? (
-                            <EyeOff className="h-4 w-4 cursor-pointer" />
-                          ) : (
-                            <Eye className="h-4 w-4 cursor-pointer" />
-                          )}
-                        </button>
-                      </div>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="flex justify-between w-full items-center h-10 text-sm font-normal font-sans border">
+                          <SelectValue placeholder="Select Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="inactive">Inactive</SelectItem>
+                          <SelectItem value="blocked">Blocked</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -339,14 +377,29 @@ const CreateAdmin = () => {
             ))}
           </div>
 
+          <Button
+            type="button"
+            onClick={() => setIsChangePassword(true)}
+            variant="link"
+            className="text-blue-600 px-0 mt-2"
+          >
+            Change password
+          </Button>
+
+          {isChangePassword && (
+            <ChangePassword
+              isChangePassword={isChangePassword}
+              setIsChangePassword={setIsChangePassword}
+            />
+          )}
+
           <div className="flex justify-end">
-            <Button
-              type="submit"
-              variant="codIntern"
-              disabled={isSubmitFormLoading}
-              className="px-10"
-            >
-              {isSubmitFormLoading ? <Spinner /> : "Add"}
+            <Button type="submit" variant="codIntern" size="" className="px-10">
+              {isSubmitFormLoading ? (
+                <Spinner spinnerClassName="size-6" />
+              ) : (
+                "Update"
+              )}
             </Button>
           </div>
         </form>
@@ -355,4 +408,4 @@ const CreateAdmin = () => {
   );
 };
 
-export default CreateAdmin;
+export default UpdateAdmin;
