@@ -17,21 +17,40 @@ import { Button } from "../ui/button";
 import { changePasswordSchema } from "@/schemas/AddSubAdminSchema";
 import { TypographyH3 } from "../typography.jsx/typography-h3";
 import { TypographyH4 } from "../typography.jsx/typography-h4";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { PATCH } from "@/constants/apiMethods";
+import { useParams } from "next/navigation";
+import Spinner from "../shared/Spinner";
 
 export const ChangePassword = ({ isChangePassword, setIsChangePassword }) => {
+  const params = useParams();
+
   const form = useForm({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
-      currentPassword: "",
-      changePassword: "",
+      oldPassword: "",
+      newPassword: "",
     },
   });
 
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
-  const onSubmit = (data) => {
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: "/admin/admins/change-password",
+    method: PATCH,
+    invalidateKey: ["admin"],
+    // isToast: false,
+  });
+
+  const onSubmit = async (data) => {
     console.log("data :", data);
+    await submitForm({ ...data, adminId: params.adminId });
+    setIsChangePassword(false);
   };
 
   return (
@@ -42,13 +61,13 @@ export const ChangePassword = ({ isChangePassword, setIsChangePassword }) => {
             <TypographyH4 heading="Change Password" />
             <FormField
               control={form.control}
-              name="currentPassword"
+              name="oldPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={`text-[#111928] font-semibold font-inter opacity-80`}
                   >
-                    Current Password
+                    Old Password
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
@@ -78,7 +97,7 @@ export const ChangePassword = ({ isChangePassword, setIsChangePassword }) => {
             />
             <FormField
               control={form.control}
-              name="changePassword"
+              name="newPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
@@ -113,8 +132,13 @@ export const ChangePassword = ({ isChangePassword, setIsChangePassword }) => {
               )}
             />
             <div className="flex justify-end">
-              <Button type="submit" variant="codIntern" className="text-sm">
-                Change Password
+              <Button
+                disabled={isSubmitFormLoading}
+                type="submit"
+                variant="codIntern"
+                className="text-sm"
+              >
+                {isSubmitFormLoading ? <Spinner /> : "Change Password"}
               </Button>
             </div>
           </form>

@@ -74,10 +74,17 @@ export const EditSubAdminSchema = z.object({
 });
 
 export const changePasswordSchema = z.object({
-  currentPassword: z
+  oldPassword: z
     .string()
-    .min(8, "Current password must be at least 8 characters long."),
-  changePassword: z
+    .min(8, "Old password must be at least 8 characters long.")
+    .regex(/[A-Z]/, "Old password must contain at least one uppercase letter.")
+    .regex(/[a-z]/, "Old password must contain at least one lowercase letter.")
+    .regex(/[0-9]/, "Old password must contain at least one number.")
+    .regex(
+      /[@$!%*?&]/,
+      "Old password must contain at least one special character."
+    ),
+  newPassword: z
     .string()
     .min(8, "New password must be at least 8 characters long.")
     .regex(/[A-Z]/, "New password must contain at least one uppercase letter.")

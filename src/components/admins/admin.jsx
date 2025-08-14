@@ -96,14 +96,14 @@ export const Admin = ({ admin }) => {
                 status === "active"
                   ? "success"
                   : status === "inactive"
-                  ? "inPrgress"
+                  ? "inProgress"
                   : "destructive"
               }
               className="capitalize h-6"
             >
               {isPending ? <Spinner spinnerClassName="size-4" /> : status}
             </Badge>
-            {(admin.role !== "superAdmin" && admin.status !== "blocked") && (
+            {admin.role !== "superAdmin" && admin.status !== "blocked" && (
               <Switch
                 checked={status === "active"}
                 onCheckedChange={handleStatus}

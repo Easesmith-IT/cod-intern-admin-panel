@@ -106,7 +106,7 @@ export const Job = ({ job }) => {
           <div className="flex flex-col gap-2 items-start justify-center">
             <Badge
               className="capitalize h-6"
-              variant={status === "active" ? "success" : "inPrgress"}
+              variant={status === "active" ? "success" : "inProgress"}
             >
               {isPending ? <Spinner spinnerClassName="size-4" /> : status}
             </Badge>

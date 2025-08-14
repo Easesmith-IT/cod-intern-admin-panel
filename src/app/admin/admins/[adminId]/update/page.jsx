@@ -69,7 +69,6 @@ const UpdateAdmin = () => {
       profileImagePreview: "",
       email: "",
       password: "",
-      cityName: "",
       permissions: {
         dashboard: "none",
         admin: "none",
@@ -215,6 +214,7 @@ const UpdateAdmin = () => {
                     <FormLabel>Position</FormLabel>
                     <FormControl>
                       <Select
+                        key={field.value}
                         value={field.value}
                         onValueChange={field.onChange}
                       >
@@ -240,6 +240,7 @@ const UpdateAdmin = () => {
                     <FormLabel>Role</FormLabel>
                     <FormControl>
                       <Select
+                        key={field.value}
                         value={field.value}
                         onValueChange={field.onChange}
                       >
@@ -315,6 +316,7 @@ const UpdateAdmin = () => {
                     <FormLabel>Status</FormLabel>
                     <FormControl>
                       <Select
+                        key={field.value}
                         value={field.value}
                         onValueChange={field.onChange}
                       >
@@ -352,6 +354,7 @@ const UpdateAdmin = () => {
                     </FormLabel>
                     <FormControl>
                       <Select
+                        key={field.value}
                         onValueChange={field.onChange}
                         value={field.value}
                       >
@@ -386,13 +389,6 @@ const UpdateAdmin = () => {
             Change password
           </Button>
 
-          {isChangePassword && (
-            <ChangePassword
-              isChangePassword={isChangePassword}
-              setIsChangePassword={setIsChangePassword}
-            />
-          )}
-
           <div className="flex justify-end">
             <Button type="submit" variant="codIntern" size="" className="px-10">
               {isSubmitFormLoading ? (
@@ -404,6 +400,12 @@ const UpdateAdmin = () => {
           </div>
         </form>
       </Form>
+      {isChangePassword && (
+        <ChangePassword
+          isChangePassword={isChangePassword}
+          setIsChangePassword={setIsChangePassword}
+        />
+      )}
     </div>
   );
 };
