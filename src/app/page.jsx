@@ -67,6 +67,9 @@ const Login = () => {
       const { accessToken, refreshToken, userInfo } = result.cookies;
       setAuthCookies({ accessToken, refreshToken, userInfo });
       // login();
+
+      console.log("userInfo", userInfo);
+      
       reset();
       router.push("/admin/dashboard");
     }
