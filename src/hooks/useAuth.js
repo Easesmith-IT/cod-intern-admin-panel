@@ -2,7 +2,7 @@
 "use client";
 
 import { readCookie } from "@/lib/readCookie";
-import { setAuthCookies } from "@/lib/setCookies";
+import { setAuthCookies } from "@/lib/cookies";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 

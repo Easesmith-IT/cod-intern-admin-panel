@@ -12,8 +12,43 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ConfirmModal } from "../shared/confirm-modal";
+import { useEffect, useState } from "react";
+import { readCookie } from "@/lib/readCookie";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
+import { useRouter } from "next/navigation";
+import { removeAuthCookies, setAuthCookies } from "@/lib/cookies";
 
 export const Header = () => {
+  const router = useRouter();
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+
+  const userInfo = readCookie("userInfo");
+  console.log("userInfo", userInfo);
+
+  const {
+    mutateAsync: logout,
+    isPending: isLogoutLoading,
+    data: result,
+  } = useApiMutation({
+    url: "/admin/admins/logout",
+    method: POST,
+    invalidateKey: ["logout"],
+    // isToast: false,
+  });
+
+  const handleLogout = async () => {
+    await logout({ email: userInfo.email });
+  };
+
+  useEffect(() => {
+    if (result) {
+      removeAuthCookies();
+      router.push("/");
+    }
+  }, [result]);
+
   return (
     <header className="bg-white sticky z-20 top-0 shadow-sm border-b px-6 py-4">
       <div className="flex items-center justify-between">
@@ -52,7 +87,7 @@ export const Header = () => {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">Admin User</p>
@@ -70,12 +105,26 @@ export const Header = () => {
                 <span>Settings</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="hover:bg-purple-50">
+              <DropdownMenuItem
+                onSelect={() => setIsAlertModalOpen(true)}
+                className="hover:bg-purple-50"
+              >
                 <span>Log out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+
+        {isAlertModalOpen && (
+          <ConfirmModal
+            isModalOpen={isAlertModalOpen}
+            setIsModalOpen={setIsAlertModalOpen}
+            header="Logout"
+            description="Are you sure you want to logout?"
+            disabled={isLogoutLoading}
+            onConfirm={handleLogout}
+          />
+        )}
       </div>
     </header>
   );

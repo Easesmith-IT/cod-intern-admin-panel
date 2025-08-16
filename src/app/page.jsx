@@ -29,7 +29,7 @@ import { useEffect, useState } from "react";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { POST } from "@/constants/apiMethods";
-import { setAuthCookies } from "@/lib/setCookies";
+import { setAuthCookies } from "@/lib/cookies";
 import Spinner from "@/components/shared/Spinner";
 
 const Login = () => {
@@ -65,11 +65,15 @@ const Login = () => {
   useEffect(() => {
     if (result) {
       const { accessToken, refreshToken, userInfo } = result.cookies;
-      setAuthCookies({ accessToken, refreshToken, userInfo });
+      setAuthCookies({
+        accessToken,
+        refreshToken,
+        userInfo: JSON.stringify(userInfo),
+      });
       // login();
 
       console.log("userInfo", userInfo);
-      
+
       reset();
       router.push("/admin/dashboard");
     }

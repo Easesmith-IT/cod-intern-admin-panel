@@ -127,24 +127,25 @@ const AdminDetails = () => {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {permissions && Object.entries(permissions).map(([module, level]) => (
-              <div key={module} className="p-4 border rounded-lg bg-muted/20">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium capitalize">{module}</h4>
-                  <Badge
-                    className={cn("capitalize",getPermissionColor(level))}
-                    variant="outline"
-                  >
-                    {level}
-                  </Badge>
+            {permissions &&
+              Object.entries(permissions).map(([module, level]) => (
+                <div key={module} className="p-4 border rounded-lg bg-muted/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-medium capitalize">{module}</h4>
+                    <Badge
+                      className={cn("capitalize", getPermissionColor(level))}
+                      variant="outline"
+                    >
+                      {level}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {level === "read&write" && "Read and write permissions"}
+                    {level === "read" && "Read-only access"}
+                    {level === "none" && "No access granted"}
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {level === "read&write" && "Read and write permissions"}
-                  {level === "read" && "Read-only access"}
-                  {level === "none" && "No access granted"}
-                </p>
-              </div>
-            ))}
+              ))}
           </div>
         </CardContent>
       </Card>

@@ -4,6 +4,7 @@ export const permissions = [
   { label: "Job", value: "job" },
   { label: "Student", value: "student" },
   { label: "Reviews", value: "review" },
+  { label: "Courses", value: "course" },
 ];
 
 export const localPermissions = {
@@ -12,4 +13,5 @@ export const localPermissions = {
   jobs: "job",
   students: "student",
   reviews: "review",
+  courses: "course",
 };
