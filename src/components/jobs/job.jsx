@@ -69,15 +69,16 @@ export const Job = ({ job }) => {
         <TableCell className="font-medium">{job.customId}</TableCell>
         <TableCell className="font-medium">
           <div className="flex items-center space-x-3">
-            <Avatar className="h-8 w-8">
+            <Avatar className="h-8 w-8 rounded-none">
               <AvatarImage
                 src={job.jobImage || "/user-placeholder.png"}
                 alt={job.company}
+                className="object-contain"
               />
               <AvatarFallback>{job.company.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
-              <div className="font-medium">{job.title}</div>
+              <div className="font-medium truncate w-60">{job.title}</div>
               <div className="text-sm text-muted-foreground flex items-center">
                 <Clock className="h-3 w-3 mr-1" />
                 Posted{" "}
@@ -91,7 +92,9 @@ export const Job = ({ job }) => {
         <TableCell>
           <div className="flex items-center">
             <MapPin className="h-3 w-3 mr-1 text-muted-foreground" />
-            {job.city}, {job.state}, {job.country}
+            <div className="truncate w-60">
+              {job.city}, {job.state}, {job.country}
+            </div>
           </div>
         </TableCell>
         <TableCell>

@@ -45,6 +45,7 @@ const UpdateJob = () => {
   console.log("data", data);
 
   const {
+    _id,
     title,
     postingDate,
     status,
@@ -59,7 +60,8 @@ const UpdateJob = () => {
     aboutJob,
     rolesAndReponsibilities,
     goodToHave,
-    _id,
+    jobId,
+    externalLink,
   } = data?.job || {};
 
   const form = useForm({
@@ -80,6 +82,8 @@ const UpdateJob = () => {
       aboutJob: "",
       rolesAndReponsibilities: "",
       goodToHave: "",
+      externalLink: "",
+      jobId: "",
     },
   });
 
@@ -103,6 +107,8 @@ const UpdateJob = () => {
         aboutJob,
         rolesAndReponsibilities,
         goodToHave,
+        externalLink,
+        jobId,
       });
     }
   }, [data]);
@@ -166,6 +172,8 @@ const UpdateJob = () => {
     formData.append("aboutJob", data.aboutJob);
     formData.append("rolesAndReponsibilities", data.rolesAndReponsibilities);
     formData.append("goodToHave", data.goodToHave);
+    formData.append("externalLink", data.externalLink);
+    formData.append("jobId", data.jobId);
     formData.append("image", data.jobImage[0]);
 
     await submitForm(formData);
@@ -418,6 +426,32 @@ const UpdateJob = () => {
                   <FormLabel>Company Name</FormLabel>
                   <FormControl>
                     <Input placeholder="Company Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="externalLink"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>External Link</FormLabel>
+                  <FormControl>
+                    <Input placeholder="External Link" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="jobId"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Job Id</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Job Id" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

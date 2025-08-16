@@ -28,6 +28,8 @@ export const AddJobSchema = z.object({
     .string()
     .min(1, "Roles & Reponsibilities is required"),
   goodToHave: z.string().min(1, "Good to have is required"),
+  externalLink: z.url().optional(),
+  jobId: z.string().optional(),
 });
 
 export const EditJobSchema = z.object({
@@ -54,4 +56,6 @@ export const EditJobSchema = z.object({
     .string()
     .min(1, "Roles & Reponsibilities is required"),
   goodToHave: z.string().min(1, "Good to have is required"),
+  externalLink: z.url().optional(),
+  jobId: z.string().optional(),
 });

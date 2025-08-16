@@ -13,6 +13,7 @@ import {
   Building2,
   Calendar,
   CheckCircle2,
+  ExternalLink,
   Globe,
   MapPin,
   Tags,
@@ -45,6 +46,8 @@ const JobDetails = () => {
     aboutJob,
     rolesAndReponsibilities,
     goodToHave,
+    externalLink,
+    jobId,
     _id,
   } = data?.job || {};
 
@@ -133,6 +136,18 @@ const JobDetails = () => {
                   icon={<Building2 className="h-4 w-4" />}
                   label="Company Name"
                   value={company}
+                  // className="sm:col-span-2"
+                />
+                <Field
+                  icon={<Briefcase className="h-4 w-4" />}
+                  label="Job Id"
+                  value={jobId}
+                  // className="sm:col-span-2"
+                />
+                <Field
+                  icon={<ExternalLink className="h-4 w-4" />}
+                  label="External Link"
+                  value={externalLink}
                   className="sm:col-span-2"
                 />
               </div>

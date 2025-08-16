@@ -38,7 +38,7 @@ const Jobs = () => {
     url: `/admin/jobs/get?status=${status === "all" ? "" : status}&category=${
       category === "all" ? "" : category
     }&page=${page}&limit=${limit}&search=${searchTerm}`,
-    queryKeys: ["job", status, category, page, searchTerm,limit],
+    queryKeys: ["job", status, category, page, searchTerm, limit],
   });
 
   useEffect(() => {
@@ -107,9 +107,9 @@ const Jobs = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Job ID</TableHead>
-              <TableHead>Job</TableHead>
+              <TableHead className="w-60">Job</TableHead>
               <TableHead>Company</TableHead>
-              <TableHead>Location</TableHead>
+              <TableHead className="w-60">Location</TableHead>
               <TableHead>Type</TableHead>
               {/* <TableHead>Applications</TableHead> */}
               <TableHead className="w-20">Status</TableHead>
