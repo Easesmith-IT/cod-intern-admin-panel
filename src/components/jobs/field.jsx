@@ -26,7 +26,7 @@ export const Field = ({
             {value}
           </Badge>
         ) : (
-          <span className="truncate">{value}</span>
+          <div className="truncate break-all whitespace-pre-wrap">{value}</div>
         )}
       </div>
     </div>
@@ -34,7 +34,7 @@ export const Field = ({
 };
 
 export const LabelText = ({ children }) => {
-  return <div className="text-sm font-medium">{children}</div>;
+  return <div className="text-sm font-medium whitespace-nowrap">{children}</div>;
 };
 
 export const ReadOnlyBlock = ({ title, text }) => {

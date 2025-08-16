@@ -117,11 +117,15 @@ const JobDetails = () => {
                 label="Country"
                 value={country}
               />
-              <div className="flex gap-3 items-center">
-                <LabelText>{"Education"}</LabelText>
+              <div className="flex gap-3 items-center col-span-2">
+                <LabelText>Education:</LabelText>
                 <div className="flex flex-wrap items-center gap-2">
                   {education?.map((ed) => (
-                    <Badge key={ed} variant="secondary" className="rounded-md">
+                    <Badge
+                      key={ed}
+                      variant="secondary"
+                      className="rounded-md whitespace-pre-wrap"
+                    >
                       <Tags className="mr-1.5 h-3.5 w-3.5" />
                       {ed}
                     </Badge>
@@ -138,18 +142,22 @@ const JobDetails = () => {
                   value={company}
                   // className="sm:col-span-2"
                 />
-                <Field
-                  icon={<Briefcase className="h-4 w-4" />}
-                  label="Job Id"
-                  value={jobId}
-                  // className="sm:col-span-2"
-                />
-                <Field
-                  icon={<ExternalLink className="h-4 w-4" />}
-                  label="External Link"
-                  value={externalLink}
-                  className="sm:col-span-2"
-                />
+                {jobId && (
+                  <Field
+                    icon={<Briefcase className="h-4 w-4" />}
+                    label="Job Id"
+                    value={jobId}
+                    // className="sm:col-span-2"
+                  />
+                )}
+                {externalLink && (
+                  <Field
+                    icon={<ExternalLink className="h-4 w-4" />}
+                    label="External Link"
+                    value={externalLink}
+                    className="sm:col-span-2"
+                  />
+                )}
               </div>
             </div>
           </div>
