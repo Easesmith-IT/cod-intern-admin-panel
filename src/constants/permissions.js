@@ -5,6 +5,7 @@ export const permissions = [
   { label: "Student", value: "student" },
   { label: "Reviews", value: "review" },
   { label: "Courses", value: "course" },
+  { label: "Content Management", value: "content" },
 ];
 
 export const localPermissions = {
@@ -14,4 +15,5 @@ export const localPermissions = {
   students: "student",
   reviews: "review",
   courses: "course",
+  content: "content",
 };

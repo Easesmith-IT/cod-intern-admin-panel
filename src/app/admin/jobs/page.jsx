@@ -52,9 +52,7 @@ const Jobs = () => {
       <div className="flex justify-between items-center">
         <div>
           <TypographyH2 heading="Job Management" />
-          <p className="text-muted-foreground">
-            Manage job postings, applications, and employer accounts
-          </p>
+          <p className="text-muted-foreground">Manage job postings</p>
         </div>
 
         <Button variant="codIntern" asChild className="bg-main">

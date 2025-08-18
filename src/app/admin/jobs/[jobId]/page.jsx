@@ -3,6 +3,7 @@
 import { Field, LabelText, ReadOnlyBlock } from "@/components/jobs/field";
 import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useApiQuery } from "@/hooks/useApiQuery";
@@ -53,13 +54,16 @@ const JobDetails = () => {
 
   return (
     <div className="space-y-5">
-      <button
-        onClick={() => router.push("/admin/jobs")}
-        className="flex gap-1 items-center mb-4"
-      >
-        <ArrowLeft className="text-3xl cursor-pointer" />
-        <TypographyH2 heading="Job Details" />
-      </button>
+      <div className="flex gap-5 items-center justify-between">
+        <button
+          onClick={() => router.push("/admin/jobs")}
+          className="flex gap-1 items-center mb-4"
+        >
+          <ArrowLeft className="text-3xl cursor-pointer" />
+          <TypographyH2 heading="Job Details" />
+        </button>
+        <Button onClick={()=> router.push(`/admin/jobs/${_id}/applications`)} variant="codIntern">View Job Applications</Button>
+      </div>
 
       <div className="rounded-xl border bg-card">
         <div className="grid gap-6 p-4 md:grid-cols-3 items-start md:p-6">

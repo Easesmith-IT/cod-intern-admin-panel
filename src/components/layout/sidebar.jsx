@@ -9,6 +9,9 @@ import {
   BookOpen,
   Briefcase,
   CreditCard,
+  Files,
+  FileText,
+  FolderCog,
   LayoutDashboard,
   PanelLeft,
   Settings,
@@ -31,6 +34,7 @@ const menuItems = [
   { id: "analytics", label: "Analytics", icon: BarChart3 },
   { id: "payments", label: "Payments", icon: CreditCard },
   { id: "settings", label: "Settings", icon: Settings },
+  { id: "content", label: "Content Management", icon: FolderCog },
 ];
 
 export const Sidebar = () => {
@@ -50,8 +54,8 @@ export const Sidebar = () => {
   return (
     <div
       className={cn(
-        "bg-white shadow-lg h-screen sticky top-0 overflow-y-auto transition-all duration-300 flex flex-col border-r",
-        collapsed ? "w-20" : "w-52"
+        "bg-white shadow-lg h-screen sticky top-0 overflow-y-auto transition-all overflow-x-hidden duration-300 flex flex-col border-r",
+        collapsed ? "w-20" : "w-64"
       )}
     >
       <div className="p-4 border-b">

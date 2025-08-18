@@ -1,0 +1,10 @@
+[
+  { "name": "web_development", "label": "Web Development" },
+  { "name": "mobile_development", "label": "Mobile App Development" },
+  { "name": "frontend", "label": "Frontend Development" },
+  { "name": "backend", "label": "Backend Development" },
+  { "name": "fullstack", "label": "Full-Stack Development" },
+  { "name": "devops", "label": "DevOps & Cloud" },
+  { "name": "data_science", "label": "Data Science" },
+  { "name": "machine_learning", "label": "Machine Learning" }
+]

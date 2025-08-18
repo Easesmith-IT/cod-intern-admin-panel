@@ -1,6 +1,5 @@
 import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
 import { Toaster } from "@/components/ui/sonner";
-import { MantineProvider } from "@mantine/core";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -25,13 +24,10 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        <MantineProvider>
-          <ReactQueryProvider>{children}</ReactQueryProvider>
-        </MantineProvider>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
         <Toaster richColors position="top-center" />
       </body>
     </html>
