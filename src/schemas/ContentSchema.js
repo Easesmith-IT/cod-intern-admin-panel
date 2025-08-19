@@ -31,6 +31,50 @@ export const ThreeStepApproachSchema = z.object({
     )
     .length(3, "Exactly 3 steps are required"), // ✅ fixed to 3
 });
+
 export const PopularCoursesSchema = z.object({
+  desc: z.string().min(1, "Required"),
+});
+
+export const SharpenYourSkillSchema = z.object({
+  image: z
+    .any()
+    .refine((files) => files instanceof FileList && files.length > 0, {
+      message: "Image is required",
+    }),
+  imagePreview: z.string().optional(),
+  desc: z.string().min(1, "Required"),
+});
+
+export const UniversitiesSchema = z.object({
+  icons: z
+    .array(
+      z.object({
+        image: z.any().optional(), // File input
+        preview: z.string().optional(),
+      })
+    )
+    .min(1, "At least one icon is required"),
+});
+
+export const WhyCodInternsSchema = z.object({
+  desc: z.string().min(1, "Required"),
+});
+
+export const LearningToCareerSchema = z.object({
+  desc: z.string().min(1, "Required"),
+});
+
+export const ConnectWithUsSchema = z.object({
+  desc: z.string().min(1, "Required"),
+});
+
+export const WeJustKeepGrowingSchema = z.object({
+  image: z
+    .any()
+    .refine((files) => files instanceof FileList && files.length > 0, {
+      message: "Image is required",
+    }),
+  imagePreview: z.string().optional(),
   desc: z.string().min(1, "Required"),
 });

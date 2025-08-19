@@ -7,25 +7,23 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import Image from "next/image";
-import { CourseCard } from "./course-card";
-import { CourseCategory } from "./course-category";
-import { useEffect, useState } from "react";
-import courseCategory from "@/data/courseCategory.json";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
-  FormLabel,
-  FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { PopularCoursesSchema } from "@/schemas/ContentSchema";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import courseCategory from "@/data/courseCategory.json";
+import { PopularCoursesSchema } from "@/schemas/ContentSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, X } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { CourseCard } from "./course-card";
+import { CourseCategory } from "./course-category";
 
 export const PopularCourses = () => {
   const [selectedCategory, setSelectedCategory] = useState("web_development");
@@ -74,9 +72,13 @@ export const PopularCourses = () => {
       <div className="relative max-w-4xl mx-auto">
         <button
           onClick={() => setIsDescEdit((prev) => !prev)}
-          className="size-6 absolute shadow -top-4 -right-4 p-1.5 rounded-full bg-white flex justify-center items-center"
+          className="size-7 absolute shadow -top-4 -right-4 p-1.5 rounded-full bg-white flex justify-center items-center"
         >
-          {isDescEdit ? <X /> : <Pencil className="size-4" />}
+          {isDescEdit ? (
+            <X className="size-5" />
+          ) : (
+            <Pencil className="size-5" />
+          )}
         </button>
         {isDescEdit ? (
           <Form {...form}>
@@ -91,7 +93,7 @@ export const PopularCourses = () => {
                   <FormItem className="mt-4">
                     <FormControl>
                       <Textarea
-                        className="h-32 !text-base"
+                        className="h-32 !text-base resize-none"
                         placeholder="Enter Description"
                         {...field}
                       />

@@ -79,9 +79,11 @@ export const ThreeStepApproach = () => {
               />
             ))}
           </div>
-          <Button className="mt-5" variant="codIntern">
-            Submit
-          </Button>
+          <div className="flex justify-end">
+            <Button className="mt-5" variant="codIntern">
+              Submit
+            </Button>
+          </div>
         </form>
       </Form>
     </section>
