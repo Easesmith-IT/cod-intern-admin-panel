@@ -1,7 +1,7 @@
 "use client";
 
 import { Course } from "@/components/courses/course";
-import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
+import { TypographyH2 } from "@/components/typography/typography-h2";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,7 +26,7 @@ import {
   TableBody,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Search } from "lucide-react";

@@ -2,7 +2,7 @@
 
 import { ChangePassword } from "@/components/admins/ChangePassword";
 import Spinner from "@/components/shared/Spinner";
-import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
+import { TypographyH2 } from "@/components/typography/typography-h2";
 import { Button } from "@/components/ui/button";
 import {
   Form,

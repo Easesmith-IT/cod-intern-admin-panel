@@ -66,6 +66,12 @@ export const LearningToCareerSchema = z.object({
 });
 
 export const ConnectWithUsSchema = z.object({
+  image: z
+    .any()
+    .refine((files) => files instanceof FileList && files.length > 0, {
+      message: "Image is required",
+    }),
+  imagePreview: z.string().optional(),
   desc: z.string().min(1, "Required"),
 });
 
@@ -77,4 +83,17 @@ export const WeJustKeepGrowingSchema = z.object({
     }),
   imagePreview: z.string().optional(),
   desc: z.string().min(1, "Required"),
+});
+export const MentorsSchema = z.object({
+  mentors: z
+    .array(
+      z.object({
+        image: z.any(),
+        imagePreview: z.string().optional(),
+        name: z.string().min(1, "Name required"),
+        position: z.string().min(1, "Position required"),
+        arr: z.array(z.string().min(1, "Item required")),
+      })
+    )
+    .length(3, "Exactly 3 steps are required"),
 });

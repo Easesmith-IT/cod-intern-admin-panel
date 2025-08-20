@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -8,18 +8,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ConnectWithUsSchema } from "@/schemas/ContentSchema";
 import { Form } from "@/components/ui/form";
 import { EditableTextarea } from "@/components/content/EditableTextarea";
+import { ImageUploadField } from "@/components/content/image-upload-field";
+import { updatePreview } from "@/lib/updatePreview";
 
 export const ConnectWithUs = () => {
   const form = useForm({
     resolver: zodResolver(ConnectWithUsSchema),
     defaultValues: {
-      //  image: "",
-      //  imagePreview: "/sharpenYourSkill/sharpen-your-skill-img.jpg",
+      image: "",
+      imagePreview: "/connect-with-us-img.svg",
       desc: "Unlock your future with CodIntern's innovative, AI-powered learning platform. We offer tailored learning paths, experiential real-world projects, and invaluable mentor guidance to enable you to become an expert in high-demand tech skills and build the future you want with confidence.",
     },
   });
 
-  const { handleSubmit } = form;
+  const {
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { isSubmitted, submitCount },
+  } = form;
+
+  const image = watch("image");
+
+  useEffect(() => {
+    updatePreview(image, "imagePreview", setValue);
+  }, [form, image]);
 
   const onSubmit = (values) => {
     console.log("Steps Data:", values);
@@ -61,12 +74,19 @@ export const ConnectWithUs = () => {
               </Button>
             </div>
             <div className="hidden md:block">
-              <Image
+              {/* <Image
                 src="/connect-with-us-img.svg"
                 className="mt-14"
                 width={156}
                 height={312}
                 alt="connect-with-us"
+              /> */}
+
+              <ImageUploadField
+                name="image"
+                previewName="imagePreview"
+                imgClassName="max-w-[156px] w-full h-[312px] shadow-none"
+                placeholderClassName="max-w-[156px] w-full h-[312px]"
               />
             </div>
           </div>

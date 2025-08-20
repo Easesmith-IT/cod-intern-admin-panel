@@ -6,12 +6,13 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { DELETE, PATCH } from "@/constants/apiMethods";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { format } from "date-fns";
-import { Clock, MapPin } from "lucide-react";
+import { Clock, Eye, MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Actions } from "../shared/actions";
 import { ConfirmModal } from "../shared/confirm-modal";
 import Spinner from "../shared/Spinner";
 import { Switch } from "../ui/switch";
+import Link from "next/link";
 
 export const Job = ({ job }) => {
   const router = useRouter();
@@ -56,7 +57,7 @@ export const Job = ({ job }) => {
     setIsAlertModalOpen(true);
   };
   const onView = () => {
-   router.push(`/admin/jobs/${job?._id}`);
+    router.push(`/admin/jobs/${job?._id}`);
   };
 
   const onEdit = () => {
@@ -66,7 +67,7 @@ export const Job = ({ job }) => {
   return (
     <>
       <TableRow>
-        <TableCell className="font-medium">{job.customId}</TableCell>
+        <TableCell className="font-medium">{job.jobId}</TableCell>
         <TableCell className="font-medium">
           <div className="flex items-center space-x-3">
             <Avatar className="h-8 w-8 rounded-none">
@@ -102,9 +103,14 @@ export const Job = ({ job }) => {
             {job.category}
           </Badge>
         </TableCell>
-        {/* <TableCell>
-          <Badge variant="secondary">{job.applications} applications</Badge>
-        </TableCell> */}
+        <TableCell title="View Job Applications">
+          <Link href={`/admin/jobs/${job._id}/applications`}>
+            <Badge variant="secondary">
+              {job.applicationCount} applications
+              <Eye className="size-6" />
+            </Badge>
+          </Link>
+        </TableCell>
         <TableCell>
           <div className="flex flex-col gap-2 items-start justify-center">
             <Badge

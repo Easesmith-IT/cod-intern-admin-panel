@@ -1,0 +1,37 @@
+[
+  {
+    "img": "/linkedin.svg",
+    "rating": "2.5",
+    "name": "Vivek Parde",
+    "position": "Student",
+    "desc": "CodIntern's Python Full Stack course was life-changing. The AI-driven diagnostic test gave a flawless customized roadmap. Their Smart LMS, with auto-captions for lectures and interactive content, really maximized my learning, CodIntern's AI career matching brought me to a fantastic job I'm proud to own. Highly recommend for a real tech career!"
+  },
+  {
+    "img": "/linkedin.svg",
+    "rating": "5",
+    "name": "Mansi Yadav",
+    "position": "Student",
+    "desc": "Taking CodIntern's Java Full Stack was a revelation! The first AI-based evaluation really tailored my learning journey, making it extremely effective, I got an amazing job with the help of CodIntern's AI career matching, something I'm really passionate about. This platform really lives up to its vision of career transformation!"
+  },
+  {
+    "img": "/linkedin.svg",
+    "rating": "1.5",
+    "name": "Kunal Singh",
+    "position": "Student",
+    "desc": "My experience with CodIntern's Cloud Computing course has been outstanding! The first AI-powered assessment accurately determined my gaps in learning, and a very effective personalized journey was created. The Smart LMS was unbelievably user-friendly, with auto-captioned classes and content that adjusted to my speed. Due to CodIntern's AI career matchmaking, I landed a challenging Cloud Engineer position I'm truly passionate about. CodIntern really gets you ready for the future of tech!"
+  },
+  {
+    "img": "/linkedin.svg",
+    "rating": "3.3",
+    "name": "Jatin Patel",
+    "position": "Student",
+    "desc": "Data Analysis using Python course has been amazing! The first AI-powered test accurately determined my learning requirements, putting me on a very productive path.AI-created adaptive quizzes were great to reemphasize concepts and locate areas to improve. CodIntern truly empowers your data career!"
+  },
+  {
+    "img": "/linkedin.svg",
+    "rating": "4.5",
+    "name": "Ravi Jaiswal",
+    "position": "Student",
+    "desc": "CodIntern's Data Visualization using Tableau course was incredibly insightful! The Smart LMS was very intuitive, with clear video lectures and content that adapted as I mastered complex Tableau concepts like dashboard creation and interactive storytelling. CodIntern truly empowers your career in data visualization!"
+  }
+]

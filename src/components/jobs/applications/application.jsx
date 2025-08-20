@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Clock, MapPin } from "lucide-react";
 import { format } from "date-fns";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import Spinner from "@/components/shared/Spinner";
-import { Actions } from "@/components/shared/actions";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export const Application = ({ application }) => {
+  const { customId, jobId, fullName, email, gender, dateOfBirth, phoneNumber,_id } =
+    application || {};
+    const router = useRouter();
   const [status, setStatus] = useState(application.status || "");
   const onDelete = () => {};
-  const onView = () => {};
+  const onView = () => {
+  };
 
   const onEdit = () => {};
 
@@ -18,54 +19,77 @@ export const Application = ({ application }) => {
 
   return (
     <TableRow>
-      <TableCell className="font-medium">{application.customId}</TableCell>
-      <TableCell className="font-medium">
+      <TableCell className="font-medium">{customId}</TableCell>
+      {/* <TableCell className="font-medium">
         <div className="flex items-center space-x-3">
           <div>
-            <div className="font-medium truncate w-60">{application.title}</div>
+            <div className="font-medium truncate w-60">{jobId.title}</div>
             <div className="text-sm text-muted-foreground flex items-center">
               <Clock className="h-3 w-3 mr-1" />
               Posted{" "}
-              {application.postingDate &&
-                format(new Date(application.postingDate), "dd-MM-yyyy")}
+              {jobId.postingDate &&
+                format(new Date(jobId.postingDate), "dd-MM-yyyy")}
             </div>
           </div>
         </div>
-      </TableCell>
-      <TableCell>{application.company}</TableCell>
+      </TableCell> */}
+      {/* <TableCell>{jobId.company}</TableCell> */}
+      <TableCell>{fullName}</TableCell>
+      <TableCell>{email}</TableCell>
+      <TableCell>{gender}</TableCell>
       <TableCell>
-        <div className="flex items-center">
-          <MapPin className="h-3 w-3 mr-1 text-muted-foreground" />
-          <div className="truncate w-60">
-            {application.city}, {application.state}, {application.country}
-          </div>
-        </div>
+        {dateOfBirth && format(new Date(dateOfBirth), "dd/MM/yyyy")}
       </TableCell>
-      <TableCell>
-        <Badge variant="outline" className="capitalize">
-          {application.category}
-        </Badge>
-      </TableCell>
+      <TableCell>{phoneNumber}</TableCell>
       {/* <TableCell>
-          <Badge variant="secondary">{application.applications} applications</Badge>
-        </TableCell> */}
-      <TableCell>
         <div className="flex flex-col gap-2 items-start justify-center">
           <Badge
-            className="capitalize h-6"
-            variant={status === "active" ? "success" : "inProgress"}
+            className={cn("capitalize h-6", getStatusColorCode(status))}
           >
-            {false ? <Spinner spinnerClassName="size-4" /> : status}
+            {status}
           </Badge>
-          <Switch
-            checked={status === "active"}
-            onCheckedChange={handleStatus}
-          />
         </div>
-      </TableCell>
-      <TableCell className="text-right">
+      </TableCell> */}
+      {/* <TableCell className="text-right">
         <Actions onDelete={onDelete} onEdit={onEdit} onView={onView} />
+      </TableCell> */}
+    </TableRow>
+  );
+};
+
+Application.Skeleton = function ApplicationSkeleton() {
+  return (
+    <TableRow>
+      <TableCell>
+        <Skeleton className="h-4 w-24" />
       </TableCell>
+      <TableCell>
+        <Skeleton className="h-4" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-32" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-28" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-20" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-24" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-28" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-16" />
+      </TableCell>
+      {/* <TableCell className="text-right">
+        <Skeleton className="h-8 w-16 rounded-md" />
+      </TableCell> */}
     </TableRow>
   );
 };

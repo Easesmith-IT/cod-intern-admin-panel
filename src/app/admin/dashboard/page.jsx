@@ -4,7 +4,7 @@ import { CourseStatsChart } from "@/components/dashboard/course-stats-chart";
 import { JobStatsChart } from "@/components/dashboard/job-stats-chart";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 import { StatsChart } from "@/components/dashboard/stats-chart";
-import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
+import { TypographyH2 } from "@/components/typography/typography-h2";
 import {
   Card,
   CardContent,

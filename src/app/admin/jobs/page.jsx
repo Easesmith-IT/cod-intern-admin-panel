@@ -1,7 +1,7 @@
 "use client";
 
 import { Job } from "@/components/jobs/job";
-import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
+import { TypographyH2 } from "@/components/typography/typography-h2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -109,7 +109,7 @@ const Jobs = () => {
               <TableHead>Company</TableHead>
               <TableHead className="w-60">Location</TableHead>
               <TableHead>Type</TableHead>
-              {/* <TableHead>Applications</TableHead> */}
+              <TableHead>Applications</TableHead>
               <TableHead className="w-20">Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>

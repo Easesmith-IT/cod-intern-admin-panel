@@ -4,7 +4,7 @@ import { Admin } from "@/components/admins/admin";
 import { AdminSkeleton } from "@/components/admins/admin-skeleton";
 import DataNotFound from "@/components/shared/DataNotFound";
 import { PaginationComp } from "@/components/shared/PaginationComp";
-import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
+import { TypographyH2 } from "@/components/typography/typography-h2";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

@@ -1,8 +1,9 @@
 "use client";
 
-import { Job } from "@/components/jobs/job";
-import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
-import { Button } from "@/components/ui/button";
+import { Application } from "@/components/jobs/applications/application";
+import DataNotFound from "@/components/shared/DataNotFound";
+import { PaginationComp } from "@/components/shared/PaginationComp";
+import { TypographyH2 } from "@/components/typography/typography-h2";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -11,21 +12,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Search } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useApiQuery } from "@/hooks/useApiQuery";
-import { JobSkeleton } from "@/components/jobs/job-skeleton";
-import DataNotFound from "@/components/shared/DataNotFound";
-import { PaginationComp } from "@/components/shared/PaginationComp";
-import { Application } from "@/components/jobs/applications/application";
+import { ArrowLeft, Search } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Applications = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,36 +24,35 @@ const Applications = () => {
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [limit, setLimit] = useState(10);
+  const params = useParams();
+  const router = useRouter();
 
-//   const { data, isLoading, error } = useApiQuery({
-//     url: `/admin/jobs/application/get?status=${status === "all" ? "" : status}&category=${
-//       category === "all" ? "" : category
-//     }&page=${page}&limit=${limit}&search=${searchTerm}`,
-//     queryKeys: ["job", status, category, page, searchTerm, limit],
-//   });
+  const { data, isLoading, error } = useApiQuery({
+    url: `/admin/jobs/job-applications/get/${params.jobId}?status=${
+      status === "all" ? "" : status
+    }&page=${page}&limit=${limit}&search=${searchTerm}`,
+    queryKeys: ["job-application", status, page, searchTerm, limit],
+  });
 
-//   useEffect(() => {
-//     if (data?.pagination) {
-//       setPageCount(() => data?.pagination?.totalPages);
-//     }
-//   }, [data]);
+  console.log("data", data);
+
+  useEffect(() => {
+    if (data?.pagination) {
+      setPageCount(() => data?.pagination?.totalPages);
+    }
+  }, [data]);
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
+      <div>
+        <button
+          onClick={() => router.push(`/admin/jobs/${params.jobId}`)}
+          className="flex gap-1 items-center"
+        >
+          <ArrowLeft className="text-3xl cursor-pointer" />
           <TypographyH2 heading="Job Applications" />
-          <p className="text-muted-foreground">
-            Manage job applications
-          </p>
-        </div>
-
-        {/* <Button variant="codIntern" asChild className="bg-main">
-          <Link href="/admin/jobs/create">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Job
-          </Link>
-        </Button> */}
+        </button>
+        <p className="text-muted-foreground">Manage job applications</p>
       </div>
 
       <div className="flex items-center justify-between space-x-2">
@@ -76,31 +65,21 @@ const Applications = () => {
             className="pl-10"
           />
         </div>
-        <div className="flex gap-4 items-center">
+        {/* <div className="flex gap-4 items-center">
           <Select value={status} onValueChange={(value) => setStatus(value)}>
             <SelectTrigger className="flex justify-between bg-white w-32 items-center h-10 text-sm font-normal font-sans border">
               <SelectValue placeholder="Select Status" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="inactive">Inactive</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="reviewed">Reviewed</SelectItem>
+              <SelectItem value="shortlisted">Shortlisted</SelectItem>
+              <SelectItem value="rejected">Rejected</SelectItem>
+              <SelectItem value="accepted">Accepted</SelectItem>
             </SelectContent>
           </Select>
-          <Select
-            value={category}
-            onValueChange={(value) => setCategory(value)}
-          >
-            <SelectTrigger className="flex justify-between bg-white w-44 items-center h-10 text-sm font-normal font-sans border">
-              <SelectValue placeholder="Select Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="fresher">Fresher</SelectItem>
-              <SelectItem value="experienced">Experienced</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        </div> */}
       </div>
 
       <div className="table-container">
@@ -108,32 +87,33 @@ const Applications = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Application ID</TableHead>
-              <TableHead className="w-60">Job</TableHead>
-              <TableHead>Company</TableHead>
+              {/* <TableHead className="w-60">Job</TableHead> */}
+              {/* <TableHead>Company</TableHead> */}
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Gender</TableHead>
               <TableHead>Date of Birth</TableHead>
               <TableHead>Phone</TableHead>
               {/* <TableHead>Applications</TableHead> */}
-              <TableHead className="w-20">Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              {/* <TableHead className="w-20">Status</TableHead> */}
+              {/* <TableHead className="text-right">Actions</TableHead> */}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* {data?.jobs?.map((job) => (
-              <Application key={job._id} application={job} />
+            {data?.applications?.map((application) => (
+              <Application key={application._id} application={application} />
             ))}
 
             {isLoading &&
               Array.from({ length: 5 }).map((_, index) => (
-                <JobSkeleton key={index} />
-              ))} */}
+                <Application.Skeleton key={index} />
+              ))}
           </TableBody>
         </Table>
 
-        {/* {data?.jobs?.length === 0 && !isLoading && <DataNotFound name="Jobs" />} */}
-        <DataNotFound name="Job Applications" />
+        {data?.applications?.length === 0 && !isLoading && (
+          <DataNotFound name="Job Applications" />
+        )}
 
         <PaginationComp
           page={page}

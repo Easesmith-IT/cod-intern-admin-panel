@@ -1,5 +1,5 @@
 import { HeroSection } from "@/components/content/home/hero-section";
-import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
+import { TypographyH2 } from "@/components/typography/typography-h2";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -13,6 +13,8 @@ import { WhyCodInterns } from "@/components/content/home/why-cod-interns/why-cod
 import { LearningToCareer } from "@/components/content/home/learning-to-career/learning-to-career";
 import { ConnectWithUs } from "./connect-with-us";
 import { WeJustKeepGrowing } from "./we-just-keep-growing";
+import { LearnersStories } from "./learners-stories/learners-stories";
+import { Mentors } from "./mentors/mentors";
 
 const Home = () => {
   return (
@@ -37,6 +39,8 @@ const Home = () => {
         <LearningToCareer />
         <ConnectWithUs />
         <WeJustKeepGrowing />
+        <LearnersStories />
+        <Mentors />
       </div>
     </div>
   );

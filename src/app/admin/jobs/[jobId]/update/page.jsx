@@ -3,7 +3,7 @@
 import DatePicker from "@/components/shared/DatePicker";
 import Spinner from "@/components/shared/Spinner";
 import { RichTextEditor } from "@/components/tiptap-editor";
-import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
+import { TypographyH2 } from "@/components/typography/typography-h2";
 import { Button } from "@/components/ui/button";
 import {
   Form,

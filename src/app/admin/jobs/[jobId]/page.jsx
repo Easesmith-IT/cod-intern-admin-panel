@@ -1,7 +1,7 @@
 "use client";
 
 import { Field, LabelText, ReadOnlyBlock } from "@/components/jobs/field";
-import { TypographyH2 } from "@/components/typography.jsx/typography-h2";
+import { TypographyH2 } from "@/components/typography/typography-h2";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -62,7 +62,12 @@ const JobDetails = () => {
           <ArrowLeft className="text-3xl cursor-pointer" />
           <TypographyH2 heading="Job Details" />
         </button>
-        <Button onClick={()=> router.push(`/admin/jobs/${_id}/applications`)} variant="codIntern">View Job Applications</Button>
+        <Button
+          onClick={() => router.push(`/admin/jobs/${_id}/applications`)}
+          variant="codIntern"
+        >
+          View Job Applications
+        </Button>
       </div>
 
       <div className="rounded-xl border bg-card">
@@ -78,7 +83,7 @@ const JobDetails = () => {
                   alt="Job cover"
                   width={600}
                   height={440}
-                  className="aspect-square w-full object-cover md:aspect-[4/3]"
+                  className="aspect-square w-full object-contain md:aspect-[4/3]"
                   loading="eager"
                 />
               </div>
