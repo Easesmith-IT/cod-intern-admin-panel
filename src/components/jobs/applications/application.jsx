@@ -78,18 +78,6 @@ Application.Skeleton = function ApplicationSkeleton() {
       <TableCell>
         <Skeleton className="h-4 w-20" />
       </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-24" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-28" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-16" />
-      </TableCell>
-      {/* <TableCell className="text-right">
-        <Skeleton className="h-8 w-16 rounded-md" />
-      </TableCell> */}
     </TableRow>
   );
 };
