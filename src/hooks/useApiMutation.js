@@ -4,7 +4,9 @@ import { readCookie } from "@/lib/readCookie";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-const apiCall = async ({ url, method, data, config = {} }) => {
+const apiCall = async ({ url, method, data, config = {} }, retryCount = 0) => {
+  const maxRetries = 3;
+
   try {
     const axiosConfig =
       method === DELETE
@@ -14,8 +16,27 @@ const apiCall = async ({ url, method, data, config = {} }) => {
     const response = await axiosInstance({ url, method, ...axiosConfig });
     return response.data;
   } catch (error) {
+    const isExtensionError = error.message?.includes(
+      "Request interrupted by browser extension"
+    );
+
+    // Retry if it's an extension error and we haven't exceeded max retries
+    if (isExtensionError && retryCount < maxRetries) {
+      console.warn(
+        `Extension interference detected, retrying... (${
+          retryCount + 1
+        }/${maxRetries})`
+      );
+      await new Promise((resolve) =>
+        setTimeout(resolve, 1000 * (retryCount + 1))
+      ); // Exponential backoff
+      return apiCall({ url, method, data, config }, retryCount + 1);
+    }
+
     console.error("API Error:", error);
-    throw new Error(error?.response?.data?.message || "Something went wrong!");
+    throw new Error(
+      error?.response?.data?.message || error.message || "Something went wrong!"
+    );
   }
 };
 

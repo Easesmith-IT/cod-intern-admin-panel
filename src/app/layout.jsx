@@ -1,5 +1,6 @@
 import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
 import { Toaster } from "@/components/ui/sonner";
+import ExtensionProtection from "@/components/ExtensionProtection";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
+        <ExtensionProtection />
         <ReactQueryProvider>{children}</ReactQueryProvider>
         <Toaster richColors position="top-center" />
       </body>

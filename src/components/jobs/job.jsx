@@ -67,9 +67,9 @@ export const Job = ({ job }) => {
   return (
     <>
       <TableRow>
-        <TableCell className="font-medium">{job.jobId}</TableCell>
+        <TableCell className="font-medium">{job.jobId || "NA"}</TableCell>
         <TableCell className="font-medium">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-start space-x-3">
             <Avatar className="h-8 w-8 rounded-none">
               <AvatarImage
                 src={job.jobImage || "/user-placeholder.png"}
@@ -79,7 +79,9 @@ export const Job = ({ job }) => {
               <AvatarFallback>{job.company.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
-              <div className="font-medium truncate w-60">{job.title}</div>
+              <div className="font-medium whitespace-pre-wrap w-40">
+                {job.title}
+              </div>
               <div className="text-sm text-muted-foreground flex items-center">
                 <Clock className="h-3 w-3 mr-1" />
                 Posted{" "}
@@ -93,7 +95,7 @@ export const Job = ({ job }) => {
         <TableCell>
           <div className="flex items-center">
             <MapPin className="h-3 w-3 mr-1 text-muted-foreground" />
-            <div className="truncate w-60">
+            <div className="whitespace-pre-wrap w-40">
               {job.city}, {job.state}, {job.country}
             </div>
           </div>

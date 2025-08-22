@@ -105,7 +105,7 @@ const Jobs = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Job ID</TableHead>
-              <TableHead className="w-60">Job</TableHead>
+              <TableHead className="w-40">Job</TableHead>
               <TableHead>Company</TableHead>
               <TableHead className="w-60">Location</TableHead>
               <TableHead>Type</TableHead>

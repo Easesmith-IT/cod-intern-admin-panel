@@ -34,9 +34,9 @@ export const Application = ({ application }) => {
         </div>
       </TableCell> */}
       {/* <TableCell>{jobId.company}</TableCell> */}
-      <TableCell>{fullName}</TableCell>
+      <TableCell className="capitalize">{fullName}</TableCell>
       <TableCell>{email}</TableCell>
-      <TableCell>{gender}</TableCell>
+      <TableCell className="capitalize">{gender}</TableCell>
       <TableCell>
         {dateOfBirth && format(new Date(dateOfBirth), "dd/MM/yyyy")}
       </TableCell>
