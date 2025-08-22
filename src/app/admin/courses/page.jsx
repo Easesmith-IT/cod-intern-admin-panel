@@ -42,7 +42,6 @@ const courses = [
     students: 1234,
     status: "Published",
     rating: 4.8,
-    thumbnail: "/placeholder.svg?height=60&width=80",
   },
   {
     id: 2,
@@ -53,7 +52,6 @@ const courses = [
     students: 856,
     status: "Published",
     rating: 4.9,
-    thumbnail: "/placeholder.svg?height=60&width=80",
   },
   {
     id: 3,
@@ -64,7 +62,6 @@ const courses = [
     students: 567,
     status: "Draft",
     rating: 4.7,
-    thumbnail: "/placeholder.svg?height=60&width=80",
   },
   {
     id: 4,
@@ -75,7 +72,6 @@ const courses = [
     students: 2341,
     status: "Published",
     rating: 4.6,
-    thumbnail: "/placeholder.svg?height=60&width=80",
   },
 ];
 

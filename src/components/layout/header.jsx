@@ -25,7 +25,7 @@ export const Header = () => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   const userInfo = readCookie("userInfo");
-  console.log("userInfo", userInfo);
+  // console.log("userInfo", userInfo);
 
   const {
     mutateAsync: logout,
@@ -76,7 +76,7 @@ export const Header = () => {
               >
                 <Avatar className="h-8 w-8 ring-2 ring-purple-200">
                   <AvatarImage
-                    src="/placeholder.svg?height=32&width=32"
+                    src=""
                     alt="Admin"
                   />
                   <AvatarFallback

@@ -49,7 +49,7 @@ export const Sidebar = () => {
     setPermissions(userInfo?.permissions || {});
   }, []);
 
-  console.log("userInfo", userInfo);
+  // console.log("userInfo", userInfo);
 
   return (
     <div
