@@ -39,15 +39,15 @@ export const Header = () => {
   });
 
   const handleLogout = async () => {
-    await logout({ email: userInfo.email });
+    // await logout({ email: userInfo.email });
+    removeAuthCookies();
+    router.push("/");
   };
 
-  useEffect(() => {
-    if (result) {
-      removeAuthCookies();
-      router.push("/");
-    }
-  }, [result]);
+  // useEffect(() => {
+  //   if (result) {
+  //   }
+  // }, [result]);
 
   return (
     <header className="bg-white sticky z-20 top-0 shadow-sm border-b px-6 py-4">
