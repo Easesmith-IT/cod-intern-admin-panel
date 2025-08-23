@@ -138,7 +138,7 @@ const CreateJob = () => {
         onClick={() => router.push("/admin/jobs")}
         className="flex gap-1 items-center mb-4"
       >
-        <ArrowLeft className="text-3xl cursor-pointer" />
+        <ArrowLeft />
         <TypographyH2 heading="Add Job" />
       </button>
 
