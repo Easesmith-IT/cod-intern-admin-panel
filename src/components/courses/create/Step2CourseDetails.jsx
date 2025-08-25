@@ -42,21 +42,31 @@ const step2Schema = z.object({
     issueDate: z.string().optional(),
     expiryDate: z.string().optional(),
   }),
-  courseHighlights: z.array(z.object({
-    label: z.string().min(1, "Label is required"),
-    type: z.enum(["feature", "highlight", "certification", "update"]),
-    value: z.string().optional(),
-  })).min(1, "At least one course highlight is required"),
-  studentBenefits: z.array(z.object({
-    label: z.string().min(1, "Label is required"),
-    type: z.enum(["feature", "highlight", "certification", "update"]),
-    value: z.string().optional(),
-  })).min(1, "At least one student benefit is required"),
+  courseHighlights: z
+    .array(
+      z.object({
+        label: z.string().min(1, "Label is required"),
+        type: z.enum(["feature", "highlight", "certification", "update"]),
+        value: z.string().optional(),
+      })
+    )
+    .min(1, "At least one course highlight is required"),
+  studentBenefits: z
+    .array(
+      z.object({
+        label: z.string().min(1, "Label is required"),
+        type: z.enum(["feature", "highlight", "certification", "update"]),
+        value: z.string().optional(),
+      })
+    )
+    .min(1, "At least one student benefit is required"),
 });
 
 const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
   const [certificateFile, setCertificateFile] = useState(null);
   const [certificatePreview, setCertificatePreview] = useState(null);
+
+  console.log("data", data);
 
   const form = useForm({
     resolver: zodResolver(step2Schema),
@@ -97,8 +107,14 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
     name: "studentBenefits",
   });
 
-  const { mutateAsync: updateCourseDetails, isPending } = useApiMutation({
-    url: `/admin/courses/${data.courseId}/details`,
+  const {
+    mutateAsync: updateCourseDetails,
+    isPending,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/courses/${
+      data.courseId || "68ac6333b7d88323aa5aa749"
+    }/details`,
     method: PATCH,
   });
 
@@ -127,39 +143,49 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
   };
 
   const onSubmit = async (formData) => {
-    try {
-      // Create FormData for file upload
-      const submitData = new FormData();
-      
-      // Convert form data to match backend expectations
-      submitData.append("pricing", JSON.stringify(formData.pricing));
-      submitData.append("certificate", JSON.stringify(formData.certificate));
-      submitData.append("courseHighlights", JSON.stringify(formData.courseHighlights));
-      submitData.append("studentBenefits", JSON.stringify(formData.studentBenefits));
+    // Create FormData for file upload
+    const submitData = new FormData();
 
-      // Add certificate image if selected
-      if (certificateFile) {
-        submitData.append("image", certificateFile);
-      }
+    // Convert form data to match backend expectations
+    submitData.append("pricing", JSON.stringify(formData.pricing));
+    submitData.append("certificate", JSON.stringify(formData.certificate));
+    submitData.append(
+      "courseHighlights",
+      JSON.stringify(formData.courseHighlights)
+    );
+    submitData.append(
+      "studentBenefits",
+      JSON.stringify(formData.studentBenefits)
+    );
 
-      await updateCourseDetails(submitData);
-      
-      // Update local data state
-      updateData("courseDetails", formData);
-      
-      // Proceed to next step
-      onNext();
-    } catch (error) {
-      console.error("Error updating course details:", error);
+    // Add certificate image if selected
+    if (certificateFile) {
+      submitData.append("image", certificateFile);
     }
+
+    await updateCourseDetails(submitData);
+
+    // Update local data state
+    updateData("courseDetails", formData);
   };
+
+  useEffect(() => {
+    if (result) {
+      console.log("result", result);
+      onNext();
+    }
+  }, [result]);
 
   const watchedPrice = form.watch("pricing.price");
   const watchedDiscountPrice = form.watch("pricing.discountPrice");
   const watchedIsFree = form.watch("pricing.isFree");
 
-  const savingsAmount = watchedPrice && watchedDiscountPrice ? watchedPrice - watchedDiscountPrice : 0;
-  const savingsPercentage = watchedPrice > 0 ? Math.round((savingsAmount / watchedPrice) * 100) : 0;
+  const savingsAmount =
+    watchedPrice && watchedDiscountPrice
+      ? watchedPrice - watchedDiscountPrice
+      : 0;
+  const savingsPercentage =
+    watchedPrice > 0 ? Math.round((savingsAmount / watchedPrice) * 100) : 0;
 
   return (
     <Form {...form}>

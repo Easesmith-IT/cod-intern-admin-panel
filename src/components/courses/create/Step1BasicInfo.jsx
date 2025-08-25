@@ -58,7 +58,11 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
     },
   });
 
-  const { mutateAsync: createCourse, isPending } = useApiMutation({
+  const {
+    mutateAsync: createCourse,
+    isPending,
+    data: result,
+  } = useApiMutation({
     url: "/admin/courses/create",
     method: POST,
   });
@@ -122,34 +126,35 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
   };
 
   const onSubmit = async (formData) => {
-    try {
-      // Create FormData for file upload
-      const submitData = new FormData();
+    // Create FormData for file upload
+    const submitData = new FormData();
 
-      // Add form fields
-      Object.keys(formData).forEach((key) => {
-        if (formData[key]) {
-          submitData.append(key, formData[key]);
-        }
-      });
-
-      // Add thumbnail if selected
-      if (thumbnailFile) {
-        submitData.append("thumbnail", thumbnailFile);
+    // Add form fields
+    Object.keys(formData).forEach((key) => {
+      if (formData[key]) {
+        submitData.append(key, formData[key]);
       }
+    });
 
-      const result = await createCourse(submitData);
+    // Add thumbnail if selected
+    if (thumbnailFile) {
+      submitData.append("thumbnail", thumbnailFile);
+    }
+
+    await createCourse(submitData);
+    updateData("basicInfo", formData);
+  };
+
+  useEffect(() => {
+    if (result) {
+      console.log("result", result);
+      const id = result.course._id;
 
       // Update local data state
-      updateData("basicInfo", formData);
-      updateData("courseId", result.course._id);
-
-      // Proceed to next step
+      updateData("courseId", id);
       onNext();
-    } catch (error) {
-      console.error("Error creating course:", error);
     }
-  };
+  }, [result]);
 
   const selectedCategory = form.watch("category");
 

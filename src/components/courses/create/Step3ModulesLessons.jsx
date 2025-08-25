@@ -101,10 +101,15 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
     name: "modules",
   });
 
-  const { mutateAsync: addModules, isPending } = useApiMutation({
-    url: `/courses/${data.courseId}/modules`,
+  const {
+    mutateAsync: addModules,
+    isPending,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/courses/${
+      data.courseId || "68ac6333b7d88323aa5aa749"
+    }/modules`,
     method: POST,
-    isToast: true,
   });
 
   const contentTypes = [
@@ -178,18 +183,18 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
   };
 
   const onSubmit = async (formData) => {
-    try {
-      await addModules(formData);
+    await addModules(formData);
 
-      // Update local data state
-      updateData("modules", formData);
-
-      // Proceed to next step
-      onNext();
-    } catch (error) {
-      console.error("Error adding modules:", error);
-    }
+    // Update local data state
+    updateData("modules", formData);
   };
+
+  useEffect(() => {
+    if (result) {
+      console.log("result", result);
+      onNext();
+    }
+  }, [result]);
 
   // Initialize first module as open
   useEffect(() => {
