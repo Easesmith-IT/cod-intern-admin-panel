@@ -62,14 +62,12 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
 
   useEffect(() => {
     if (data?.extras) {
-      const { projects, batches } = data.extras;
+      const { projects = [], batches } = data.extras;
 
       reset({ projects, batches });
-      // setCertificatePreview(
-      //   data?.courseDetails?.certificate?.certificateLink || null
-      // );
+      setProjectFiles(projects.map((project) => project.icon));
     }
-  }, [data.extras]);
+  }, [data?.extras]);
 
   const {
     fields: projectFields,
@@ -149,15 +147,29 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
 
     // Add projects data
     if (formData.projects && formData.projects.length > 0) {
-      submitData.append("projects", JSON.stringify(formData.projects));
+      if (Array.isArray(projectFiles)) {
+        submitData.append(
+          "projects",
+          JSON.stringify(
+            formData.projects.map((project, index) => ({
+              ...project,
+              icon: projectFiles[index],
+            }))
+          )
+        );
+      } else {
+        submitData.append("projects", JSON.stringify(formData.projects));
+      }
 
       // Add project images
-      Object.keys(projectFiles).forEach((projectIndex) => {
-        const file = projectFiles[projectIndex];
-        if (file) {
-          submitData.append("projectImages", file);
-        }
-      });
+      if (!Array.isArray(projectFiles)) {
+        Object.keys(projectFiles).forEach((projectIndex) => {
+          const file = projectFiles[projectIndex];
+          if (file) {
+            submitData.append("projectImages", file);
+          }
+        });
+      }
     }
 
     // Add batches data
@@ -267,10 +279,20 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
                           {projectFiles[index] ? (
                             <div className="flex items-center space-x-2">
                               <div className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded">
-                                <ImageIcon className="h-4 w-4" />
-                                <span className="text-sm">
-                                  {projectFiles[index].name}
-                                </span>
+                                {projectFiles[index].name ? (
+                                  <>
+                                    <ImageIcon className="h-4 w-4" />
+                                    <span className="text-sm">
+                                      {projectFiles[index].name}
+                                    </span>
+                                  </>
+                                ) : (
+                                  <img
+                                    src={projectFiles[index]}
+                                    alt="Project"
+                                    className="w-48 h-32 object-cover rounded-lg border"
+                                  />
+                                )}
                               </div>
                               <Button
                                 type="button"

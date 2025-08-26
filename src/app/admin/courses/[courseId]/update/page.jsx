@@ -11,12 +11,14 @@ import { useApiQuery } from "@/hooks/useApiQuery";
 import Step2CourseDetails from "@/components/courses/update/Step2CourseDetails";
 import Step3ModulesLessons from "@/components/courses/update/Step3ModulesLessons";
 import Step4ProjectsBatches from "@/components/courses/update/Step4ProjectsBatches";
+import Step5AdditionalDetails from "@/components/courses/update/Step5AdditionalDetails";
+import Step6PublishCourse from "@/components/courses/update/Step6PublishCourse";
 
 const UpdateCourse = () => {
   const router = useRouter();
   const params = useParams();
 
-  const [currentStep, setCurrentStep] = useState(4);
+  const [currentStep, setCurrentStep] = useState(6);
   const [courseData, setCourseData] = useState({
     // Step 1 data
     basicInfo: {},
@@ -61,13 +63,13 @@ const UpdateCourse = () => {
       number: 5,
       title: "Additional Details",
       description: "Duration, features, materials",
-      // component: Step5AdditionalDetails,
+      component: Step5AdditionalDetails,
     },
     {
       number: 6,
       title: "Publish Course",
       description: "Assign instructors and publish",
-      // component: Step6PublishCourse,
+      component: Step6PublishCourse,
     },
   ];
 
@@ -100,6 +102,21 @@ const UpdateCourse = () => {
 
         projects,
         batches,
+
+        courseDuration,
+        classTiming,
+        totalSeats,
+        interviews,
+        integratedInternship,
+        features,
+        venue,
+        onlinePlatform,
+        meetingLink,
+        brochure,
+        syllabusFile,
+
+        instructors,
+        status,
       } = data.course;
 
       setCourseData({
@@ -123,7 +140,24 @@ const UpdateCourse = () => {
         modules,
         extras: {
           projects,
-          batches
+          batches,
+        },
+        additionalDetails: {
+          courseDuration,
+          classTiming,
+          totalSeats,
+          brochure,
+          syllabusFile,
+          interviews,
+          integratedInternship,
+          features,
+          venue,
+          onlinePlatform,
+          meetingLink,
+        },
+        publishInfo: {
+          instructors,
+          status,
         },
       });
     }
