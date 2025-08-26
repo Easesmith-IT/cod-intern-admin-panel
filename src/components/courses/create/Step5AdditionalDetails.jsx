@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -13,7 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -21,47 +18,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Plus,
-  X,
-  Clock,
-  Users,
-  FileText,
-  Star,
-  Globe,
-  Upload,
-  Link as LinkIcon,
-} from "lucide-react";
-import { useApiMutation } from "@/hooks/useApiMutation";
 import { PUT } from "@/constants/apiMethods";
-
-// Validation schema matching backend
-const step5Schema = z.object({
-  courseDuration: z.string().min(1, "Course duration is required"),
-  classTiming: z.string().min(1, "Class timing is required"),
-  totalSeats: z.number().min(1, "Total seats is required"),
-  interviews: z.union([
-    z.number().min(1),
-    z.literal("unlimited")
-  ]).optional(),
-  integratedInternship: z.object({
-    hasInternship: z.boolean().default(false),
-    count: z.union([
-      z.number().min(1),
-      z.literal("unlimited")
-    ]).optional(),
-  }),
-  features: z.array(z.object({
-    title: z.string().min(1, "Feature title is required"),
-    subtitle: z.string().optional(),
-  })).min(1, "At least one feature is required"),
-  venue: z.enum(["online"]).default("online"),
-  onlinePlatform: z.string().optional(),
-  meetingLink: z.string().url().optional().or(z.literal("")),
-});
+import {
+  commonFeatures,
+  durationOptions,
+  platformOptions,
+  timingOptions,
+} from "@/constants/constants";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { step5Schema } from "@/schemas/CourseSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Clock,
+  FileText,
+  Globe,
+  Link as LinkIcon,
+  Plus,
+  Star,
+  Upload,
+  Users,
+  X,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 
 const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
   const [brochureFile, setBrochureFile] = useState(null);
@@ -79,15 +58,19 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
         hasInternship: false,
         count: 0,
       },
-      features: [
-        { title: "", subtitle: "" }
-      ],
+      features: [{ title: "", subtitle: "" }],
       venue: "online",
       onlinePlatform: "Zoom",
       meetingLink: "",
+      brochureFile: "",
+      syllabusFile: "",
       ...data.additionalDetails,
     },
   });
+
+  const { setValue, getValues, watch, register, formState } = form;
+  const { errors } = formState || {};
+  console.log("errors", errors);
 
   const {
     fields: featureFields,
@@ -98,42 +81,26 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
     name: "features",
   });
 
-  const { mutateAsync: updateAdditionalDetails, isPending } = useApiMutation({
-    url: `/courses/${data.courseId}/update-additional`,
+  const {
+    mutateAsync: updateAdditionalDetails,
+    isPending,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/courses/${
+      data.courseId || "68ac6333b7d88323aa5aa749"
+    }/update-additional`,
     method: PUT,
     isToast: true,
   });
 
-  const commonFeatures = [
-    { title: "Pan India Placements", subtitle: "100+ hiring partners" },
-    { title: "Live Project Training", subtitle: "Real-world experience" },
-    { title: "24/7 Doubt Support", subtitle: "Never get stuck" },
-    { title: "Industry Mentorship", subtitle: "Learn from experts" },
-    { title: "Certification", subtitle: "Government recognized" },
-    { title: "Flexible Timing", subtitle: "Weekend & weekday batches" },
-    { title: "Lifetime Access", subtitle: "Course materials forever" },
-    { title: "Money Back Guarantee", subtitle: "100% refund policy" },
-  ];
-
-  const durationOptions = [
-    "1 month", "2 months", "3 months", "4 months", "6 months", "1 year", "2 years"
-  ];
-
-  const timingOptions = [
-    "Weekdays 9-11 AM", "Weekdays 7-9 PM", "Weekends 10-12 PM", 
-    "Mon-Wed-Fri 6-8 PM", "Tue-Thu-Sat 9-11 AM", "Flexible timing"
-  ];
-
-  const platformOptions = [
-    "Zoom", "Google Meet", "Microsoft Teams", "Custom LMS", "Discord"
-  ];
-
   const handleFileChange = (fileType, event) => {
     const file = event.target.files[0];
     if (file) {
-      if (fileType === 'brochure') {
+      if (fileType === "brochure") {
+        setValue("brochureFile", file);
         setBrochureFile(file);
-      } else if (fileType === 'syllabus') {
+      } else if (fileType === "syllabus") {
+        setValue("syllabusFile", file);
         setSyllabusFile(file);
       }
     }
@@ -142,23 +109,25 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
   const handleFeatureIconChange = (featureIndex, event) => {
     const file = event.target.files[0];
     if (file) {
-      setFeatureIcons(prev => ({
+      setFeatureIcons((prev) => ({
         ...prev,
-        [featureIndex]: file
+        [featureIndex]: file,
       }));
     }
   };
 
   const removeFile = (fileType) => {
-    if (fileType === 'brochure') {
+    if (fileType === "brochure") {
       setBrochureFile(null);
-    } else if (fileType === 'syllabus') {
+      setValue("brochureFile", null);
+    } else if (fileType === "syllabus") {
       setSyllabusFile(null);
+      setValue("syllabusFile", null);
     }
   };
 
   const removeFeatureIcon = (featureIndex) => {
-    setFeatureIcons(prev => {
+    setFeatureIcons((prev) => {
       const newIcons = { ...prev };
       delete newIcons[featureIndex];
       return newIcons;
@@ -170,46 +139,53 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
   };
 
   const onSubmit = async (formData) => {
-    try {
-      // Create FormData for file uploads
-      const submitData = new FormData();
-      
-      // Add form fields
-      Object.keys(formData).forEach(key => {
-        if (key === 'features') {
-          submitData.append('features', JSON.stringify(formData.features));
-        } else if (key === 'integratedInternship') {
-          submitData.append('integratedInternship', JSON.stringify(formData.integratedInternship));
-        } else if (formData[key] !== '' && formData[key] !== null && formData[key] !== undefined) {
-          submitData.append(key, formData[key]);
-        }
-      });
+    // Create FormData for file uploads
+    const submitData = new FormData();
 
-      // Add files
-      if (brochureFile) {
-        submitData.append("brochure", brochureFile);
+    // Add form fields
+    Object.keys(formData).forEach((key) => {
+      if (key === "features") {
+        submitData.append("features", JSON.stringify(formData.features));
+      } else if (key === "integratedInternship") {
+        submitData.append(
+          "integratedInternship",
+          JSON.stringify(formData.integratedInternship)
+        );
+      } else if (
+        formData[key] !== "" &&
+        formData[key] !== null &&
+        formData[key] !== undefined
+      ) {
+        submitData.append(key, formData[key]);
       }
-      if (syllabusFile) {
-        submitData.append("syllabusFile", syllabusFile);
-      }
+    });
 
-      // Add feature icons
-      const featureIconFiles = Object.values(featureIcons);
-      featureIconFiles.forEach(file => {
-        submitData.append("featureIcons", file);
-      });
-
-      await updateAdditionalDetails(submitData);
-      
-      // Update local data state
-      updateData("additionalDetails", formData);
-      
-      // Proceed to next step
-      onNext();
-    } catch (error) {
-      console.error("Error updating additional details:", error);
+    // Add files
+    if (brochureFile) {
+      submitData.append("brochure", brochureFile);
     }
+    if (syllabusFile) {
+      submitData.append("syllabusFile", syllabusFile);
+    }
+
+    // Add feature icons
+    const featureIconFiles = Object.values(featureIcons);
+    featureIconFiles.forEach((file) => {
+      submitData.append("featureIcons", file);
+    });
+
+    await updateAdditionalDetails(submitData);
+
+    // Update local data state
+    updateData("additionalDetails", formData);
   };
+
+  useEffect(() => {
+    if (result) {
+      console.log("result", result);
+      onNext();
+    }
+  }, [result]);
 
   const watchedHasInternship = form.watch("integratedInternship.hasInternship");
 
@@ -485,24 +461,31 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
                         </Button>
                       </div>
                     ) : (
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                        <input
-                          type="file"
-                          accept=".pdf"
-                          onChange={(e) => handleFileChange("brochure", e)}
-                          className="hidden"
-                          id="brochure-upload"
-                        />
-                        <label
-                          htmlFor="brochure-upload"
-                          className="cursor-pointer flex flex-col items-center space-y-2"
-                        >
-                          <Upload className="h-6 w-6 text-gray-400" />
-                          <span className="text-sm text-gray-600">
-                            Upload course brochure (PDF)
-                          </span>
-                        </label>
-                      </div>
+                      <>
+                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                          <input
+                            type="file"
+                            accept=".pdf"
+                            onChange={(e) => handleFileChange("brochure", e)}
+                            className="hidden"
+                            id="brochure-upload"
+                          />
+                          <label
+                            htmlFor="brochure-upload"
+                            className="cursor-pointer flex flex-col items-center space-y-2"
+                          >
+                            <Upload className="h-6 w-6 text-gray-400" />
+                            <span className="text-sm text-gray-600">
+                              Upload course brochure (PDF)
+                            </span>
+                          </label>
+                        </div>
+                        {errors?.brochureFile?.message && (
+                          <p className="text-sm text-destructive mt-2">
+                            {errors?.brochureFile?.message}
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
@@ -525,24 +508,31 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
                         </Button>
                       </div>
                     ) : (
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                        <input
-                          type="file"
-                          accept=".pdf"
-                          onChange={(e) => handleFileChange("syllabus", e)}
-                          className="hidden"
-                          id="syllabus-upload"
-                        />
-                        <label
-                          htmlFor="syllabus-upload"
-                          className="cursor-pointer flex flex-col items-center space-y-2"
-                        >
-                          <Upload className="h-6 w-6 text-gray-400" />
-                          <span className="text-sm text-gray-600">
-                            Upload detailed syllabus (PDF)
-                          </span>
-                        </label>
-                      </div>
+                      <>
+                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                          <input
+                            type="file"
+                            accept=".pdf"
+                            onChange={(e) => handleFileChange("syllabus", e)}
+                            className="hidden"
+                            id="syllabus-upload"
+                          />
+                          <label
+                            htmlFor="syllabus-upload"
+                            className="cursor-pointer flex flex-col items-center space-y-2"
+                          >
+                            <Upload className="h-6 w-6 text-gray-400" />
+                            <span className="text-sm text-gray-600">
+                              Upload detailed syllabus (PDF)
+                            </span>
+                          </label>
+                        </div>
+                        {errors?.syllabusFile?.message && (
+                          <p className="text-sm text-destructive mt-2">
+                            {errors?.syllabusFile?.message}
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

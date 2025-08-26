@@ -1,56 +1,23 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Form } from "@/components/ui/form";
 import { POST } from "@/constants/apiMethods";
 import { contentTypes } from "@/constants/constants";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { step3Schema } from "@/schemas/CourseSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  BookOpen,
-  ChevronDown,
-  ChevronRight,
-  Clipboard,
-  Clock,
-  Eye,
-  FileText,
-  HelpCircle,
-  Plus,
-  Video,
-  X,
-} from "lucide-react";
+import { Plus } from "lucide-react";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { LessonCard } from "../lesson-card";
 import { ModuleCard } from "../module-card";
 
 const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
   const [openModules, setOpenModules] = useState({});
+
+  const params = useParams();
 
   const form = useForm({
     resolver: zodResolver(step3Schema),
@@ -73,12 +40,14 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
     },
   });
 
+  const { reset, control, handleSubmit, watch } = form;
+
   const {
     fields: moduleFields,
     append: appendModule,
     remove: removeModule,
   } = useFieldArray({
-    control: form.control,
+    control: control,
     name: "modules",
   });
 
@@ -87,11 +56,18 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
     isPending,
     data: result,
   } = useApiMutation({
-    url: `/admin/courses/${
-      data.courseId || "68ac6333b7d88323aa5aa749"
-    }/modules`,
+    url: `/admin/courses/${params.courseId}/modules`,
     method: POST,
   });
+
+  useEffect(() => {
+    if (data?.modules.length > 0) {
+      reset({ modules: data.modules });
+      // setCertificatePreview(
+      //   data?.courseDetails?.certificate?.certificateLink || null
+      // );
+    }
+  }, [data.modules]);
 
   const toggleModule = (index) => {
     setOpenModules((prev) => ({
@@ -111,8 +87,7 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
   };
 
   const calculateModuleDuration = (moduleIndex) => {
-    // const module = form.watch(moduleIndex.toString());
-    const module = form.watch(`modules.${moduleIndex}`);
+    const module = watch(`modules.${moduleIndex}`);
     if (!module?.lessons) return 0;
     return module.lessons.reduce(
       (total, lesson) => total + (lesson.duration || 0),
@@ -121,7 +96,7 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
   };
 
   const calculateTotalDuration = () => {
-    const modules = form.watch("modules");
+    const modules = watch("modules");
     console.log("modules", modules);
 
     return modules?.reduce((total, module) => {
@@ -137,6 +112,8 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
   };
 
   const onSubmit = async (formData) => {
+    console.log("formData", formData);
+
     updateData("modules", formData.modules);
     await addModules(formData);
   };
@@ -155,7 +132,7 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Course Structure Overview */}
         <Card>
           <CardHeader>
@@ -172,7 +149,7 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
               <div>
                 Total Lessons:{" "}
                 {moduleFields.reduce((total, _, index) => {
-                  const module = form.watch(index.toString());
+                  const module = watch(`modules.${index.toString()}`);
                   return total + (module?.lessons?.length || 0);
                 }, 0)}
               </div>

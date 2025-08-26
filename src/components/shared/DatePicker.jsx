@@ -49,6 +49,7 @@ export default function DatePicker({
 
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
+          captionLayout="dropdown"
           mode="single"
           selected={value}
           onSelect={handleDateSelect}

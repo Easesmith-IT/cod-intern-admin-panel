@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -12,8 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -21,32 +19,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  CheckCircle,
-  AlertCircle,
-  User,
-  Users,
-  BookOpen,
-  Star,
-  IndianRupee,
-  Clock,
-  Calendar,
-  Eye,
-  Send,
-} from "lucide-react";
-import { useApiMutation, useApiQuery } from "@/hooks/useApiMutation";
 import { PATCH } from "@/constants/apiMethods";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { useApiQuery } from "@/hooks/useApiQuery";
+import { step6Schema } from "@/schemas/CourseSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AlertCircle,
+  BookOpen,
+  Calendar,
+  CheckCircle,
+  Clock,
+  Eye,
+  IndianRupee,
+  Send,
+  Star,
+  Users,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
-
-// Validation schema matching backend
-const step6Schema = z.object({
-  instructors: z.array(z.string()).min(1, "At least one instructor is required"),
-  status: z.enum(["draft", "published", "archived"]),
-});
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Instructor, SelectedInstructor } from "../instructor/instructor";
+import Spinner from "@/components/shared/Spinner";
+import DataNotFound from "@/components/shared/DataNotFound";
 
 const Step6PublishCourse = ({ data, updateData, onPrevious }) => {
   const router = useRouter();
@@ -61,77 +56,40 @@ const Step6PublishCourse = ({ data, updateData, onPrevious }) => {
     },
   });
 
-  // Mock instructors data - replace with actual API call
-  const instructors = [
-    {
-      _id: "1",
-      name: "John Smith",
-      email: "john@example.com",
-      expertise: ["React", "Node.js", "JavaScript"],
-      bio: "Senior Full Stack Developer with 8+ years experience",
-      profileImage: "/instructor1.jpg",
-      coursesCount: 12,
-      studentsCount: 2500,
-      rating: 4.8,
-    },
-    {
-      _id: "2", 
-      name: "Sarah Johnson",
-      email: "sarah@example.com",
-      expertise: ["Python", "Data Science", "Machine Learning"],
-      bio: "Data Science Expert and AI Researcher",
-      profileImage: "/instructor2.jpg",
-      coursesCount: 8,
-      studentsCount: 1800,
-      rating: 4.9,
-    },
-    {
-      _id: "3",
-      name: "Mike Chen",
-      email: "mike@example.com",
-      expertise: ["Mobile Development", "Flutter", "React Native"],
-      bio: "Mobile App Development Specialist",
-      profileImage: "/instructor3.jpg",
-      coursesCount: 6,
-      studentsCount: 1200,
-      rating: 4.7,
-    },
-  ];
-
-  const { mutateAsync: publishCourse, isPending } = useApiMutation({
-    url: `/courses/${data.courseId}/publish`,
-    method: PATCH,
-    isToast: true,
+  const {
+    data: instructorsData,
+    isLoading,
+    error,
+  } = useApiQuery({
+    url: `/admin/instructors`,
+    queryKeys: ["instructors"],
   });
 
-  const toggleInstructorSelection = (instructorId) => {
-    const currentInstructors = form.getValues("instructors");
-    if (currentInstructors.includes(instructorId)) {
-      form.setValue(
-        "instructors",
-        currentInstructors.filter(id => id !== instructorId)
-      );
-    } else {
-      form.setValue("instructors", [...currentInstructors, instructorId]);
-    }
-  };
+  const instructors = instructorsData?.instructors || [];
+
+  const { mutateAsync: publishCourse, isPending,data:result } = useApiMutation({
+    url: `/admin/courses/${
+      data.courseId || "68ac6333b7d88323aa5aa749"
+    }/publish`,
+    method: PATCH,
+  });
 
   const onSubmit = async (formData) => {
-    try {
-      await publishCourse(formData);
-      
-      // Update local data state
-      updateData("publishInfo", formData);
-      
-      // Redirect to courses list or success page
-      router.push("/admin/courses?success=course-published");
-    } catch (error) {
-      console.error("Error publishing course:", error);
-    }
+    await publishCourse(formData);
+
+    // Update local data state
+    updateData("publishInfo", formData);
   };
 
+  useEffect(() => {
+    if (result) {
+      console.log("result", result);
+      router.push("/admin/courses");
+    }
+  }, [result]);
+
   const selectedInstructorIds = form.watch("instructors");
-  const selectedInstructorDetails = instructors.filter(instructor => 
+  const selectedInstructorDetails = instructors.filter((instructor) =>
     selectedInstructorIds.includes(instructor._id)
   );
 
@@ -143,7 +101,7 @@ const Step6PublishCourse = ({ data, updateData, onPrevious }) => {
       description: "Course title, description, category",
     },
     {
-      label: "Course Details", 
+      label: "Course Details",
       completed: !!data.courseDetails?.pricing,
       description: "Pricing, certificate, highlights",
     },
@@ -164,7 +122,7 @@ const Step6PublishCourse = ({ data, updateData, onPrevious }) => {
     },
   ];
 
-  const allStepsCompleted = completionChecklist.every(item => item.completed);
+  const allStepsCompleted = completionChecklist.every((item) => item.completed);
 
   return (
     <Form {...form}>
@@ -239,69 +197,18 @@ const Step6PublishCourse = ({ data, updateData, onPrevious }) => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  {isLoading && <Spinner />}
                   {instructors.map((instructor) => (
-                    <div
+                    <Instructor
                       key={instructor._id}
-                      className={`border rounded-lg p-4 cursor-pointer transition-colors ${
-                        selectedInstructorIds.includes(instructor._id)
-                          ? "border-primary bg-primary/5"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
-                      onClick={() => toggleInstructorSelection(instructor._id)}
-                    >
-                      <div className="flex items-center space-x-4">
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage
-                            src={instructor.profileImage}
-                            alt={instructor.name}
-                          />
-                          <AvatarFallback>
-                            {instructor.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h3 className="font-medium">{instructor.name}</h3>
-                              <p className="text-sm text-muted-foreground">
-                                {instructor.email}
-                              </p>
-                            </div>
-                            <div className="text-right">
-                              <div className="flex items-center space-x-1 text-sm">
-                                <Star className="h-4 w-4 text-yellow-500" />
-                                <span>{instructor.rating}</span>
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                {instructor.coursesCount} courses
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-2">
-                            <div className="flex flex-wrap gap-1 mb-2">
-                              {instructor.expertise.slice(0, 3).map((skill) => (
-                                <Badge
-                                  key={skill}
-                                  variant="outline"
-                                  className="text-xs"
-                                >
-                                  {skill}
-                                </Badge>
-                              ))}
-                            </div>
-                            <p className="text-sm text-muted-foreground line-clamp-2">
-                              {instructor.bio}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      instructor={instructor}
+                      selectedInstructorIds={selectedInstructorIds}
+                    />
                   ))}
+
+                  {!isLoading && instructorsData?.instructors.length === 0 && (
+                    <DataNotFound name="Instructors" />
+                  )}
                 </div>
 
                 <FormField
@@ -397,24 +304,10 @@ const Step6PublishCourse = ({ data, updateData, onPrevious }) => {
                     <h4 className="font-medium text-sm mb-2">Instructors</h4>
                     <div className="space-y-2">
                       {selectedInstructorDetails.map((instructor) => (
-                        <div
+                        <SelectedInstructor
                           key={instructor._id}
-                          className="flex items-center space-x-2"
-                        >
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage
-                              src={instructor.profileImage}
-                              alt={instructor.name}
-                            />
-                            <AvatarFallback className="text-xs">
-                              {instructor.name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm">{instructor.name}</span>
-                        </div>
+                          instructor={instructor}
+                        />
                       ))}
                     </div>
                   </div>
@@ -479,7 +372,7 @@ const Step6PublishCourse = ({ data, updateData, onPrevious }) => {
                       <li>• Students can enroll once published</li>
                       <li>• You can edit course content anytime</li>
                       <li>• Course will appear in course catalog</li>
-                      <li>• Email notifications will be sent to subscribers</li>
+                      {/* <li>• Email notifications will be sent to subscribers</li> */}
                     </ul>
                   </div>
                 </div>

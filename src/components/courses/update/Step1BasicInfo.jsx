@@ -19,16 +19,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { POST } from "@/constants/apiMethods";
+import { PATCH, POST } from "@/constants/apiMethods";
 import { categories, subCategories } from "@/constants/constants";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { step1Schema } from "@/schemas/CourseSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImageIcon, X } from "lucide-react";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
+  console.log("data", data);
+  const params = useParams();
+
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
 
@@ -47,13 +51,23 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
     },
   });
 
+  const { reset, getValues, watch } = form;
+
+  console.log("getValues", getValues());
+  useEffect(() => {
+    if (data.basicInfo) {
+      reset(data.basicInfo);
+      setThumbnailPreview(data.basicInfo.thumbnail);
+    }
+  }, [data.basicInfo]);
+
   const {
-    mutateAsync: createCourse,
+    mutateAsync: updateCourse,
     isPending,
     data: result,
   } = useApiMutation({
-    url: "/admin/courses/create",
-    method: POST,
+    url: `/admin/courses/${params.courseId}/edit`,
+    method: PATCH,
   });
 
   const handleThumbnailChange = (event) => {
@@ -89,7 +103,7 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
       submitData.append("thumbnail", thumbnailFile);
     }
 
-    await createCourse(submitData);
+    await updateCourse(submitData);
     updateData("basicInfo", formData);
   };
 
@@ -104,7 +118,7 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
     }
   }, [result]);
 
-  const selectedCategory = form.watch("category");
+  const selectedCategory = watch("category");
 
   return (
     <Form {...form}>
@@ -258,7 +272,8 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
                       <FormLabel>Category *</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
+                        key={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -287,7 +302,8 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
                         <FormLabel>Sub Category</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
+                          key={field.value}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -395,7 +411,7 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
 
         <div className="flex justify-end">
           <Button type="submit" variant="codIntern" disabled={isPending}>
-            {isPending ? "Creating Course..." : "Create Course & Continue"}
+            {isPending ? "Updating Course..." : "Update Course & Continue"}
           </Button>
         </div>
       </form>

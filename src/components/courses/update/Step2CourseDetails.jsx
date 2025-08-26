@@ -1,5 +1,6 @@
 "use client";
 
+import DatePicker from "@/components/shared/DatePicker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -24,12 +25,15 @@ import { useApiMutation } from "@/hooks/useApiMutation";
 import { step2Schema } from "@/schemas/CourseSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Award, IndianRupee, Plus, Star, Upload, X } from "lucide-react";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
 const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
   const [certificateFile, setCertificateFile] = useState(null);
   const [certificatePreview, setCertificatePreview] = useState(null);
+
+  const params = useParams();
 
   const form = useForm({
     resolver: zodResolver(step2Schema),
@@ -51,6 +55,17 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
       ...data.courseDetails,
     },
   });
+
+  const { reset, getValues, control } = form;
+
+  useEffect(() => {
+    if (data?.courseDetails) {
+      reset(data.courseDetails);
+      setCertificatePreview(
+        data?.courseDetails?.certificate?.certificateLink || null
+      );
+    }
+  }, [data.courseDetails]);
 
   const {
     fields: highlightFields,
@@ -75,9 +90,7 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
     isPending,
     data: result,
   } = useApiMutation({
-    url: `/admin/courses/${
-      data.courseId || "68ac6333b7d88323aa5aa749"
-    }/details`,
+    url: `/admin/courses/${params.courseId}/details`,
     method: PATCH,
   });
 
@@ -314,7 +327,10 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                       <FormItem>
                         <FormLabel>Issue Date (Optional)</FormLabel>
                         <FormControl>
-                          <Input type="date" {...field} />
+                          <DatePicker
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -328,7 +344,10 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                       <FormItem>
                         <FormLabel>Expiry Date (Optional)</FormLabel>
                         <FormControl>
-                          <Input type="date" {...field} />
+                          <DatePicker
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

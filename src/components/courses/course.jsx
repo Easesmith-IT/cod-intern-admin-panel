@@ -94,7 +94,7 @@ export const Course = ({ course }) => {
   const instructorNames =
     instructors
       ?.map((instructor) =>
-        typeof instructor === "object" ? instructor.name : instructor
+        typeof instructor === "object" ? `${instructor.firstName} ${instructor.lastName}` : instructor
       )
       .join(", ") || "Not assigned";
 

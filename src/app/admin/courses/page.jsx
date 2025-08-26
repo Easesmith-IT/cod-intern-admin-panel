@@ -49,6 +49,7 @@ const Courses = () => {
       setPageCount(() => data?.pagination?.totalPages);
     }
   }, [data]);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -89,7 +90,10 @@ const Courses = () => {
               <SelectItem value="archived">Archived</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={category} onValueChange={(value) => setCategory(value)}>
+          <Select
+            value={category}
+            onValueChange={(value) => setCategory(value)}
+          >
             <SelectTrigger className="flex justify-between bg-white w-44 items-center h-10 text-sm font-normal font-sans border">
               <SelectValue placeholder="Select Category" />
             </SelectTrigger>
@@ -97,7 +101,9 @@ const Courses = () => {
               <SelectItem value="all">All Categories</SelectItem>
               <SelectItem value="Web Development">Web Development</SelectItem>
               <SelectItem value="Data Science">Data Science</SelectItem>
-              <SelectItem value="Mobile Development">Mobile Development</SelectItem>
+              <SelectItem value="Mobile Development">
+                Mobile Development
+              </SelectItem>
               <SelectItem value="Marketing">Marketing</SelectItem>
               <SelectItem value="Design">Design</SelectItem>
             </SelectContent>
@@ -144,7 +150,9 @@ const Courses = () => {
           </TableBody>
         </Table>
 
-        {data?.courses?.length === 0 && !isLoading && <DataNotFound name="Courses" />}
+        {data?.courses?.length === 0 && !isLoading && (
+          <DataNotFound name="Courses" />
+        )}
 
         <PaginationComp
           page={page}
