@@ -1,11 +1,14 @@
 import { axiosInstance } from "@/lib/axiosInstance";
 import { useQuery } from "@tanstack/react-query";
 
-const fetchApi = async ({ url, params }, retryCount = 0) => {
+const fetchApi = async ({ url, params, axiosOptions }, retryCount = 0) => {
   const maxRetries = 3;
 
   try {
-    const response = await axiosInstance.get(url, { params });
+    const response = await axiosInstance.get(url, {
+      params,
+      ...axiosOptions,
+    });
     return response.data;
   } catch (error) {
     const isExtensionError = error.message?.includes(
@@ -35,10 +38,11 @@ export function useApiQuery({
   queryKeys = [],
   params = {},
   options = {},
+  axiosOptions = {},
 }) {
   return useQuery({
     queryKey: [params, ...queryKeys], // Ensures caching based on query params
-    queryFn: () => fetchApi({ url, params }),
+    queryFn: () => fetchApi({ url, params, axiosOptions }),
     ...options, // Allows passing additional options like staleTime, enabled, etc.
   });
 }

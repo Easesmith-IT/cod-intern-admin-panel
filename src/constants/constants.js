@@ -140,3 +140,19 @@ export const platformOptions = [
   "Custom LMS",
   "Discord",
 ];
+
+// students statusMap
+export const statusMap = {
+  active: "success",
+  inactive: "secondary",
+  suspended: "destructive",
+  pending: "inProgress",
+};
+
+// course application statusMap
+export const courseApplicationStatusMap = {
+  reviewed: "secondary",
+  accepted: "success",
+  rejected: "destructive",
+  pending: "inProgress",
+};

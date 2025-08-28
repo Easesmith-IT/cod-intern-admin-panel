@@ -16,6 +16,7 @@ export default function DatePicker({
   value,
   onChange,
   placeholder = "Select a date",
+  disabled
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -54,6 +55,7 @@ export default function DatePicker({
           selected={value}
           onSelect={handleDateSelect}
           initialFocus
+          disabled={disabled}
         />
       </PopoverContent>
     </Popover>
