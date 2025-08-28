@@ -18,7 +18,7 @@ const UpdateCourse = () => {
   const router = useRouter();
   const params = useParams();
 
-  const [currentStep, setCurrentStep] = useState(6);
+  const [currentStep, setCurrentStep] = useState(1);
   const [courseData, setCourseData] = useState({
     // Step 1 data
     basicInfo: {},
