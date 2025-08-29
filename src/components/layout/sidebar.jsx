@@ -51,7 +51,7 @@ export const Sidebar = () => {
     setPermissions(userInfo?.permissions || {});
   }, []);
 
-  console.log("userInfo", userInfo);
+  // console.log("userInfo", userInfo);
 
   return (
     <div
@@ -87,12 +87,6 @@ export const Sidebar = () => {
           {permissions &&
             menuItems.map((item) => {
               const Icon = item.icon;
-              console.log(
-                localPermissions[item.id],
-                permissions?.[localPermissions[item.id]] &&
-                  permissions?.[localPermissions[item.id]] === "none" &&
-                  "hidden"
-              );
               
               return (
                 <li key={item.id}>

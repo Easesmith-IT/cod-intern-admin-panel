@@ -23,61 +23,6 @@ import {
 } from "@/components/ui/table";
 import { Student } from "./student";
 
-const students = [
-  {
-    studentId: "STU1001",
-    name: "Vivek Kumar",
-    company: "TechSoft Ltd",
-    email: "vivek.kumar@example.com",
-    phone: "9876543210",
-    auth: "google",
-    verified: true,
-    courses: 3,
-    jobs: 2,
-    skills: ["JavaScript", "React", "Node.js"],
-    status: "active",
-  },
-  {
-    studentId: "STU1002",
-    name: "Ananya Singh",
-    company: "EduWorks",
-    email: "ananya.singh@example.com",
-    phone: "9123456789",
-    auth: "local",
-    verified: false,
-    courses: 1,
-    jobs: 0,
-    skills: ["Python", "SQL"],
-    status: "pending",
-  },
-  {
-    studentId: "STU1003",
-    name: "Rahul Mehta",
-    company: "DesignHub",
-    email: "rahul.mehta@example.com",
-    phone: "9988776655",
-    auth: "facebook",
-    verified: true,
-    courses: 5,
-    jobs: 1,
-    skills: ["UI/UX", "Figma", "Photoshop"],
-    status: "suspended",
-  },
-  {
-    studentId: "STU1004",
-    name: "Sneha Patel",
-    company: "BizAnalytics",
-    email: "sneha.patel@example.com",
-    phone: "9876501234",
-    auth: "google",
-    verified: true,
-    courses: 2,
-    jobs: 3,
-    skills: ["Excel", "PowerBI", "SQL"],
-    status: "inactive",
-  },
-];
-
 export const StudentsClient = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [status, setStatus] = useState("all");
@@ -85,19 +30,32 @@ export const StudentsClient = () => {
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [limit, setLimit] = useState(10);
+  const [authProvider, setAuthProvider] = useState("all");
 
   const { data, isLoading, error } = useApiQuery({
-    url: `/admin/students/get?status=${
+    url: `/admin/students?status=${
       status === "all" ? "" : status
-    }&category=${
-      category === "all" ? "" : category
-    }&page=${page}&limit=${limit}&search=${searchTerm}`,
-    queryKeys: ["students", status, category, page, searchTerm, limit],
+    }&emailVerified=${
+      category === "all" ? "all" : category === "verified" ? true : false
+    }&page=${page}&limit=${limit}&search=${searchTerm}&authProvider=${
+      authProvider === "all" ? "" : authProvider
+    }`,
+    queryKeys: [
+      "students",
+      status,
+      category,
+      page,
+      searchTerm,
+      limit,
+      authProvider,
+    ],
   });
 
+  console.log("data", data);
+
   useEffect(() => {
-    if (data?.pagination) {
-      setPageCount(() => data?.pagination?.totalPages);
+    if (data?.data?.pagination) {
+      setPageCount(() => data?.data?.pagination?.totalPages);
     }
   }, [data]);
 
@@ -136,6 +94,8 @@ export const StudentsClient = () => {
               <SelectItem value="all">All</SelectItem>
               <SelectItem value="active">Active</SelectItem>
               <SelectItem value="inactive">Inactive</SelectItem>
+              <SelectItem value="suspended">Suspended</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
             </SelectContent>
           </Select>
           <Select
@@ -143,12 +103,25 @@ export const StudentsClient = () => {
             onValueChange={(value) => setCategory(value)}
           >
             <SelectTrigger className="flex justify-between bg-white w-44 items-center h-10 text-sm font-normal font-sans border">
-              <SelectValue placeholder="Select Category" />
+              <SelectValue placeholder="Email Status" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              <SelectItem value="fresher">Fresher</SelectItem>
-              <SelectItem value="experienced">Experienced</SelectItem>
+              <SelectItem value="verified">Verified</SelectItem>
+              <SelectItem value="unverified">Unverified</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={authProvider}
+            onValueChange={(value) => setAuthProvider(value)}
+          >
+            <SelectTrigger className="flex justify-between bg-white w-44 items-center h-10 text-sm font-normal font-sans border">
+              <SelectValue placeholder="Auth Provider" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="google">Google</SelectItem>
+              <SelectItem value="local">Local</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -159,8 +132,8 @@ export const StudentsClient = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Student ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Company</TableHead>
+              {/* <TableHead>Name</TableHead> */}
+              <TableHead>Student</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Phone</TableHead>
               <TableHead>Auth</TableHead>
@@ -173,8 +146,11 @@ export const StudentsClient = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {students?.map((student) => (
-              <Student key={student.studentId} student={student} />
+            {data?.data?.students?.map((student) => (
+              <Student
+                key={student._id || student.customId}
+                student={student}
+              />
             ))}
 
             {isLoading &&
@@ -184,7 +160,7 @@ export const StudentsClient = () => {
           </TableBody>
         </Table>
 
-        {data?.students?.length === 0 && !isLoading && (
+        {data?.data?.students?.length === 0 && !isLoading && (
           <DataNotFound name="Students" />
         )}
 

@@ -4,6 +4,7 @@ import { CourseStatsChart } from "@/components/dashboard/course-stats-chart";
 import { JobStatsChart } from "@/components/dashboard/job-stats-chart";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 import { StatsChart } from "@/components/dashboard/stats-chart";
+import { StudentStatsChart } from "@/components/dashboard/student-stats-chart";
 import { TypographyH2 } from "@/components/typography/typography-h2";
 import {
   Card,
@@ -121,6 +122,21 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Student Analytics Section */}
+      <Card className="border-t-4" style={{ borderTopColor: "#9237E3" }}>
+        <CardHeader>
+          <CardTitle style={{ color: "#9237E3" }}>
+            Student Analytics
+          </CardTitle>
+          <CardDescription>
+            Comprehensive student statistics and trends
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pl-2">
+          <StudentStatsChart />
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
         <Card className="border-t-4" style={{ borderTopColor: "#9237E3" }}>

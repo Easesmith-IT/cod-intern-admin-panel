@@ -28,17 +28,17 @@ export const Student = ({ student }) => {
     data,
     error,
   } = useApiMutation({
-    url: `/admin/students/update-status/${student?._id}`,
+    url: `/admin/students/${student?._id}/status`,
     method: PATCH,
-    invalidateKey: ["student"],
+    invalidateKey: ["students"],
     // isToast: false,
   });
 
   const { mutateAsync: deleteStudent, isPending: isDeleteStudentLoading } =
     useApiMutation({
-      url: `/admin/students/delete/${student?._id}`,
+      url: `/admin/students/${student?._id}`,
       method: DELETE,
-      invalidateKey: ["student"],
+      invalidateKey: ["students"],
       // isToast: false,
     });
 
@@ -71,30 +71,40 @@ export const Student = ({ student }) => {
     <>
       <TableRow>
         <TableCell className="font-medium">
-          {student.studentId || "NA"}
+          {student.customId || "NA"}
         </TableCell>
-        {/* <TableCell className="font-medium">
+        <TableCell className="font-medium">
+          <div className="flex gap-2">
           <div className="flex items-start space-x-3">
-            <Avatar className="h-8 w-8 rounded-none">
+            <Avatar className="h-8 w-8 rounded-none shrink-0">
               <AvatarImage
                 src={student.image || "/user-placeholder.png"}
                 alt={student.name}
-                className="object-contain"
-              />
+                className="object-cover"
+                />
               <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
             </Avatar>
           </div>
-        </TableCell> */}
-        <TableCell>{student.name}</TableCell>
-        <TableCell>{student.company}</TableCell>
-        <TableCell>{student.email}</TableCell>
-        <TableCell>{student.phone}</TableCell>
-        <TableCell>
-          <Badge variant="secondary">{student.auth}</Badge>
+          <p>{student.name}</p>
+                </div>
         </TableCell>
-        <TableCell>{student.verified}</TableCell>
-        <TableCell>{student.courses}</TableCell>
-        <TableCell>{student.jobs}</TableCell>
+        {/* <TableCell></TableCell> */}
+        <TableCell>{student.emailId}</TableCell>
+        <TableCell>{student.phone || "N/A"}</TableCell>
+        <TableCell>
+          <Badge className="capitalize" variant="secondary">
+            {student.authProvider}
+          </Badge>
+        </TableCell>
+        <TableCell>
+          {student.emailVerified ? (
+            <Badge variant="success">Verified</Badge>
+          ) : (
+            <Badge variant="secondary">Unverified</Badge>
+          )}
+        </TableCell>
+        <TableCell>{student.courses?.length || 0}</TableCell>
+        <TableCell>{student.jobApplications?.length || 0}</TableCell>
         {/* <TableCell>{student.skills.join(", ")}</TableCell> */}
         {/* <TableCell>
           <Badge variant="secondary">
@@ -149,9 +159,15 @@ Student.Skeleton = function StudentSkeleton() {
       <TableCell>
         <Skeleton className="w-full h-5" />
       </TableCell>
-      {/* <TableCell>
+      <TableCell>
         <Skeleton className="w-full h-5" />
-      </TableCell> */}
+      </TableCell>
+      <TableCell>
+        <Skeleton className="w-full h-5" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="w-full h-5" />
+      </TableCell>
       <TableCell>
         <Skeleton className="w-full h-5" />
       </TableCell>
