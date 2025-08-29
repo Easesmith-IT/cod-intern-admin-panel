@@ -30,11 +30,23 @@ export const AddSubAdminSchema = z.object({
     admin: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for admin.",
     }),
+    course: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for course.",
+    }),
     job: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for job.",
     }),
     student: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for student.",
+    }),
+    instructor: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for instructor.",
+    }),
+    content: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for content.",
+    }),
+    faq: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for faq.",
     }),
     review: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for review.",
@@ -61,11 +73,23 @@ export const EditSubAdminSchema = z.object({
     admin: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for admin.",
     }),
+    course: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for course.",
+    }),
     job: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for job.",
     }),
     student: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for student.",
+    }),
+    instructor: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for instructor.",
+    }),
+    content: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for content.",
+    }),
+    faq: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for faq.",
     }),
     review: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for review.",

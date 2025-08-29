@@ -12,6 +12,7 @@ import {
   Files,
   FileText,
   FolderCog,
+  HelpCircle,
   LayoutDashboard,
   PanelLeft,
   Settings,
@@ -31,10 +32,11 @@ const menuItems = [
   { id: "jobs", label: "Jobs", icon: Briefcase },
   { id: "students", label: "Students", icon: UserRound }, // New Students menu item
   { id: "instructors", label: "Instructors", icon: UserRoundCheck }, // New Instructors menu item
+  { id: "content", label: "Content Management", icon: FolderCog },
+  { id: "faqs", label: "Faqs", icon: HelpCircle },
   { id: "analytics", label: "Analytics", icon: BarChart3 },
   { id: "payments", label: "Payments", icon: CreditCard },
   { id: "settings", label: "Settings", icon: Settings },
-  { id: "content", label: "Content Management", icon: FolderCog },
 ];
 
 export const Sidebar = () => {
@@ -49,7 +51,7 @@ export const Sidebar = () => {
     setPermissions(userInfo?.permissions || {});
   }, []);
 
-  // console.log("userInfo", userInfo);
+  console.log("userInfo", userInfo);
 
   return (
     <div
@@ -85,10 +87,17 @@ export const Sidebar = () => {
           {permissions &&
             menuItems.map((item) => {
               const Icon = item.icon;
+              console.log(
+                localPermissions[item.id],
+                permissions?.[localPermissions[item.id]] &&
+                  permissions?.[localPermissions[item.id]] === "none" &&
+                  "hidden"
+              );
+              
               return (
                 <li key={item.id}>
                   <Button
-                    variant={pathname.includes(item.id) ? "codIntern" : "ghost"}
+                    variant={pathname.includes(`/admin/${item.id}`) ? "codIntern" : "ghost"}
                     className={cn(
                       "w-full justify-start",
                       collapsed ? "px-2 justify-center" : "px-4",

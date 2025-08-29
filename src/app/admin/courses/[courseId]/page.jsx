@@ -17,8 +17,10 @@ import {
   FileText,
   FolderOpen,
   Globe,
+  HelpCircle,
   IndianRupee,
   Play,
+  Plus,
   Star,
   Users,
   Video,
@@ -31,6 +33,7 @@ import DataNotFound from "@/components/shared/DataNotFound";
 import Image from "next/image";
 import { CourseCardSkeleton } from "@/components/courses/course-card-skeleton";
 import { TypographyH2 } from "@/components/typography/typography-h2";
+import { CourseFaqsTabContent } from "@/components/faqs/course-faqs-tab-content";
 
 const CourseDetails = () => {
   const params = useParams();
@@ -260,6 +263,7 @@ const CourseDetails = () => {
           <TabsTrigger value="projects">Projects</TabsTrigger>
           <TabsTrigger value="batches">Batches</TabsTrigger>
           <TabsTrigger value="instructors">Instructors</TabsTrigger>
+          <TabsTrigger value="faqs">FAQs</TabsTrigger>
           <TabsTrigger value="details">Additional Details</TabsTrigger>
         </TabsList>
 
@@ -656,6 +660,11 @@ const CourseDetails = () => {
               </CardContent>
             </Card>
           )}
+        </TabsContent>
+
+        {/* FAQs Tab */}
+        <TabsContent value="faqs">
+          <CourseFaqsTabContent courseId={courseId} courseTitle={course.title} />
         </TabsContent>
 
         {/* Additional Details Tab */}
