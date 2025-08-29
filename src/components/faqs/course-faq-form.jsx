@@ -23,13 +23,20 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Badge } from "../ui/badge";
+import { RichTextEditor } from "../tiptap-editor";
+import { TypographyH2 } from "../typography/typography-h2";
 
 // Simplified schema for course FAQs (no category selection needed)
 const CourseFaqSchema = EditFaqSchema.omit({ category: true, courseId: true });
 
-export const CourseFaqForm = ({ faq = null, isEdit = false, courseId, courseTitle }) => {
+export const CourseFaqForm = ({
+  faq = null,
+  isEdit = false,
+  courseId,
+  courseTitle,
+}) => {
   const router = useRouter();
-  
+
   const form = useForm({
     resolver: zodResolver(CourseFaqSchema),
     defaultValues: {
@@ -54,7 +61,7 @@ export const CourseFaqForm = ({ faq = null, isEdit = false, courseId, courseTitl
 
   const onSubmit = async (data) => {
     console.log("Course FAQ form data:", data);
-    
+
     const faqData = {
       question: data.question,
       answer: data.answer,
@@ -85,16 +92,18 @@ export const CourseFaqForm = ({ faq = null, isEdit = false, courseId, courseTitl
           className="flex gap-2 items-center mb-4"
         >
           <ArrowLeft />
-          <h2 className="text-2xl font-bold">
-            {isEdit ? "Edit Course FAQ" : "Add Course FAQ"}
-          </h2>
+          <TypographyH2
+            heading={isEdit ? "Edit Course FAQ" : "Add Course FAQ"}
+          />
         </button>
-        
+
         {/* Course context indicator */}
         <div className="flex items-center gap-2">
           <BookOpen className="h-5 w-5 text-blue-500" />
           <div>
-            <Badge variant="outline" className="mb-1">Course FAQ</Badge>
+            <Badge variant="outline" className="mb-1">
+              Course FAQ
+            </Badge>
             <p className="text-sm text-muted-foreground">{courseTitle}</p>
           </div>
         </div>
@@ -133,10 +142,14 @@ export const CourseFaqForm = ({ faq = null, isEdit = false, courseId, courseTitl
                 <FormItem className="md:col-span-2">
                   <FormLabel>Answer *</FormLabel>
                   <FormControl>
-                    <Textarea
+                    {/* <Textarea
                       placeholder="Enter the detailed answer for this course FAQ"
                       className="resize-none h-32"
                       {...field}
+                    /> */}
+                    <RichTextEditor
+                      value={field.value}
+                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -156,7 +169,9 @@ export const CourseFaqForm = ({ faq = null, isEdit = false, courseId, courseTitl
                       type="number"
                       placeholder="0"
                       {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                      onChange={(e) =>
+                        field.onChange(parseInt(e.target.value) || 0)
+                      }
                     />
                   </FormControl>
                   <FormMessage />

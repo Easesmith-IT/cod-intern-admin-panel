@@ -25,6 +25,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ConfirmModal } from "@/components/shared/confirm-modal";
 import Spinner from "@/components/shared/Spinner";
+import parse from "html-react-parser";
+import { options } from "@/constants/constants";
 
 const ViewCourseFaq = () => {
   const params = useParams();
@@ -120,7 +122,9 @@ const ViewCourseFaq = () => {
 
         <div className="flex items-center gap-3">
           <Button
-            onClick={() => router.push(`/admin/courses/${courseId}/faqs/${faqId}/update`)}
+            onClick={() =>
+              router.push(`/admin/courses/${courseId}/faqs/${faqId}/update`)
+            }
             variant="outline"
             size="sm"
           >
@@ -148,7 +152,10 @@ const ViewCourseFaq = () => {
                 <p className="text-sm font-medium text-blue-900">Course FAQ</p>
                 <p className="text-sm text-blue-700">{course.title}</p>
               </div>
-              <Badge variant="outline" className="ml-auto border-blue-300 text-blue-700">
+              <Badge
+                variant="outline"
+                className="ml-auto border-blue-300 text-blue-700"
+              >
                 Course-Specific
               </Badge>
             </div>
@@ -188,8 +195,8 @@ const ViewCourseFaq = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-base leading-relaxed whitespace-pre-line">
-                {faqData.answer}
+              <p className="text-base leading-relaxed whitespace-pre-line my-editor ml-4">
+                {faqData.answer && parse(faqData.answer, options)}
               </p>
             </CardContent>
           </Card>
@@ -208,7 +215,9 @@ const ViewCourseFaq = () => {
                   <div>
                     <h4 className="font-semibold text-lg">{course.title}</h4>
                     {course.description && (
-                      <p className="text-muted-foreground mt-1">{course.description}</p>
+                      <p className="text-muted-foreground mt-1">
+                        {course.description}
+                      </p>
                     )}
                   </div>
                   <div className="flex items-center gap-4">
@@ -286,9 +295,9 @@ const ViewCourseFaq = () => {
                   </p>
                 </div>
               </div>
-              
+
               <Separator />
-              
+
               <div className="flex items-center gap-3">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <div>
@@ -298,7 +307,7 @@ const ViewCourseFaq = () => {
                   </p>
                 </div>
               </div>
-              
+
               {faqData.updatedAt !== faqData.createdAt && (
                 <div className="flex items-center gap-3">
                   <Calendar className="h-4 w-4 text-muted-foreground" />

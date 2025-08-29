@@ -238,7 +238,7 @@
 
 .my-editor ol,
 .my-editor ul {
-  list-style: revert;
+  list-style: revert !important;
 }
 
 .my-editor pre{

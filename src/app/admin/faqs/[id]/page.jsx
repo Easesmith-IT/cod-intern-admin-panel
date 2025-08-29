@@ -1,32 +1,33 @@
 "use client";
 
+import { ConfirmModal } from "@/components/shared/confirm-modal";
+import Spinner from "@/components/shared/Spinner";
+import { TypographyH2 } from "@/components/typography/typography-h2";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { DELETE, PATCH } from "@/constants/apiMethods";
+import { options } from "@/constants/constants";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import { format } from "date-fns";
+import parse from "html-react-parser";
 import {
   ArrowLeft,
-  Calendar,
-  Edit3,
-  HelpCircle,
-  Hash,
   BookOpen,
+  Calendar,
+  CheckCircle,
+  Edit3,
   Eye,
   EyeOff,
-  Trash2,
-  CheckCircle,
-  XCircle,
+  Hash,
+  HelpCircle,
+  Trash2
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { ConfirmModal } from "@/components/shared/confirm-modal";
-import Spinner from "@/components/shared/Spinner";
-import { TypographyH2 } from "@/components/typography/typography-h2";
+import { useEffect, useState } from "react";
 
 const ViewFaq = ({ params }) => {
   const router = useRouter();
@@ -180,8 +181,8 @@ const ViewFaq = ({ params }) => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-base leading-relaxed whitespace-pre-line">
-                {faqData.answer}
+              <p className="text-base leading-relaxed whitespace-pre-line my-editor ml-4">
+                {faqData.answer && parse(faqData.answer, options)}
               </p>
             </CardContent>
           </Card>

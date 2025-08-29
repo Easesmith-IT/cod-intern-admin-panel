@@ -8,6 +8,8 @@ import { BookOpen, HelpCircle, Plus } from "lucide-react";
 import Link from "next/link";
 import { CourseFaq } from "./course-faq";
 import { FaqSkeleton } from "./faq-skeleton";
+import parse from "html-react-parser";
+import { options } from "@/constants/constants";
 
 export const CourseFaqsTabContent = ({ courseId, courseTitle }) => {
   const { data, isLoading, error } = useApiQuery({
@@ -32,7 +34,7 @@ export const CourseFaqsTabContent = ({ courseId, courseTitle }) => {
                 </p>
               </div>
               <Badge variant="outline" className="ml-auto">
-                {faqs.length} Active FAQ{faqs.length !== 1 ? 's' : ''}
+                {faqs.length} Active FAQ{faqs.length !== 1 ? "s" : ""}
               </Badge>
             </div>
             <div className="flex items-center gap-2">
@@ -53,8 +55,9 @@ export const CourseFaqsTabContent = ({ courseId, courseTitle }) => {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            These FAQs help students understand course-specific details, requirements, and expectations. 
-            Students can view these FAQs to get quick answers to common questions about "{courseTitle}".
+            These FAQs help students understand course-specific details,
+            requirements, and expectations. Students can view these FAQs to get
+            quick answers to common questions about "{courseTitle}".
           </p>
         </CardContent>
       </Card>
@@ -80,7 +83,7 @@ export const CourseFaqsTabContent = ({ courseId, courseTitle }) => {
         <Card>
           <CardContent className="p-0">
             <div className="divide-y">
-              {faqs.map((faq, index) => (
+              {faqs.map((faq) => (
                 <div key={faq._id} className="p-4 hover:bg-gray-50">
                   <div className="flex items-start gap-3">
                     <div className="flex-shrink-0 mt-1">
@@ -94,37 +97,33 @@ export const CourseFaqsTabContent = ({ courseId, courseTitle }) => {
                       <h4 className="font-medium text-gray-900 line-clamp-2">
                         {faq.question}
                       </h4>
-                      <p className="text-sm text-gray-600 line-clamp-3">
-                        {faq.answer}
-                      </p>
+                      <div className="text-sm text-gray-600 line-clamp-4 my-editor">
+                        {faq.answer && parse(faq.answer, options)}
+                      </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Badge variant="outline" className="text-xs">
                             Order: {faq.order || 0}
                           </Badge>
-                          <Badge 
-                            variant={faq.isActive ? "success" : "secondary"} 
+                          <Badge
+                            variant={faq.isActive ? "success" : "secondary"}
                             className="text-xs"
                           >
                             {faq.isActive ? "Active" : "Inactive"}
                           </Badge>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            asChild
-                          >
-                            <Link href={`/admin/courses/${courseId}/faqs/${faq._id}`}>
+                          <Button variant="outline" size="sm" asChild>
+                            <Link
+                              href={`/admin/courses/${courseId}/faqs/${faq._id}`}
+                            >
                               View
                             </Link>
                           </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            asChild
-                          >
-                            <Link href={`/admin/courses/${courseId}/faqs/${faq._id}/update`}>
+                          <Button variant="outline" size="sm" asChild>
+                            <Link
+                              href={`/admin/courses/${courseId}/faqs/${faq._id}/update`}
+                            >
                               Edit
                             </Link>
                           </Button>
@@ -156,7 +155,8 @@ export const CourseFaqsTabContent = ({ courseId, courseTitle }) => {
               No FAQs Yet
             </h3>
             <p className="text-gray-500 mb-4">
-              This course doesn't have any FAQs yet. Create the first FAQ to help students understand course details.
+              This course doesn't have any FAQs yet. Create the first FAQ to
+              help students understand course details.
             </p>
             <Button variant="codIntern" asChild className="bg-main">
               <Link href={`/admin/courses/${courseId}/faqs/create`}>

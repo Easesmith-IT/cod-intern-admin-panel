@@ -5,12 +5,14 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { DELETE, PATCH } from "@/constants/apiMethods";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { format } from "date-fns";
+import parse from "html-react-parser";
 import { Clock, HelpCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Actions } from "../shared/actions";
 import { ConfirmModal } from "../shared/confirm-modal";
 import Spinner from "../shared/Spinner";
 import { Switch } from "../ui/switch";
+import { options } from "@/constants/constants";
 
 export const Faq = ({ faq }) => {
   const router = useRouter();
@@ -85,8 +87,8 @@ export const Faq = ({ faq }) => {
           </div>
         </TableCell>
         <TableCell>
-          <div className="whitespace-pre-wrap w-60">
-            {truncateText(faq.answer, 100)}
+          <div className="whitespace-pre-wrap w-60 line-clamp-4 !my-editor">
+            {faq.answer && parse(faq.answer, options)}
           </div>
         </TableCell>
         <TableCell>

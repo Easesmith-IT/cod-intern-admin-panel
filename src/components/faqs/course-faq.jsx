@@ -11,6 +11,8 @@ import { Actions } from "../shared/actions";
 import { ConfirmModal } from "../shared/confirm-modal";
 import Spinner from "../shared/Spinner";
 import { Switch } from "../ui/switch";
+import { options } from "@/constants/constants";
+import parse from "html-react-parser";
 
 export const CourseFaq = ({ faq, courseId }) => {
   const router = useRouter();
@@ -83,8 +85,9 @@ export const CourseFaq = ({ faq, courseId }) => {
           </div>
         </TableCell>
         <TableCell>
-          <div className="whitespace-pre-wrap w-80">
-            {truncateText(faq.answer, 120)}
+          <div className="whitespace-pre-wrap w-80 line-clamp-4 my-editor">
+            {/* {truncateText(faq.answer, 120)} */}
+            {faq.answer && parse(faq.answer, options)}
           </div>
         </TableCell>
         <TableCell className="text-center">

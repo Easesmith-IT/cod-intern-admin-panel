@@ -1,3 +1,4 @@
+import domToReact from "html-react-parser/lib/dom-to-react";
 import { Clipboard, FileText, HelpCircle, Video } from "lucide-react";
 
 export const DEBOUNCE_DELAY = 800;
@@ -155,4 +156,17 @@ export const courseApplicationStatusMap = {
   accepted: "success",
   rejected: "destructive",
   pending: "inProgress",
+};
+
+// parse options
+export const options = {
+  replace: (domNode) => {
+    if (domNode.name === "code") {
+      return (
+        <pre className="whitespace-pre-wrap">
+          {domToReact(domNode.children)}
+        </pre>
+      );
+    }
+  },
 };

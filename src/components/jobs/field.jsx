@@ -1,9 +1,9 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { options } from "@/constants/constants";
+import { cn } from "@/lib/utils";
+import parse from "html-react-parser";
 import { Info } from "lucide-react";
 import { Badge } from "../ui/badge";
-import parse, { domToReact } from "html-react-parser";
-import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 export const Field = ({
   label,
@@ -34,22 +34,12 @@ export const Field = ({
 };
 
 export const LabelText = ({ children }) => {
-  return <div className="text-sm font-medium whitespace-nowrap">{children}</div>;
+  return (
+    <div className="text-sm font-medium whitespace-nowrap">{children}</div>
+  );
 };
 
 export const ReadOnlyBlock = ({ title, text }) => {
-  const options = {
-    replace: (domNode) => {
-      if (domNode.name === "code") {
-        return (
-          <pre className="whitespace-pre-wrap">
-            {domToReact(domNode.children)}
-          </pre>
-        );
-      }
-    },
-  };
-
   return (
     <Card className="gap-1 border-none shadow-none py-0">
       <CardHeader>

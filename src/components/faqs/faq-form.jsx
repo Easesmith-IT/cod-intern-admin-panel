@@ -26,14 +26,16 @@ import { useApiQuery } from "@/hooks/useApiQuery";
 import { FaqSchema, EditFaqSchema } from "@/schemas/FaqSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { TypographyH2 } from "../typography/typography-h2";
+import { RichTextEditor } from "../tiptap-editor";
 
 export const FaqForm = ({ faq = null, isEdit = false }) => {
   const router = useRouter();
-  
+  const params = useParams();
+
   const form = useForm({
     resolver: zodResolver(isEdit ? EditFaqSchema : FaqSchema),
     defaultValues: {
@@ -67,7 +69,7 @@ export const FaqForm = ({ faq = null, isEdit = false }) => {
 
   const onSubmit = async (data) => {
     console.log("FAQ form data:", data);
-    
+
     // Clean up data based on category
     const cleanedData = {
       question: data.question,
@@ -145,10 +147,14 @@ export const FaqForm = ({ faq = null, isEdit = false }) => {
                 <FormItem className="md:col-span-2">
                   <FormLabel>Answer *</FormLabel>
                   <FormControl>
-                    <Textarea
+                    {/* <Textarea
                       placeholder="Enter the FAQ answer"
                       className="resize-none h-32"
                       {...field}
+                    /> */}
+                    <RichTextEditor
+                      value={field.value}
+                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -163,7 +169,11 @@ export const FaqForm = ({ faq = null, isEdit = false }) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category *</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    disabled={!params.courseId}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select category" />
@@ -171,7 +181,7 @@ export const FaqForm = ({ faq = null, isEdit = false }) => {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="General">General</SelectItem>
-                      {/* <SelectItem value="Courses">Courses</SelectItem> */}
+                      <SelectItem value="Courses">Courses</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -180,7 +190,7 @@ export const FaqForm = ({ faq = null, isEdit = false }) => {
             />
 
             {/* Course Selection (only show if category is "Courses") */}
-            {watchCategory === "Courses" && (
+            {/* {watchCategory === "Courses" && (
               <FormField
                 control={control}
                 name="courseId"
@@ -205,7 +215,7 @@ export const FaqForm = ({ faq = null, isEdit = false }) => {
                   </FormItem>
                 )}
               />
-            )}
+            )} */}
 
             {/* Order Field */}
             <FormField
