@@ -33,9 +33,11 @@ import Spinner from "../shared/Spinner";
 import { PATCH } from "@/constants/apiMethods";
 import { Switch } from "@/components/ui/switch";
 import { InstructorDetailsSkeleton } from "./instructor-details-skeleton";
+import { ChangePassword } from "./ChangePassword";
 
 export const InstructorDetailClient = ({ instructorId }) => {
   const router = useRouter();
+  const [isChangePassword, setIsChangePassword] = useState(false);
 
   const { data, isLoading, error } = useApiQuery({
     url: `/admin/instructors/${instructorId}`,
@@ -63,6 +65,9 @@ export const InstructorDetailClient = ({ instructorId }) => {
 
   const handleEdit = () => {
     router.push(`/admin/instructors/${instructorId}/update`);
+  };
+  const handleChangePassword = () => {
+    setIsChangePassword(true)
   };
 
   if (isLoading) {
@@ -104,6 +109,9 @@ export const InstructorDetailClient = ({ instructorId }) => {
           </p>
         </div>
         <div className="flex space-x-2">
+          <Button variant="codIntern" onClick={handleChangePassword}>
+            Change Password
+          </Button>
           <Button variant="outline" onClick={handleEdit}>
             <Edit className="mr-2 h-4 w-4" />
             Edit Instructor
@@ -123,19 +131,27 @@ export const InstructorDetailClient = ({ instructorId }) => {
                   alt={`${instructor.firstName} ${instructor.lastName}`}
                 />
                 <AvatarFallback className="text-lg">
-                  {instructor.firstName?.charAt(0)}{instructor.lastName?.charAt(0)}
+                  {instructor.firstName?.charAt(0)}
+                  {instructor.lastName?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="text-xl font-semibold">{instructor.firstName} {instructor.lastName}</h3>
+                <h3 className="text-xl font-semibold">
+                  {instructor.firstName} {instructor.lastName}
+                </h3>
                 <p className="text-muted-foreground">{instructor.email}</p>
                 <div className="flex items-center space-x-2 mt-1">
-                  <Badge variant={instructor.isActive ? "success" : "secondary"} className="capitalize">
+                  <Badge
+                    variant={instructor.isActive ? "success" : "secondary"}
+                    className="capitalize"
+                  >
                     {instructor.isActive ? "Active" : "Inactive"}
                   </Badge>
                   <div className="flex items-center space-x-1">
                     <Star className="h-4 w-4 text-yellow-500" />
-                    <span className="text-sm">{instructor.ratings?.average || 0}</span>
+                    <span className="text-sm">
+                      {instructor.ratings?.average || 0}
+                    </span>
                     <span className="text-xs text-muted-foreground">
                       ({instructor.ratings?.count || 0} reviews)
                     </span>
@@ -205,7 +221,9 @@ export const InstructorDetailClient = ({ instructorId }) => {
                   </label>
                   <div className="flex items-center space-x-2">
                     <Phone className="h-4 w-4" />
-                    <p className="text-sm">{instructor.phone || "Not provided"}</p>
+                    <p className="text-sm">
+                      {instructor.phone || "Not provided"}
+                    </p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -231,7 +249,7 @@ export const InstructorDetailClient = ({ instructorId }) => {
                   </div>
                 </div>
               </div>
-              
+
               {instructor.bio && (
                 <>
                   <Separator />
@@ -245,66 +263,67 @@ export const InstructorDetailClient = ({ instructorId }) => {
               )}
 
               {/* Social Links */}
-              {instructor.socialLinks && Object.values(instructor.socialLinks).some(link => link) && (
-                <>
-                  <Separator />
-                  <div className="space-y-3">
-                    <label className="text-sm font-medium text-muted-foreground">
-                      Social Links
-                    </label>
-                    <div className="flex flex-wrap gap-3">
-                      {instructor.socialLinks.linkedin && (
-                        <a
-                          href={instructor.socialLinks.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center space-x-1 text-blue-600 hover:text-blue-800"
-                        >
-                          <Linkedin className="h-4 w-4" />
-                          <span className="text-sm">LinkedIn</span>
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      )}
-                      {instructor.socialLinks.twitter && (
-                        <a
-                          href={instructor.socialLinks.twitter}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center space-x-1 text-blue-400 hover:text-blue-600"
-                        >
-                          <Twitter className="h-4 w-4" />
-                          <span className="text-sm">Twitter</span>
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      )}
-                      {instructor.socialLinks.github && (
-                        <a
-                          href={instructor.socialLinks.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center space-x-1 text-gray-600 hover:text-gray-800"
-                        >
-                          <Github className="h-4 w-4" />
-                          <span className="text-sm">GitHub</span>
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      )}
-                      {instructor.socialLinks.website && (
-                        <a
-                          href={instructor.socialLinks.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center space-x-1 text-green-600 hover:text-green-800"
-                        >
-                          <Globe className="h-4 w-4" />
-                          <span className="text-sm">Website</span>
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      )}
+              {instructor.socialLinks &&
+                Object.values(instructor.socialLinks).some((link) => link) && (
+                  <>
+                    <Separator />
+                    <div className="space-y-3">
+                      <label className="text-sm font-medium text-muted-foreground">
+                        Social Links
+                      </label>
+                      <div className="flex flex-wrap gap-3">
+                        {instructor.socialLinks.linkedin && (
+                          <a
+                            href={instructor.socialLinks.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center space-x-1 text-blue-600 hover:text-blue-800"
+                          >
+                            <Linkedin className="h-4 w-4" />
+                            <span className="text-sm">LinkedIn</span>
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        )}
+                        {instructor.socialLinks.twitter && (
+                          <a
+                            href={instructor.socialLinks.twitter}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center space-x-1 text-blue-400 hover:text-blue-600"
+                          >
+                            <Twitter className="h-4 w-4" />
+                            <span className="text-sm">Twitter</span>
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        )}
+                        {instructor.socialLinks.github && (
+                          <a
+                            href={instructor.socialLinks.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center space-x-1 text-gray-600 hover:text-gray-800"
+                          >
+                            <Github className="h-4 w-4" />
+                            <span className="text-sm">GitHub</span>
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        )}
+                        {instructor.socialLinks.website && (
+                          <a
+                            href={instructor.socialLinks.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center space-x-1 text-green-600 hover:text-green-800"
+                          >
+                            <Globe className="h-4 w-4" />
+                            <span className="text-sm">Website</span>
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -340,11 +359,14 @@ export const InstructorDetailClient = ({ instructorId }) => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Award className="h-5 w-5" />
-                <span>Certifications ({instructor.certifications?.length || 0})</span>
+                <span>
+                  Certifications ({instructor.certifications?.length || 0})
+                </span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {instructor.certifications && instructor.certifications.length > 0 ? (
+              {instructor.certifications &&
+              instructor.certifications.length > 0 ? (
                 <div className="space-y-4">
                   {instructor.certifications.map((cert, index) => (
                     <div key={index} className="border rounded-lg p-4">
@@ -389,7 +411,9 @@ export const InstructorDetailClient = ({ instructorId }) => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Trophy className="h-5 w-5" />
-                <span>Achievements ({instructor.achievements?.length || 0})</span>
+                <span>
+                  Achievements ({instructor.achievements?.length || 0})
+                </span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -429,7 +453,9 @@ export const InstructorDetailClient = ({ instructorId }) => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <BookOpen className="h-5 w-5" />
-                <span>Teaching Courses ({instructor.courses?.length || 0})</span>
+                <span>
+                  Teaching Courses ({instructor.courses?.length || 0})
+                </span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -471,6 +497,13 @@ export const InstructorDetailClient = ({ instructorId }) => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {isChangePassword && (
+        <ChangePassword
+          isChangePassword={isChangePassword}
+          setIsChangePassword={setIsChangePassword}
+        />
+      )}
     </div>
   );
 };

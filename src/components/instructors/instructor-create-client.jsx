@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +12,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Save, Plus, X, Link as LinkIcon, Award, Trophy } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  Plus,
+  X,
+  Link as LinkIcon,
+  Award,
+  Trophy,
+  ImagePlus,
+  Pencil,
+  EyeOff,
+  Eye,
+} from "lucide-react";
 import { TypographyH2 } from "../typography/typography-h2";
 import Spinner from "../shared/Spinner";
 import { POST } from "@/constants/apiMethods";
@@ -25,15 +37,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { InstructorCreateSchema } from "@/schemas/InstructorCreateSchema";
+import { updatePreview } from "@/lib/updatePreview";
+import DatePicker from "../shared/DatePicker";
 
 export const InstructorCreateClient = () => {
   const router = useRouter();
-  const [imageFile, setImageFile] = useState(null);
+  const [isShowPassword, setIsShowPassword] = useState(false);
 
   // Initialize React Hook Form
   const form = useForm({
     resolver: zodResolver(InstructorCreateSchema),
     defaultValues: {
+      profileImage: "",
+      profileImagePreview: "",
       firstName: "",
       lastName: "",
       email: "",
@@ -53,76 +69,109 @@ export const InstructorCreateClient = () => {
     },
   });
 
+  const { control, reset, handleSubmit, setValue, getValues, watch, register } =
+    form;
+
   // Field arrays for dynamic sections
-  const { fields: certificationFields, append: appendCertification, remove: removeCertification } = useFieldArray({
+  const {
+    fields: certificationFields,
+    append: appendCertification,
+    remove: removeCertification,
+  } = useFieldArray({
     control: form.control,
     name: "certifications",
   });
 
-  const { fields: achievementFields, append: appendAchievement, remove: removeAchievement } = useFieldArray({
+  const {
+    fields: achievementFields,
+    append: appendAchievement,
+    remove: removeAchievement,
+  } = useFieldArray({
     control: form.control,
     name: "achievements",
   });
 
-  const { fields: expertiseFields, append: appendExpertise, remove: removeExpertise } = useFieldArray({
+  const {
+    fields: expertiseFields,
+    append: appendExpertise,
+    remove: removeExpertise,
+  } = useFieldArray({
     control: form.control,
     name: "expertise",
   });
 
+  const handleRemove = () => {
+    setValue("profileImage", null);
+    setValue("profileImagePreview", "");
+  };
+
   const {
     mutateAsync: createInstructor,
     isPending: isCreating,
+    data: result,
   } = useApiMutation({
     url: `/admin/instructors/create`,
     method: POST,
     invalidateKey: ["instructors"],
     config: {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     },
   });
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImageFile(file);
-  };
+  const profileImageRef = register("profileImage");
+  const profileImage = watch("profileImage");
+
+  useEffect(() => {
+    updatePreview(profileImage, "profileImagePreview", setValue);
+  }, [form, profileImage]);
 
   const onSubmit = async (formData) => {
-    try {
-      const submitData = new FormData();
-      
-      // Add form fields to FormData
-      Object.keys(formData).forEach(key => {
-        if (key === 'socialLinks' || key === 'certifications' || key === 'achievements' || key === 'expertise') {
-          submitData.append(key, JSON.stringify(formData[key]));
-        } else if (formData[key] !== undefined && formData[key] !== "") {
-          submitData.append(key, formData[key]);
-        }
-      });
-      
-      // Add image file if selected
-      if (imageFile) {
-        submitData.append('profileImage', imageFile);
-      }
+    console.log("formData", formData);
 
-      await createInstructor(submitData);
-      router.push('/admin/instructors');
-    } catch (error) {
-      console.error('Creation failed:', error);
+    const submitData = new FormData();
+
+    // Add form fields to FormData
+    Object.keys(formData).forEach((key) => {
+      if (key === "profileImagePreview") return;
+
+      if (
+        key === "socialLinks" ||
+        key === "certifications" ||
+        key === "achievements" ||
+        key === "expertise"
+      ) {
+        submitData.append(key, JSON.stringify(formData[key]));
+      } else if (formData[key] !== undefined && formData[key] !== "") {
+        submitData.append(key, formData[key]);
+      }
+    });
+
+    // Add image file if selected
+    if (formData.profileImage && formData.profileImage[0]) {
+      submitData.append("profileImage", formData.profileImage[0]);
     }
+
+    await createInstructor(submitData);
   };
 
+  useEffect(() => {
+    if (result) {
+      router.push("/admin/instructors");
+    }
+  }, [result]);
+
   const handleBack = () => {
-    router.push('/admin/instructors');
+    router.push("/admin/instructors");
   };
 
   const addExpertise = () => {
-    const newExpertise = form.watch('newExpertise');
+    const newExpertise = form.watch("newExpertise");
     if (newExpertise && newExpertise.trim()) {
-      const currentExpertise = form.getValues('expertise') || [];
-      form.setValue('expertise', [...currentExpertise, newExpertise.trim()]);
-      form.setValue('newExpertise', '');
+      const currentExpertise = form.getValues("expertise") || [];
+      form.setValue("expertise", [...currentExpertise, newExpertise.trim()]);
+      form.setValue("newExpertise", "");
     }
   };
 
@@ -130,15 +179,14 @@ export const InstructorCreateClient = () => {
     <div className="space-y-6 w-full">
       {/* Header */}
       <div className="flex justify-between items-start">
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" onClick={handleBack}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Instructors
-          </Button>
-          <div>
+        <div>
+          <button onClick={handleBack} className="flex items-center gap-1">
+            <ArrowLeft />
             <TypographyH2 heading="Create New Instructor" />
-            <p className="text-muted-foreground">Add a new instructor to the platform</p>
-          </div>
+          </button>
+          <p className="text-muted-foreground">
+            Add a new instructor to the platform
+          </p>
         </div>
       </div>
 
@@ -154,100 +202,171 @@ export const InstructorCreateClient = () => {
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* First Name */}
+              <div className="grid grid-cols-[208px_1fr] items-start gap-6">
                 <FormField
-                  control={form.control}
-                  name="firstName"
+                  control={control}
+                  name="profileImage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>First Name *</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter first name"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                {/* Last Name */}
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Last Name *</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter last name"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                {/* Email */}
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email *</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="Enter email address"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                {/* Phone */}
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter phone number"
-                          {...field}
-                        />
-                      </FormControl>
+                      <div className="w-52">
+                        {/* Show upload box if no image */}
+                        {!watch("profileImagePreview") && (
+                          <FormLabel className="cursor-pointer">
+                            <div className="border-2 border-dashed border-[#C2CDD6] w-52 h-52 rounded-lg flex flex-col justify-center items-center">
+                              <div className="flex flex-col items-center primary-color border-dashed rounded px-5">
+                                <ImagePlus className="h-8 w-8 text-neutral-700" />
+                                <p className="font-bold text-neutral-700 mt-2 text-center primary-color text-sm">
+                                  Add Photo
+                                </p>
+                              </div>
+                            </div>
+                          </FormLabel>
+                        )}
+
+                        {/* Show preview with remove/edit buttons */}
+                        {watch("profileImagePreview") && (
+                          <div className="relative">
+                            <div className="flex gap-1 items-center absolute shadow top-1 right-1">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  document
+                                    .querySelector("input[name='profileImage']")
+                                    .click()
+                                }
+                                className="size-7 shadow p-1.5 rounded-full bg-white flex justify-center items-center"
+                              >
+                                <Pencil />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={handleRemove}
+                                className="size-7 shadow p-1.5 rounded-full bg-red-500 text-white flex justify-center items-center"
+                              >
+                                <X />
+                              </button>
+                            </div>
+                            <img
+                              className="w-52 h-52 object-cover rounded-lg"
+                              src={getValues("profileImagePreview")}
+                              alt=""
+                            />
+                          </div>
+                        )}
+
+                        <FormControl>
+                          <Input
+                            type="file"
+                            name="profileImage"
+                            className="hidden"
+                            {...profileImageRef}
+                          />
+                        </FormControl>
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Password */}
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password *</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="Enter password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* First Name */}
+
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>First Name *</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter first name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Last Name */}
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Name *</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter last name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Email */}
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email *</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="email"
+                            placeholder="Enter email address"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Phone */}
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter phone number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {/* Password */}
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password *</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              type={isShowPassword ? "text" : "password"}
+                              placeholder="Enter password"
+                              {...field}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setIsShowPassword(!isShowPassword)}
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                            >
+                              {isShowPassword ? (
+                                <EyeOff className="h-4 w-4 cursor-pointer" />
+                              ) : (
+                                <Eye className="h-4 w-4 cursor-pointer" />
+                              )}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
-              
+
               {/* Bio */}
               <FormField
                 control={form.control}
@@ -266,20 +385,6 @@ export const InstructorCreateClient = () => {
                   </FormItem>
                 )}
               />
-              
-              {/* Profile Image Upload */}
-              <div className="space-y-2">
-                <Label htmlFor="profileImage">Profile Image</Label>
-                <Input
-                  id="profileImage"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-                <p className="text-sm text-muted-foreground">
-                  Upload instructor profile image. Max size: 5MB
-                </p>
-              </div>
             </CardContent>
           </Card>
 
@@ -295,9 +400,9 @@ export const InstructorCreateClient = () => {
               <div className="flex gap-2">
                 <Input
                   placeholder="Add expertise area"
-                  {...form.register('newExpertise')}
+                  {...form.register("newExpertise")}
                   onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
+                    if (e.key === "Enter") {
                       e.preventDefault();
                       addExpertise();
                     }
@@ -307,16 +412,23 @@ export const InstructorCreateClient = () => {
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-              
+
               <div className="flex flex-wrap gap-2">
-                {form.watch('expertise')?.map((skill, index) => (
-                  <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                {form.watch("expertise")?.map((skill, index) => (
+                  <Badge
+                    key={index}
+                    variant="secondary"
+                    className="flex items-center gap-1"
+                  >
                     {skill}
                     <X
                       className="h-3 w-3 cursor-pointer"
                       onClick={() => {
-                        const currentExpertise = form.getValues('expertise');
-                        form.setValue('expertise', currentExpertise.filter((_, i) => i !== index));
+                        const currentExpertise = form.getValues("expertise");
+                        form.setValue(
+                          "expertise",
+                          currentExpertise.filter((_, i) => i !== index)
+                        );
                       }}
                     />
                   </Badge>
@@ -354,7 +466,7 @@ export const InstructorCreateClient = () => {
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="socialLinks.twitter"
@@ -371,7 +483,7 @@ export const InstructorCreateClient = () => {
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="socialLinks.github"
@@ -388,7 +500,7 @@ export const InstructorCreateClient = () => {
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="socialLinks.website"
@@ -396,10 +508,7 @@ export const InstructorCreateClient = () => {
                     <FormItem>
                       <FormLabel>Website</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="https://example.com"
-                          {...field}
-                        />
+                        <Input placeholder="https://example.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -421,7 +530,14 @@ export const InstructorCreateClient = () => {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => appendCertification({ title: "", provider: "", year: "", certificateLink: "" })}
+                  onClick={() =>
+                    appendCertification({
+                      title: "",
+                      provider: "",
+                      year: "",
+                      certificateLink: "",
+                    })
+                  }
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -441,7 +557,7 @@ export const InstructorCreateClient = () => {
                       <X className="h-4 w-4" />
                     </Button>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -459,7 +575,7 @@ export const InstructorCreateClient = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name={`certifications.${index}.provider`}
@@ -476,7 +592,7 @@ export const InstructorCreateClient = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name={`certifications.${index}.year`}
@@ -488,14 +604,18 @@ export const InstructorCreateClient = () => {
                               type="number"
                               placeholder="2024"
                               {...field}
-                              onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : "")}
+                              onChange={(e) =>
+                                field.onChange(
+                                  e.target.value ? parseInt(e.target.value) : ""
+                                )
+                              }
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name={`certifications.${index}.certificateLink`}
@@ -530,7 +650,9 @@ export const InstructorCreateClient = () => {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => appendAchievement({ title: "", description: "", date: "" })}
+                  onClick={() =>
+                    appendAchievement({ title: "", description: "", date: "" })
+                  }
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -550,7 +672,7 @@ export const InstructorCreateClient = () => {
                       <X className="h-4 w-4" />
                     </Button>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -559,16 +681,13 @@ export const InstructorCreateClient = () => {
                         <FormItem>
                           <FormLabel>Title *</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Achievement title"
-                              {...field}
-                            />
+                            <Input placeholder="Achievement title" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name={`achievements.${index}.date`}
@@ -576,10 +695,9 @@ export const InstructorCreateClient = () => {
                         <FormItem>
                           <FormLabel>Date</FormLabel>
                           <FormControl>
-                            <Input
-                              type="date"
-                              {...field}
-                              onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : "")}
+                            <DatePicker
+                              value={field.value}
+                              onChange={field.onChange}
                             />
                           </FormControl>
                           <FormMessage />
@@ -587,7 +705,7 @@ export const InstructorCreateClient = () => {
                       )}
                     />
                   </div>
-                  
+
                   <FormField
                     control={form.control}
                     name={`achievements.${index}.description`}
@@ -625,9 +743,7 @@ export const InstructorCreateClient = () => {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
-                      <FormLabel className="text-base">
-                        Active Status
-                      </FormLabel>
+                      <FormLabel className="text-base">Active Status</FormLabel>
                       <div className="text-sm text-muted-foreground">
                         Set instructor as active and available for teaching
                       </div>
@@ -649,17 +765,11 @@ export const InstructorCreateClient = () => {
             <Button type="button" variant="outline" onClick={handleBack}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isCreating || !form.formState.isValid}>
+            <Button type="submit" disabled={isCreating}>
               {isCreating ? (
-                <>
-                  <Spinner className="mr-2 h-4 w-4" />
-                  Creating...
-                </>
+                <Spinner />
               ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  Create Instructor
-                </>
+                "Create Instructor"
               )}
             </Button>
           </div>

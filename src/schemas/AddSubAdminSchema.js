@@ -5,7 +5,7 @@ export const AddSubAdminSchema = z.object({
   profileImage: z
     .any()
     .refine((files) => files instanceof FileList && files.length > 0, {
-      message: "Job image is required",
+      message: "Image is required",
     }),
   profileImagePreview: z.string().optional(),
   role: z.string().min(1, "Role is required"),

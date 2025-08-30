@@ -8,6 +8,8 @@ export const permissions = [
   { label: "Content Management", value: "content" },
   { label: "Faqs", value: "faq" },
   { label: "Reviews", value: "review" },
+  { label: "Workshop", value: "workshop" },
+  { label: "Workshop Feedbacks", value: "workshopFeedbacks" },
 ];
 
 export const localPermissions = {
@@ -20,4 +22,6 @@ export const localPermissions = {
   content: "content",
   faqs: "faq",
   reviews: "review",
+  workshops: "workshop",
+  workshopFeedbacks: "workshopFeedbacks",
 };

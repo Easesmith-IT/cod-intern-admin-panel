@@ -24,7 +24,11 @@ import {
 } from "@/components/ui/form";
 import DatePicker from "./DatePicker";
 
-export const ExportToCsvModal = ({ isModalOpen, setIsModalOpen }) => {
+export const ExportToCsvModal = ({
+  isModalOpen,
+  setIsModalOpen,
+  queryKey = "course-applications",
+}) => {
   const params = useParams();
   const [url, setUrl] = useState("");
 
@@ -46,34 +50,56 @@ export const ExportToCsvModal = ({ isModalOpen, setIsModalOpen }) => {
   const fromDate = watch("startDate");
   const toDate = watch("endDate");
 
-  const { data, isLoading, error, refetch, isSuccess } = useApiQuery({
-    url: `/admin/course-applications/export/${params.courseId}?from=${fromDate}&to=${toDate}`,
-    queryKeys: ["course-applications", fromDate, toDate],
-    options: {
-      enabled: false,
-    },
-    axiosOptions: { responseType: "blob" },
-  });
+  let result;
+  let isResultLoading;
+  let refetchResult;
+
+  if (params.courseId) {
+    const { data, isLoading, error, refetch, isSuccess } = useApiQuery({
+      url: `/admin/course-applications/export/${params.courseId}?from=${fromDate}&to=${toDate}`,
+      queryKeys: ["course-applications", fromDate, toDate],
+      options: {
+        enabled: false,
+      },
+      axiosOptions: { responseType: "blob" },
+    });
+
+    result = data;
+    isResultLoading = isLoading;
+    refetchResult = refetch;
+  } else {
+    const { data, isLoading, error, refetch, isSuccess } = useApiQuery({
+      url: `/admin/${queryKey}/export?from=${fromDate}&to=${toDate}`,
+      queryKeys: [queryKey, fromDate, toDate],
+      options: {
+        enabled: false,
+      },
+      axiosOptions: { responseType: "blob" },
+    });
+    result = data;
+    isResultLoading = isLoading;
+    refetchResult = refetch;
+  }
 
   const onSubmit = (data) => {
     console.log("Form Data:", data);
-    refetch();
+    refetchResult();
   };
 
-  console.log("result", data);
+  console.log("result", result);
 
   useEffect(() => {
-    if (data) {
-      if (data instanceof Blob) {
-        const downloadUrl = URL.createObjectURL(data);
+    if (result) {
+      if (result instanceof Blob) {
+        const downloadUrl = URL.createObjectURL(result);
         setUrl(downloadUrl);
         console.log("downloadUrl", downloadUrl);
       }
-      //   const csvBlob = new Blob([data], { type: "text/csv" });
+      //   const csvBlob = new Blob([result], { type: "text/csv" });
       //   const downloadUrl = URL.createObjectURL(csvBlob);
       //   setUrl(downloadUrl);
     }
-  }, [data]);
+  }, [result]);
 
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -115,13 +141,14 @@ export const ExportToCsvModal = ({ isModalOpen, setIsModalOpen }) => {
               )}
             />
 
-            {!isSuccess ? (
-              <Button>{isLoading ? "Fetching..." : "Submit"}</Button>
-            ) : (
-              <a href={url} download="course_applications.csv">
-                <Button type="button">Download CSV</Button>
-              </a>
-            )}
+            <div className="flex gap-5 items-center">
+              <Button>{isResultLoading ? "Fetching..." : "Submit"}</Button>
+              {url && (
+                <a href={url} download={`${queryKey}.csv`}>
+                  <Button type="button">Download CSV</Button>
+                </a>
+              )}
+            </div>
           </form>
         </Form>
       </DialogContent>

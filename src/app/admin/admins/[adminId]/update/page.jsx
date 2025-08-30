@@ -75,6 +75,10 @@ const UpdateAdmin = () => {
         job: "none",
         student: "none",
         review: "none",
+        content: "none",
+        course: "none",
+        faq: "none",
+        instructor: "none",
       },
     },
   });

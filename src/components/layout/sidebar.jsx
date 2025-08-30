@@ -8,12 +8,14 @@ import {
   BarChart3,
   BookOpen,
   Briefcase,
+  CalendarDays,
   CreditCard,
   Files,
   FileText,
   FolderCog,
   HelpCircle,
   LayoutDashboard,
+  MessageSquareText,
   PanelLeft,
   Settings,
   ShieldCheck,
@@ -34,9 +36,15 @@ const menuItems = [
   { id: "instructors", label: "Instructors", icon: UserRoundCheck }, // New Instructors menu item
   { id: "content", label: "Content Management", icon: FolderCog },
   { id: "faqs", label: "Faqs", icon: HelpCircle },
-  { id: "analytics", label: "Analytics", icon: BarChart3 },
-  { id: "payments", label: "Payments", icon: CreditCard },
-  { id: "settings", label: "Settings", icon: Settings },
+  // { id: "analytics", label: "Analytics", icon: BarChart3 },
+  // { id: "payments", label: "Payments", icon: CreditCard },
+  // { id: "settings", label: "Settings", icon: Settings },
+  { id: "workshops", label: "Workshop Registration", icon: CalendarDays },
+  {
+    id: "workshopFeedbacks",
+    label: "Workshop Feedbacks",
+    icon: MessageSquareText,
+  },
 ];
 
 export const Sidebar = () => {
@@ -51,12 +59,12 @@ export const Sidebar = () => {
     setPermissions(userInfo?.permissions || {});
   }, []);
 
-  // console.log("userInfo", userInfo);
+  console.log("userInfo", userInfo);
 
   return (
     <div
       className={cn(
-        "bg-white shadow-lg h-screen sticky top-0 overflow-y-auto transition-all overflow-x-hidden duration-300 flex flex-col border-r",
+        "bg-white shadow-lg h-[100vh] sticky top-0 overflow-y-auto transition-all overflow-x-hidden duration-300 flex flex-col border-r",
         collapsed ? "w-20" : "w-64"
       )}
     >
@@ -87,11 +95,15 @@ export const Sidebar = () => {
           {permissions &&
             menuItems.map((item) => {
               const Icon = item.icon;
-              
+
               return (
                 <li key={item.id}>
                   <Button
-                    variant={pathname.includes(`/admin/${item.id}`) ? "codIntern" : "ghost"}
+                    variant={
+                      pathname.includes(`/admin/${item.id}`)
+                        ? "codIntern"
+                        : "ghost"
+                    }
                     className={cn(
                       "w-full justify-start",
                       collapsed ? "px-2 justify-center" : "px-4",
