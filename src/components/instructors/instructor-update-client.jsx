@@ -425,6 +425,7 @@ export const InstructorUpdateClient = ({ instructorId }) => {
                     <FormControl>
                       <Textarea
                         placeholder="Enter instructor bio"
+                        className="resize-none"
                         rows={3}
                         {...field}
                       />
@@ -763,6 +764,7 @@ export const InstructorUpdateClient = ({ instructorId }) => {
                         <FormControl>
                           <Textarea
                             placeholder="Achievement description"
+                            className="resize-none"
                             rows={2}
                             {...field}
                           />

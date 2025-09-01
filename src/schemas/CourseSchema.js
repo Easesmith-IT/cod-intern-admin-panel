@@ -70,8 +70,14 @@ const projectSchema = z.object({
 
 const batchSchema = z.object({
   name: z.string().min(1, "Batch name is required"),
-  startDate: z.string().min(1, "Start date is required"),
-  endDate: z.string().optional(),
+  startDate: z.date({
+    required_error: "Start date is required",
+    invalid_type_error: "Invalid start date",
+  }),
+  endDate: z.date({
+    required_error: "End date is required",
+    invalid_type_error: "Invalid end date",
+  }),
   schedule: z.object({
     days: z.array(z.string()).min(1, "At least one day is required"),
     time: z.object({

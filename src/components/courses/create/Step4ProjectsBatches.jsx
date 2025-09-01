@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { BatchCard } from "../batch-card";
 
 const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
   const [projectFiles, setProjectFiles] = useState({});
@@ -174,9 +175,16 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
     }
   }, [result]);
 
+  const onError = (error) => {
+    console.log("error", error);
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit, onError)}
+        className="space-y-6"
+      >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Projects Section */}
           <div className="space-y-4">
@@ -339,7 +347,6 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
                   <BatchCard
                     key={field.id}
                     batchIndex={index}
-                    form={form}
                     weekDays={weekDays}
                     formatTimeForInput={formatTimeForInput}
                     formatTimeForDisplay={formatTimeForDisplay}
@@ -492,282 +499,5 @@ const ProjectToolsField = ({ form, projectIndex, commonTools }) => {
 };
 
 // Batch Card Component
-const BatchCard = ({
-  batchIndex,
-  form,
-  weekDays,
-  formatTimeForInput,
-  formatTimeForDisplay,
-  onRemove,
-}) => {
-  const {
-    fields: highlightFields,
-    append: appendHighlight,
-    remove: removeHighlight,
-  } = useFieldArray({
-    control: form.control,
-    name: `batches.${batchIndex}.batchHighlights`,
-  });
-
-  const selectedDays = form.watch(`batches.${batchIndex}.schedule.days`) || [];
-  const price = form.watch(`batches.${batchIndex}.price`) || 0;
-  const offerPrice = form.watch(`batches.${batchIndex}.offerPrice`) || 0;
-
-  const savings =
-    price && offerPrice && offerPrice < price ? price - offerPrice : 0;
-  const savingsPercentage =
-    savings > 0 ? Math.round((savings / price) * 100) : 0;
-
-  const toggleDay = (day) => {
-    const currentDays =
-      form.getValues(`batches.${batchIndex}.schedule.days`) || [];
-    if (currentDays.includes(day)) {
-      form.setValue(
-        `batches.${batchIndex}.schedule.days`,
-        currentDays.filter((d) => d !== day)
-      );
-    } else {
-      form.setValue(`batches.${batchIndex}.schedule.days`, [
-        ...currentDays,
-        day,
-      ]);
-    }
-  };
-
-  return (
-    <div className="border rounded-lg p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <h4 className="font-medium">Batch {batchIndex + 1}</h4>
-        {onRemove && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={onRemove}
-            className="text-red-600 hover:text-red-700"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <FormField
-          control={form.control}
-          name={`batches.${batchIndex}.name`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Batch Name *</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="e.g., Morning Batch - January 2024"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name={`batches.${batchIndex}.status`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Status</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="upcoming">Upcoming</SelectItem>
-                  <SelectItem value="ongoing">Ongoing</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <FormField
-          control={form.control}
-          name={`batches.${batchIndex}.startDate`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Start Date *</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name={`batches.${batchIndex}.endDate`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>End Date (Optional)</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-
-      {/* Schedule */}
-      <div>
-        <FormLabel>Class Schedule *</FormLabel>
-        <div className="mt-2 space-y-3">
-          {/* Days Selection */}
-          <div>
-            <p className="text-sm text-muted-foreground mb-2">
-              Select class days:
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {weekDays.map((day) => (
-                <Button
-                  key={day}
-                  type="button"
-                  variant={selectedDays.includes(day) ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => toggleDay(day)}
-                  className="text-xs"
-                >
-                  {day.slice(0, 3)}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Time Selection */}
-          <div className="grid grid-cols-2 gap-3">
-            <FormField
-              control={form.control}
-              name={`batches.${batchIndex}.schedule.time.start`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Start Time *</FormLabel>
-                  <FormControl>
-                    <Input type="time" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name={`batches.${batchIndex}.schedule.time.end`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>End Time *</FormLabel>
-                  <FormControl>
-                    <Input type="time" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Pricing & Seats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <FormField
-          control={form.control}
-          name={`batches.${batchIndex}.seatsLimit`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Seats Limit *</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input
-                    type="number"
-                    placeholder="50"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(Number(e.target.value) || 0)
-                    }
-                  />
-                  <Users className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name={`batches.${batchIndex}.price`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Regular Price *</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <IndianRupee className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="number"
-                    placeholder="29999"
-                    className="pl-10"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(Number(e.target.value) || 0)
-                    }
-                  />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name={`batches.${batchIndex}.offerPrice`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Offer Price</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <IndianRupee className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="number"
-                    placeholder="19999"
-                    className="pl-10"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(Number(e.target.value) || 0)
-                    }
-                  />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-
-      {/* Savings Display */}
-      {savings > 0 && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-2">
-          <div className="text-sm text-green-800">
-            Students Save: ₹{savings.toLocaleString()} ({savingsPercentage}%
-            off)
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 export default Step4ProjectsBatches;

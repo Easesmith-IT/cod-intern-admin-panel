@@ -92,6 +92,7 @@ const ApplicationDetail = () => {
             placeholder="Add a note (optional)"
             value={note}
             onChange={(e) => setNote(e.target.value)}
+            className="resize-none"
           />
 
           <Button

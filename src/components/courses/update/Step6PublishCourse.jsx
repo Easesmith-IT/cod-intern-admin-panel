@@ -85,6 +85,7 @@ const Step6PublishCourse = ({ data, updateData, onPrevious }) => {
     data: result,
   } = useApiMutation({
     url: `/admin/courses/${params.courseId}/publish`,
+    invalidateKey: ["course"],
     method: PATCH,
   });
 

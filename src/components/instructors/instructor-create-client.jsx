@@ -377,6 +377,7 @@ export const InstructorCreateClient = () => {
                     <FormControl>
                       <Textarea
                         placeholder="Enter instructor bio"
+                        className="resize-none"
                         rows={3}
                         {...field}
                       />
@@ -714,6 +715,7 @@ export const InstructorCreateClient = () => {
                         <FormLabel>Description</FormLabel>
                         <FormControl>
                           <Textarea
+                            className="resize-none"
                             placeholder="Achievement description"
                             rows={2}
                             {...field}
@@ -766,11 +768,7 @@ export const InstructorCreateClient = () => {
               Cancel
             </Button>
             <Button type="submit" disabled={isCreating}>
-              {isCreating ? (
-                <Spinner />
-              ) : (
-                "Create Instructor"
-              )}
+              {isCreating ? <Spinner /> : "Create Instructor"}
             </Button>
           </div>
         </form>

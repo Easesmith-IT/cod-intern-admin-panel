@@ -53,7 +53,7 @@ export const Header = () => {
     <header className="bg-white sticky z-20 top-0 shadow-sm border-b px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <div className="relative">
+          <div className="relative hidden">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input placeholder="Search..." className="pl-10 w-64" />
           </div>

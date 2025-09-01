@@ -176,6 +176,7 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
                       <FormControl>
                         <Textarea
                           placeholder="Detailed overview of what students will learn"
+                          className="resize-none"
                           rows={6}
                           {...field}
                         />

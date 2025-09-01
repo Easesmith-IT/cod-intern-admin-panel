@@ -461,8 +461,9 @@ const CourseDetails = () => {
                       src={project.icon}
                       width={74}
                       height={60}
-                      className="w-full"
+                      className="w-full h-full"
                       alt={project.title}
+                      unoptimized
                     />
                     <CardTitle className="flex items-center space-x-2">
                       <FolderOpen className="h-5 w-5 text-orange-600" />
@@ -664,7 +665,10 @@ const CourseDetails = () => {
 
         {/* FAQs Tab */}
         <TabsContent value="faqs">
-          <CourseFaqsTabContent courseId={courseId} courseTitle={course.title} />
+          <CourseFaqsTabContent
+            courseId={courseId}
+            courseTitle={course.title}
+          />
         </TabsContent>
 
         {/* Additional Details Tab */}

@@ -67,10 +67,15 @@ const Step6PublishCourse = ({ data, updateData, onPrevious }) => {
 
   const instructors = instructorsData?.instructors || [];
 
-  const { mutateAsync: publishCourse, isPending,data:result } = useApiMutation({
+  const {
+    mutateAsync: publishCourse,
+    isPending,
+    data: result,
+  } = useApiMutation({
     url: `/admin/courses/${
       data.courseId || "68ac6333b7d88323aa5aa749"
     }/publish`,
+    invalidateKey: ["course"],
     method: PATCH,
   });
 

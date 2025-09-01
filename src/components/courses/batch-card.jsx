@@ -25,8 +25,14 @@ export const BatchCard = ({
   formatTimeForDisplay,
   onRemove,
 }) => {
-  const { setValue, getValues, handleSubmit, watch, control } =
-    useFormContext();
+  const {
+    setValue,
+    getValues,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors },
+  } = useFormContext();
 
   const {
     fields: highlightFields,
@@ -36,6 +42,9 @@ export const BatchCard = ({
     control: control,
     name: `batches.${batchIndex}.batchHighlights`,
   });
+
+  console.log("errors", errors);
+  
 
   const selectedDays = watch(`batches.${batchIndex}.schedule.days`) || [];
   const price = watch(`batches.${batchIndex}.price`) || 0;
@@ -169,6 +178,11 @@ export const BatchCard = ({
                 </Button>
               ))}
             </div>
+            {errors?.batches?.[batchIndex]?.schedule?.days?.message && (
+              <FormMessage>
+                {errors.batches[batchIndex]?.schedule?.days.message}
+              </FormMessage>
+            )}
           </div>
 
           {/* Time Selection */}

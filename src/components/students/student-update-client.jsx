@@ -260,6 +260,7 @@ export const StudentUpdateClient = ({ studentId }) => {
                     <FormControl>
                       <Textarea
                         placeholder="Enter student bio"
+                        className="resize-none"
                         rows={3}
                         {...field}
                       />
