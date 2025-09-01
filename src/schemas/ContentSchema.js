@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// Home page
 export const heroSectionBannersSchema = z.object({
   image1: z
     .any()
@@ -63,6 +64,15 @@ export const WhyCodInternsSchema = z.object({
 
 export const LearningToCareerSchema = z.object({
   desc: z.string().min(1, "Required"),
+  steps: z.array(
+    z.object({
+      index: z.number(),
+      title: z.string().min(1, "Title is required"),
+      title1: z.string().optional(),
+      description: z.string().optional(),
+      points: z.array(z.string()).optional(), // for list items
+    })
+  ),
 });
 
 export const ConnectWithUsSchema = z.object({
@@ -84,6 +94,7 @@ export const WeJustKeepGrowingSchema = z.object({
   imagePreview: z.string().optional(),
   desc: z.string().min(1, "Required"),
 });
+
 export const MentorsSchema = z.object({
   mentors: z
     .array(
@@ -96,4 +107,14 @@ export const MentorsSchema = z.object({
       })
     )
     .length(3, "Exactly 3 steps are required"),
+});
+
+
+// About us page
+
+export const HeroSectionSchema = z.object({
+  desc: z.string().min(1, "Required"),
+});
+export const AchieveYourGoalsSchema = z.object({
+  desc: z.string().min(1, "Required"),
 });

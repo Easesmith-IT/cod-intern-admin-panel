@@ -117,6 +117,7 @@ const UpdateCourse = () => {
 
         instructors,
         status,
+        isFastTrack
       } = data.course;
 
       setCourseData({
@@ -130,6 +131,7 @@ const UpdateCourse = () => {
           language,
           thumbnail,
           introVideo,
+          isFastTrack,
         },
         courseDetails: {
           pricing,

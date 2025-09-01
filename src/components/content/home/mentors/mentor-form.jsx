@@ -1,0 +1,146 @@
+"use client";
+
+import { useFieldArray, useFormContext, Controller } from "react-hook-form";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Plus, Trash2, Upload } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+
+export const MentorForm = ({ name }) => {
+  const { control, setValue, watch } = useFormContext();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: `${name}.arr`, // proficiencies
+  });
+
+  const imageFile = watch(`${name}.image`); // actual file
+  const imagePreview = watch(`${name}.imagePreview`); // preview url
+
+  const [localPreview, setLocalPreview] = useState(imagePreview || "");
+
+ const handleFileChange = (e) => {
+   const file = e.target.files?.[0];
+   if (file) {
+     // store actual File object
+     setValue(`${name}.image`, file);
+     // update preview as base64 string
+     updatePreview(e.target.files, `${name}.imagePreview`, setValue);
+   }
+ };
+
+  return (
+    <div className="space-y-4">
+      {/* Image Upload */}
+      <div className="space-y-2">
+        <FormLabel>Mentor Image</FormLabel>
+        {imagePreview && (
+          <div className="w-full h-[350px] relative rounded-md overflow-hidden border">
+            <Image
+              src={imagePreview}
+              alt="Preview"
+              fill
+              className="object-cover"
+            />
+          </div>
+        )}
+        <div className="flex items-center gap-3">
+          <label className="cursor-pointer flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-md border hover:bg-gray-200">
+            <Upload className="size-4" />
+            <span className="text-sm">Upload Image</span>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </label>
+          {imagePreview && (
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              onClick={() => {
+                setValue(`${name}.image`, null);
+                setValue(`${name}.imagePreview`, "");
+              }}
+            >
+              Remove
+            </Button>
+          )}
+        </div>
+      </div>
+      {/* Name */}
+      <FormField
+        control={control}
+        name={`${name}.name`}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Mentor Name</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter name" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {/* Position */}
+      <FormField
+        control={control}
+        name={`${name}.position`}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Position</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter position" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {/* Proficiencies */}
+      <div>
+        <FormLabel>Proficiencies</FormLabel>
+        <div className="space-y-3 mt-2">
+          {fields.map((field, index) => (
+            <div key={field.id} className="flex gap-2 items-center">
+              <FormField
+                control={control}
+                name={`${name}.arr.${index}`}
+                render={({ field }) => (
+                  <Input placeholder="Enter skill" {...field} />
+                )}
+              />
+              <Button
+                type="button"
+                size="icon"
+                variant="destructive"
+                onClick={() => remove(index)}
+              >
+                <Trash2 className="size-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          className="mt-3"
+          onClick={() => append("")}
+        >
+          <Plus className="size-4 mr-1" /> Add Skill
+        </Button>
+      </div>
+    </div>
+  );
+};

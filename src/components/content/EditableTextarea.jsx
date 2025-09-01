@@ -17,7 +17,7 @@ export const EditableTextarea = ({
   name = "desc",
   textareaClassName,
   pClassName,
-  isSubmitBtn=true
+  isSubmitBtn = true,
 }) => {
   const {
     control,
@@ -62,9 +62,13 @@ export const EditableTextarea = ({
               </FormItem>
             )}
           />
-          {isSubmitBtn && <Button className="mt-4" variant="codIntern">
-            Submit
-          </Button>}
+          {isSubmitBtn && (
+            <div className="flex justify-end">
+              <Button className="mt-4" variant="codIntern">
+                Submit
+              </Button>
+            </div>
+          )}
         </>
       ) : (
         <p

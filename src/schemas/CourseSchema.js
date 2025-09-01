@@ -9,6 +9,7 @@ export const step1Schema = z.object({
   level: z.enum(["beginner", "intermediate", "advanced"]),
   language: z.string().default("English"),
   introVideo: z.url().optional().or(z.literal("")),
+  isFastTrack: z.boolean().default(false),
 });
 
 export const step2Schema = z.object({
