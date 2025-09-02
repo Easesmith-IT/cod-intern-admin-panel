@@ -77,7 +77,7 @@ export const EditableTextarea = ({
             pClassName
           )}
         >
-          {watch("desc")}
+          {watch(name)}
         </p>
       )}
     </div>

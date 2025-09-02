@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2, Upload } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
 
 export const MentorForm = ({ name }) => {
   const { control, setValue, watch } = useFormContext();
@@ -24,7 +23,6 @@ export const MentorForm = ({ name }) => {
   const imageFile = watch(`${name}.image`); // actual file
   const imagePreview = watch(`${name}.imagePreview`); // preview url
 
-  const [localPreview, setLocalPreview] = useState(imagePreview || "");
 
  const handleFileChange = (e) => {
    const file = e.target.files?.[0];

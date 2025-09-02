@@ -159,3 +159,35 @@ export const AchieveYourGoalsSchema = z.object({
     )
     .min(1, "At least one item is required"),
 });
+
+export const ShapingFuturesSchema = z.object({
+  subheading: z.string().min(1, "Subheading required"),
+  paragraph: z.string().min(1, "Paragraph required"),
+  infos: z
+    .array(
+      z.object({
+        image: z.any(),
+        imagePreview: z.string().optional(),
+        title: z.string().min(1, "Title required"),
+        desc: z.string().min(1, "Description required"),
+      })
+    )
+    .length(3, "Exactly 3 steps are required"),
+});
+
+export const StartYourCourseSchema = z.object({
+  stats: z.array(
+    z.object({
+      icon: z.any(), // File input
+      iconPreview: z.string().optional(),
+      number: z.string().min(1, "Number is required"),
+      label: z.string().min(1, "Label is required"),
+    })
+  ),
+});
+
+export const ExpertInstructorLiveClassesSchema = z.object({
+  image: z.any(),
+  imagePreview: z.string().optional(),
+  desc: z.string().min(1, "Required"),
+});

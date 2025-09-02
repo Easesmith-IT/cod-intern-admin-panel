@@ -3,7 +3,7 @@ import { ExpertInstructorLiveClasses } from "@/components/content/about-us/exper
 import { HeroSection } from "@/components/content/about-us/hero";
 import { Mentors } from "@/components/content/about-us/mentors/mentors";
 import { ShapingFutures } from "@/components/content/about-us/shaping-futures/shaping-futures";
-import { StartYourCourse } from "@/components/content/about-us/start-your-course";
+import { StartYourCourse } from "@/components/content/about-us/start-your-course/start-your-course";
 import { LearnersStories } from "@/components/content/home/learners-stories/learners-stories";
 import { LearningToCareer } from "@/components/content/home/learning-to-career/learning-to-career";
 import { TypographyH2 } from "@/components/typography/typography-h2";
