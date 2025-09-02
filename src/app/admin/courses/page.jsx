@@ -44,6 +44,8 @@ const Courses = () => {
     queryKeys: ["course", status, category, level, page, searchTerm, limit],
   });
 
+  console.log("data", data);
+
   useEffect(() => {
     if (data?.pagination) {
       setPageCount(() => data?.pagination?.totalPages);

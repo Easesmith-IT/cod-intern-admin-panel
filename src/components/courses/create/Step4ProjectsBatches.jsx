@@ -52,8 +52,8 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
       batches: data.extras?.batches || [
         {
           name: "",
-          startDate: "",
-          endDate: "",
+          startDate: null,
+          endDate: null,
           schedule: {
             days: [],
             time: { start: "", end: "" },

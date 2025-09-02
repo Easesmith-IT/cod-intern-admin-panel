@@ -67,6 +67,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
       meetingLink: "",
       brochureFile: "",
       syllabusFile: "",
+      averageRating: "4.5",
     },
   });
 
@@ -89,6 +90,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
         venue,
         onlinePlatform,
         meetingLink,
+        averageRating
       } = data.additionalDetails;
 
       reset({
@@ -103,6 +105,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
         venue,
         onlinePlatform,
         meetingLink,
+        averageRating,
       });
       setFeatureIcons(features.map((feature) => feature.icon));
       setBrochureFile(brochure);
@@ -124,9 +127,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
     isPending,
     data: result,
   } = useApiMutation({
-    url: `/admin/courses/${
-      params.courseId
-    }/update-additional`,
+    url: `/admin/courses/${params.courseId}/update-additional`,
     method: PUT,
     isToast: true,
   });
@@ -177,6 +178,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
   };
 
   const onSubmit = async (formData) => {
+    console.log("formData", formData);
     // Create FormData for file uploads
     const submitData = new FormData();
     const featureIconFiles = Object.values(featureIcons);
@@ -399,8 +401,11 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
                       <FormLabel>Job Interviews (Optional)</FormLabel>
                       <Select
                         onValueChange={(value) => {
-                          if (value === "unlimited") {
-                            field.onChange("unlimited");
+                          if (
+                            value === "unlimited" ||
+                            value === "No guarantee"
+                          ) {
+                            field.onChange(value);
                           } else {
                             field.onChange(Number(value));
                           }
@@ -598,6 +603,19 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
                     )}
                   </div>
                 </div>
+                <FormField
+                  control={form.control}
+                  name="averageRating"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Rating *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter Rating" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </CardContent>
             </Card>
           </div>

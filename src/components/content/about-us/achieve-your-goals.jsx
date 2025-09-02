@@ -9,12 +9,13 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Pencil, X } from "lucide-react";
+import { Pencil, Plus, Trash, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AchieveYourGoalsSchema } from "@/schemas/ContentSchema";
 import { EditableTextarea } from "../EditableTextarea";
@@ -24,8 +25,31 @@ export const AchieveYourGoals = () => {
     resolver: zodResolver(AchieveYourGoalsSchema),
     defaultValues: {
       desc: "We don't only educate at CodIntern — we evolve. Our enhanced courses are tailored to narrow the gap between what they learn and what the job market requires. Through practical projects, AI-driven learning engines, and immersive mentorship, we empower learners to take bold strides towards their ideal jobs What You Can Achieve:",
+      items: [
+        {
+          text: "Master In-Demand Skills From programming to AI, web development to aptitude — know what employers are really looking for.",
+        },
+        {
+          text: "Crack Internships & Job Interviews Practice with resume assistance, mock interviews, and placement-ready training.",
+        },
+        {
+          text: "Build Real-World Projects Practice in the real world. Practice problems, develop apps, and present your portfolio to recruiters.",
+        },
+        {
+          text: "Learn Smarter with AI Get personalized learning with AI-created quizzes, progress monitoring, and adaptive difficulty levels.",
+        },
+        {
+          text: "Upskill Anytime, Anywhere With multilingual material, downloadable content, and mobile-supported access — learning is within reach",
+        },
+      ],
     },
   });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "items",
+  });
+
   const [isDescEdit, setIsDescEdit] = useState(false);
 
   const {
@@ -144,71 +168,56 @@ export const AchieveYourGoals = () => {
               isSubmitBtn={false}
             />
             <ul className="mt-5 space-y-5">
-              <li className="flex gap-2 items-center">
-                <Image
-                  src="/about-us/list-item.svg"
-                  width={21}
-                  height={17}
-                  alt="List Item"
-                />
-                <span className="text-xs sm:text-sm font-stolzl font-book text-para">
-                  Master In-Demand Skills From programming to AI, web
-                  development to aptitude — know what employers are really
-                  looking for.
-                </span>
-              </li>
-              <li className="flex gap-2 items-center">
-                <Image
-                  src="/about-us/list-item.svg"
-                  width={21}
-                  height={17}
-                  alt="List Item"
-                />
-                <span className="text-xs sm:text-sm font-stolzl font-book text-para">
-                  Crack Internships & Job Interviews Practice with resume
-                  assistance, mock interviews, and placement-ready training.
-                </span>
-              </li>
-              <li className="flex gap-2 items-center">
-                <Image
-                  src="/about-us/list-item.svg"
-                  width={21}
-                  height={17}
-                  alt="List Item"
-                />
-                <span className="text-xs sm:text-sm font-stolzl font-book text-para">
-                  Build Real-World Projects Practice in the real world. Practice
-                  problems, develop apps, and present your portfolio to
-                  recruiters.
-                </span>
-              </li>
-              <li className="flex gap-2 items-center">
-                <Image
-                  src="/about-us/list-item.svg"
-                  width={21}
-                  height={17}
-                  alt="List Item"
-                />
-                <span className="text-xs sm:text-sm font-stolzl font-book text-para">
-                  Learn Smarter with AI Get personalized learning with
-                  AI-created quizzes, progress monitoring, and adaptive
-                  difficulty levels.
-                </span>
-              </li>
-              <li className="flex gap-2 items-center">
-                <Image
-                  src="/about-us/list-item.svg"
-                  width={21}
-                  height={17}
-                  alt="List Item"
-                />
-                <span className="text-xs sm:text-sm font-stolzl font-book text-para">
-                  Upskill Anytime, Anywhere With multilingual material,
-                  downloadable content, and mobile-supported access — learning
-                  is within reach
-                </span>
-              </li>
+              {fields.map((field, index) => (
+                <li key={field.id} className="flex gap-3 items-start">
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.text`}
+                    render={({ field: f }) => (
+                      <FormItem>
+                        <FormLabel className="sr-only">
+                          List item text
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            {...f}
+                            rows={2}
+                            className="text-xs sm:text-sm font-stolzl resize-none font-book text-para w-full"
+                            placeholder="Enter list item text"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="mt-2 flex gap-2 items-center">
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      onClick={() => remove(index)}
+                      size="sm"
+                      aria-label={`Remove item ${index + 1}`}
+                    >
+                      <Trash size={16} />
+                    </Button>
+                  </div>
+                </li>
+              ))}
             </ul>
+
+            <div className="flex gap-2 justify-end mt-4">
+              <Button
+                type="button"
+                variant="codIntern"
+                onClick={() => append({ text: "New list item" })}
+              >
+                <Plus size={14} className="mr-2" /> Add item
+              </Button>
+
+              <Button type="submit" variant="codIntern">
+                Save
+              </Button>
+            </div>
           </form>
         </Form>
         <Button

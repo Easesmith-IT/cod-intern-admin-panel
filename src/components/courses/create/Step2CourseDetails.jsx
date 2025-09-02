@@ -1,5 +1,6 @@
 "use client";
 
+import DatePicker from "@/components/shared/DatePicker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -43,12 +44,12 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
       certificate: {
         title: "",
         provider: "CodIntern",
-        issueDate: "",
-        expiryDate: "",
+        issueDate: null,
+        expiryDate: null,
       },
       courseHighlights: [{ label: "", type: "feature", value: "" }],
       studentBenefits: [{ label: "", type: "feature", value: "" }],
-      ...data.courseDetails,
+      // ...data.courseDetails,
     },
   });
 
@@ -307,34 +308,40 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                 />
 
                 <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="certificate.issueDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Issue Date (Optional)</FormLabel>
-                        <FormControl>
-                          <Input type="date" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="certificate.expiryDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Expiry Date (Optional)</FormLabel>
-                        <FormControl>
-                          <Input type="date" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                                  <FormField
+                                    control={form.control}
+                                    name="certificate.issueDate"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Issue Date (Optional)</FormLabel>
+                                        <FormControl>
+                                          <DatePicker
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                
+                                  <FormField
+                                    control={form.control}
+                                    name="certificate.expiryDate"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Expiry Date (Optional)</FormLabel>
+                                        <FormControl>
+                                          <DatePicker
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
 
                 {/* Certificate Template Upload */}
                 <div>

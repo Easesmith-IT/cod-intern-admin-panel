@@ -359,7 +359,7 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
                             Click to upload thumbnail
                           </span>
                           <span className="text-xs text-gray-500">
-                            PNG, JPG up to 10MB
+                            PNG, JPG up to 4.5MB
                           </span>
                         </label>
                       </div>

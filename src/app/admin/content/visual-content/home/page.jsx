@@ -1,4 +1,4 @@
-import { HeroSection } from "@/components/content/home/hero-section";
+import { HeroSection } from "@/components/content/home/hero-section/hero-section";
 import { TypographyH2 } from "@/components/typography/typography-h2";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

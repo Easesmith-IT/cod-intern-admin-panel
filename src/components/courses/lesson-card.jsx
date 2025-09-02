@@ -125,7 +125,7 @@ export const LessonCard = ({
           name={`modules.${moduleIndex}.lessons.${lessonIndex}.contentUrl`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Content URL (Optional)</FormLabel>
+              <FormLabel>Content URL</FormLabel>
               <FormControl>
                 <Input placeholder="https://..." {...field} />
               </FormControl>

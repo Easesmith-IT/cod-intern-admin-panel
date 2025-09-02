@@ -44,7 +44,6 @@ export const BatchCard = ({
   });
 
   console.log("errors", errors);
-  
 
   const selectedDays = watch(`batches.${batchIndex}.schedule.days`) || [];
   const price = watch(`batches.${batchIndex}.price`) || 0;
@@ -145,7 +144,7 @@ export const BatchCard = ({
           name={`batches.${batchIndex}.endDate`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>End Date (Optional)</FormLabel>
+              <FormLabel>End Date</FormLabel>
               <FormControl>
                 <DatePicker value={field.value} onChange={field.onChange} />
               </FormControl>

@@ -64,6 +64,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
       meetingLink: "",
       brochureFile: "",
       syllabusFile: "",
+      averageRating: "4.5",
       ...data.additionalDetails,
     },
   });
@@ -139,6 +140,8 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
   };
 
   const onSubmit = async (formData) => {
+    console.log("formData", formData);
+    
     // Create FormData for file uploads
     const submitData = new FormData();
 
@@ -409,7 +412,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
                                 field.onChange(Number(value));
                               }
                             }}
-                            defaultValue={field.value?.toString() || "1"}
+                            value={field.value?.toString() || "1"}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -536,6 +539,20 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
                     )}
                   </div>
                 </div>
+
+                <FormField
+                  control={form.control}
+                  name="averageRating"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Rating *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter Rating" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </CardContent>
             </Card>
           </div>

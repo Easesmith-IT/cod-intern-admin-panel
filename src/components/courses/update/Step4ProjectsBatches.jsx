@@ -42,8 +42,8 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
       batches: [
         {
           name: "",
-          startDate: "",
-          endDate: "",
+          startDate: null,
+          endDate: null,
           schedule: {
             days: [],
             time: { start: "", end: "" },
@@ -64,7 +64,14 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
     if (data?.extras) {
       const { projects = [], batches } = data.extras;
 
-      reset({ projects, batches });
+      reset({
+        projects,
+        batches: batches.map((batch) => ({
+          ...batch,
+          startDate: batch.startDate ? new Date(batch.startDate) : "",
+          endDate: batch.endDate ? new Date(batch.endDate) : "",
+        })),
+      });
       setProjectFiles(projects.map((project) => project.icon));
     }
   }, [data?.extras]);

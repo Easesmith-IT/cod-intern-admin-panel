@@ -22,9 +22,10 @@ export const step2Schema = z.object({
   certificate: z.object({
     title: z.string().min(1, "Certificate title is required"),
     provider: z.string().optional(),
-    issueDate: z.string().optional(),
-    expiryDate: z.string().optional(),
+    issueDate: z.coerce.date().optional().nullable(),
+    expiryDate: z.coerce.date().optional().nullable(),
   }),
+
   courseHighlights: z
     .array(
       z.object({
@@ -75,10 +76,7 @@ const batchSchema = z.object({
     required_error: "Start date is required",
     invalid_type_error: "Invalid start date",
   }),
-  endDate: z.date({
-    required_error: "End date is required",
-    invalid_type_error: "Invalid end date",
-  }),
+  endDate: z.coerce.date().optional().nullable(),
   schedule: z.object({
     days: z.array(z.string()).min(1, "At least one day is required"),
     time: z.object({
@@ -103,11 +101,17 @@ export const step5Schema = z.object({
   classTiming: z.string().min(1, "Class timing is required"),
   totalSeats: z.number().min(1, "Total seats is required"),
   interviews: z
-    .union([z.number().int().min(0), z.literal("unlimited")])
+    .union([
+      z.coerce.number().int().min(0), // coerces string → number
+      z.literal("unlimited"),
+      z.literal("No guarantee"),
+    ])
     .optional(),
   integratedInternship: z.object({
     hasInternship: z.boolean().default(false),
-    count: z.union([z.number().min(1), z.literal("unlimited")]).optional(),
+    count: z
+      .union([z.coerce.number().optional(), z.literal("unlimited")])
+      .optional(),
   }),
   features: z
     .array(
@@ -130,6 +134,7 @@ export const step5Schema = z.object({
   //     .refine((files) => files instanceof FileList && files.length > 0, {
   //       message: "Syllabus pdf is required",
   //     }),
+  averageRating: z.string().default("4.5"),
 });
 
 export const step6Schema = z.object({

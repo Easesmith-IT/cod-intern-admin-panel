@@ -30,6 +30,8 @@ import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
 const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
+  console.log("data in step 2", data);
+
   const [certificateFile, setCertificateFile] = useState(null);
   const [certificatePreview, setCertificatePreview] = useState(null);
 
@@ -47,8 +49,8 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
       certificate: {
         title: "",
         provider: "CodIntern",
-        issueDate: "",
-        expiryDate: "",
+        issueDate: null,
+        expiryDate: null,
       },
       courseHighlights: [{ label: "", type: "feature", value: "" }],
       studentBenefits: [{ label: "", type: "feature", value: "" }],

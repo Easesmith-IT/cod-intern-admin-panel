@@ -73,6 +73,7 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
     },
   });
 
+  const {reset} = form;
 
   useEffect(() => {
       if (data?.modules.length > 0) {

@@ -16,7 +16,9 @@ export default function DatePicker({
   value,
   onChange,
   placeholder = "Select a date",
-  disabled
+  disabled,
+  fromYear = 1900,
+  toYear = 2100,
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -56,6 +58,8 @@ export default function DatePicker({
           onSelect={handleDateSelect}
           initialFocus
           disabled={disabled}
+          fromYear={fromYear}
+          toYear={toYear}
         />
       </PopoverContent>
     </Popover>

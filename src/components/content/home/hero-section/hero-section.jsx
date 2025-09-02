@@ -9,19 +9,25 @@ import {
 import { Form } from "@/components/ui/form";
 import { updatePreview } from "@/lib/updatePreview";
 import { cn } from "@/lib/utils";
-import { heroSectionBannersSchema } from "@/schemas/ContentSchema";
+import {
+  heroSectionBannersSchema,
+  HomeHeroSectionSchema,
+} from "@/schemas/ContentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { ImageUploadField } from "../image-upload-field";
+import { ImageUploadField } from "../../image-upload-field";
+import { TextField } from "./text-field";
+import { ButtonField } from "./button-field";
+import { TextField1 } from "./text-field1";
 
 export const HeroSection = () => {
   const [api, setApi] = useState();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
   const form = useForm({
-    resolver: zodResolver(heroSectionBannersSchema),
+    resolver: zodResolver(HomeHeroSectionSchema),
     defaultValues: {
       image1: "",
       image2: "",
@@ -29,6 +35,26 @@ export const HeroSection = () => {
       image1Preview: "/home/banner-1.png",
       image2Preview: "/home/banner-2.png",
       image3Preview: "/home/banner-3.png",
+      banner1: {
+        card1: {
+          title: "Training",
+          desc: "Al-Driven Courses Designed for Real-World Jobs",
+          button: { text: "View Courses", link: "#" },
+        },
+        card2: {
+          title: "Get Hired",
+          desc: "Get Trained at Codintern. Apply on Our Job Portal. Get Hired - For Free!",
+          button: { text: "View Hiring Drives", link: "#" },
+        },
+      },
+      banner2: {
+        button1: { text: "Request Call Back", link: "#" },
+        button2: { text: "Enquire Now", link: "#" },
+      },
+      banner3: {
+        button1: { text: "Talk To Your Advisor", link: "#" },
+        button2: { text: "Apply For Job", link: "#" },
+      },
     },
   });
 
@@ -123,14 +149,59 @@ export const HeroSection = () => {
         </CarouselContent>
       </Carousel>
       <Form {...form}>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex gap-3 items-center mt-4 w-full"
-        >
-          <ImageUploadField name="image1" previewName="image1Preview" />
-          <ImageUploadField name="image2" previewName="image2Preview" />
-          <ImageUploadField name="image3" previewName="image3Preview" />
-          <Button variant="codIntern">Submit</Button>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-2">
+          {/* Uploads */}
+          <div className="flex gap-4">
+            <ImageUploadField name="image1" previewName="image1Preview" />
+            <ImageUploadField name="image2" previewName="image2Preview" />
+            <ImageUploadField name="image3" previewName="image3Preview" />
+          </div>
+
+          {/* Banner 1 */}
+          <section className="space-y-4 border p-4 rounded-xl">
+            <h2 className="font-semibold text-lg">Banner 1</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Card 1 */}
+              <div className="space-y-3 border rounded-lg p-3">
+                <h3 className="font-medium">Card 1</h3>
+                <TextField name="banner1.card1.title" label="Title" />
+                <TextField1 name="banner1.card1.desc" label="Description" />
+                <ButtonField name="banner1.card1.button" />
+              </div>
+
+              {/* Card 2 */}
+              <div className="space-y-3 border rounded-lg p-3">
+                <h3 className="font-medium">Card 2</h3>
+                <TextField name="banner1.card2.title" label="Title" />
+                <TextField1 name="banner1.card2.desc" label="Description" />
+                <ButtonField name="banner1.card2.button" />
+              </div>
+            </div>
+          </section>
+
+          {/* Banner 2 */}
+          <section className="space-y-4 border p-4 rounded-xl">
+            <h2 className="font-semibold text-lg">Banner 2</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <ButtonField name="banner2.button1" />
+              <ButtonField name="banner2.button2" />
+            </div>
+          </section>
+
+          {/* Banner 3 */}
+          <section className="space-y-4 border p-4 rounded-xl">
+            <h2 className="font-semibold text-lg">Banner 3</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <ButtonField name="banner3.button1" />
+              <ButtonField name="banner3.button2" />
+            </div>
+          </section>
+
+          <div className="flex justify-end">
+            <Button variant="codIntern">
+              Submit
+            </Button>
+          </div>
         </form>
       </Form>
     </>
