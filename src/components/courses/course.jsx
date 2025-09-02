@@ -30,6 +30,7 @@ export const Course = ({ course }) => {
     category,
     averageRating,
     level,
+    studentCount
   } = course;
 
   const {
@@ -136,9 +137,7 @@ export const Course = ({ course }) => {
             {category}
           </Badge>
         </TableCell>
-        <TableCell className="capitalize">
-          {level}
-        </TableCell>
+        <TableCell className="capitalize">{level}</TableCell>
         <TableCell>
           <div className="font-medium flex items-center">
             <IndianRupee className="size-3" />
@@ -148,7 +147,8 @@ export const Course = ({ course }) => {
         <TableCell title="Total enrolled students across all batches">
           <div className="flex items-center">
             <Users className="h-3 w-3 mr-1 text-muted-foreground" />
-            <span>{totalStudents}</span>
+            {/* <span>{totalStudents}</span> */}
+            <span>{studentCount}</span>
           </div>
         </TableCell>
         <TableCell>

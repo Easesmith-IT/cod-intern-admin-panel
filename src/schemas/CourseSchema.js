@@ -10,6 +10,7 @@ export const step1Schema = z.object({
   language: z.string().default("English"),
   introVideo: z.url().optional().or(z.literal("")),
   isFastTrack: z.boolean().default(false),
+  studentCount: z.coerce.number().default(0),
 });
 
 export const step2Schema = z.object({

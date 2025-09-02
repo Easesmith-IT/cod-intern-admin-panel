@@ -49,6 +49,7 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
       language: "English",
       introVideo: "",
       isFastTrack: false,
+      studentCount: 0,
       ...data.basicInfo,
     },
   });
@@ -304,6 +305,23 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
                           <SelectItem value="French">French</SelectItem>
                         </SelectContent>
                       </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="studentCount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Student Count *</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Student Count"
+                          {...field}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}

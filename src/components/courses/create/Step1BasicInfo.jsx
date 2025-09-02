@@ -45,6 +45,7 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
       language: "English",
       introVideo: "",
       isFastTrack: false,
+      studentCount: 0,
       ...data.basicInfo,
     },
   });
@@ -295,6 +296,21 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="studentCount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Student Count *</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="Student Count" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={control}
                   name="isFastTrack"
@@ -307,7 +323,9 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
                             onCheckedChange={field.onChange}
                           />
                         </FormControl>
-                        <FormLabel className="text-sm">This is Fast track course</FormLabel>
+                        <FormLabel className="text-sm">
+                          This is Fast track course
+                        </FormLabel>
                       </div>
                     </FormItem>
                   )}
