@@ -70,6 +70,7 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
   } = useApiMutation({
     url: `/admin/courses/${params.courseId}/edit`,
     method: PATCH,
+    invalidateKey: ["course"],
   });
 
   const handleThumbnailChange = (event) => {

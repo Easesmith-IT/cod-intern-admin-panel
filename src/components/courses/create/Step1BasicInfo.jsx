@@ -58,6 +58,7 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
   } = useApiMutation({
     url: "/admin/courses/create",
     method: POST,
+    invalidateKey: ["course"],
   });
 
   const handleThumbnailChange = (event) => {

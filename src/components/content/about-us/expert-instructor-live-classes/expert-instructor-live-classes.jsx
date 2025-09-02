@@ -109,7 +109,7 @@ export const ExpertInstructorLiveClasses = () => {
                   )}
                 />
               ) : (
-                <div className="font-stolzl text-xs sm:text-sm text-para max-w-[869px] mt-4 font-book">
+                <div className="font-stolzl text-xs sm:text-sm text-para max-w-[869px] mt-4 font-book my-editor prose prose-sm prose-p:mb-4 prose-p:mt-0">
                   {watch("desc") && parse(watch("desc"), options)}
                 </div>
               )}

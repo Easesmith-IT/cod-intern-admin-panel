@@ -1,11 +1,12 @@
 import { AchieveYourGoals } from "@/components/content/about-us/achieve-your-goals";
 import { ExpertInstructorLiveClasses } from "@/components/content/about-us/expert-instructor-live-classes/expert-instructor-live-classes";
 import { HeroSection } from "@/components/content/about-us/hero";
-import { Mentors } from "@/components/content/about-us/mentors/mentors";
+// import { Mentors } from "@/components/content/about-us/mentors/mentors";
 import { ShapingFutures } from "@/components/content/about-us/shaping-futures/shaping-futures";
 import { StartYourCourse } from "@/components/content/about-us/start-your-course/start-your-course";
 import { LearnersStories } from "@/components/content/home/learners-stories/learners-stories";
 import { LearningToCareer } from "@/components/content/home/learning-to-career/learning-to-career";
+import { Mentors } from "@/components/content/home/mentors/mentors";
 import { TypographyH2 } from "@/components/typography/typography-h2";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
