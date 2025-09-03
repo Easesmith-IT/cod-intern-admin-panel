@@ -22,6 +22,7 @@ export const step2Schema = z.object({
   }),
   certificate: z.object({
     title: z.string().min(1, "Certificate title is required"),
+    description: z.string().min(1, "Certificate description is required"),
     provider: z.string().optional(),
     issueDate: z.coerce.date().optional().nullable(),
     expiryDate: z.coerce.date().optional().nullable(),
@@ -73,6 +74,12 @@ const projectSchema = z.object({
 
 const batchSchema = z.object({
   name: z.string().min(1, "Batch name is required"),
+  image: z
+    .any(),
+    // .refine((files) => files instanceof FileList && files.length > 0, {
+    //   message: "Batch image is required",
+    // }),
+  imagePreview: z.string().optional(),
   startDate: z.date({
     required_error: "Start date is required",
     invalid_type_error: "Invalid start date",
@@ -89,7 +96,13 @@ const batchSchema = z.object({
   price: z.number().min(0, "Price is required"),
   offerPrice: z.number().min(0).optional(),
   status: z.enum(["upcoming", "ongoing", "completed"]).default("upcoming"),
-  batchHighlights: z.array(z.string()).optional(),
+  batchHighlights: z
+    .array(
+      z.object({
+        text: z.string().min(1, "Highlight is required"),
+      })
+    )
+    .optional(),
 });
 
 export const step4Schema = z.object({

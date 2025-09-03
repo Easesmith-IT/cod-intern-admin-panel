@@ -14,9 +14,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IndianRupee, Users, X } from "lucide-react";
+import { ImageIcon, IndianRupee, Users, X } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import DatePicker from "../shared/DatePicker";
+import { useEffect } from "react";
+import { updatePreview } from "@/lib/updatePreview";
 
 export const BatchCard = ({
   batchIndex,
@@ -28,9 +30,9 @@ export const BatchCard = ({
   const {
     setValue,
     getValues,
-    handleSubmit,
     watch,
     control,
+    register,
     formState: { errors },
   } = useFormContext();
 
@@ -42,6 +44,24 @@ export const BatchCard = ({
     control: control,
     name: `batches.${batchIndex}.batchHighlights`,
   });
+
+  console.log("getValues", getValues());
+
+  const imageRef = register(`batches.${batchIndex}.image`);
+  const image = watch(`batches.${batchIndex}.image`);
+  const imagePreview = watch(`batches.${batchIndex}.imagePreview`);
+
+  console.log("image", image);
+  
+
+  useEffect(() => {
+    image && updatePreview(image, `batches.${batchIndex}.imagePreview`, setValue);
+  }, [setValue, image]);
+
+  const removeImage = () => {
+    setValue(`batches.${batchIndex}.image`, null);
+    setValue(`batches.${batchIndex}.imagePreview`, "");
+  };
 
   console.log("errors", errors);
 
@@ -83,6 +103,57 @@ export const BatchCard = ({
         )}
       </div>
 
+      <FormField
+        control={control}
+        name={`batches.${batchIndex}.image`}
+        render={({ field }) => (
+          <FormItem>
+            <div className="w-52">
+              <FormLabel className="cursor-pointer">
+                {!imagePreview && (
+                  <div className="border-2 border-dashed border-[#C2CDD6] w-52 h-40 rounded-lg flex flex-col justify-center items-center">
+                    <div className="flex flex-col items-center border-dashed rounded px-5">
+                      <ImageIcon className="h-8 w-8 text-neutral-700" />
+                      <p className="font-bold text-neutral-700 mt-2 text-center text-sm">
+                        Upload Thumbnail
+                      </p>
+                      <span className="text-xs text-gray-500">
+                        PNG, JPG up to 4.5MB
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </FormLabel>
+              {imagePreview && (
+                <div className="relative inline-block">
+                  <img
+                    src={imagePreview}
+                    alt="Thumbnail preview"
+                    className="w-52 h-40 object-cover rounded-lg border"
+                  />
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+
+              <FormControl>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  {...imageRef}
+                />
+              </FormControl>
+            </div>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <FormField
           control={control}
@@ -100,7 +171,6 @@ export const BatchCard = ({
             </FormItem>
           )}
         />
-
         <FormField
           control={control}
           name={`batches.${batchIndex}.status`}
@@ -303,6 +373,53 @@ export const BatchCard = ({
           </div>
         </div>
       )}
+
+      <div>
+        <FormLabel>Batch Highlights</FormLabel>
+        <div className="space-y-3 mt-2">
+          {highlightFields.map((field, index) => (
+            <div
+              key={field.id}
+              className="flex items-center gap-2 border rounded-lg p-2"
+            >
+              <FormField
+                control={control}
+                name={`batches.${batchIndex}.batchHighlights.${index}.text`}
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <Input
+                        placeholder="e.g., Live interactive classes"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => removeHighlight(index)}
+                className="text-red-600 hover:text-red-700"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => appendHighlight({ text: "" })}
+            className="w-full"
+          >
+            + Add Highlight
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

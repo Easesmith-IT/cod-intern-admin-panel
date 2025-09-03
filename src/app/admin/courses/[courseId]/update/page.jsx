@@ -75,7 +75,7 @@ const UpdateCourse = () => {
 
   const { data, isLoading, error } = useApiQuery({
     url: `/admin/courses/${params.courseId}`,
-    queryKeys: ["course"],
+    queryKeys: ["course", params.courseId],
   });
 
   console.log("course", data?.course);

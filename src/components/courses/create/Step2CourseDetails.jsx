@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { PATCH } from "@/constants/apiMethods";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { step2Schema } from "@/schemas/CourseSchema";
@@ -43,6 +44,7 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
       },
       certificate: {
         title: "",
+        description: "",
         provider: "CodIntern",
         issueDate: null,
         expiryDate: null,
@@ -292,6 +294,24 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
 
                 <FormField
                   control={form.control}
+                  name="certificate.description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Certificate Description *</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          className="resize-none h-48"
+                          placeholder="Certificate Description"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
                   name="certificate.provider"
                   render={({ field }) => (
                     <FormItem>
@@ -308,40 +328,40 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                 />
 
                 <div className="grid grid-cols-2 gap-4">
-                                  <FormField
-                                    control={form.control}
-                                    name="certificate.issueDate"
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Issue Date (Optional)</FormLabel>
-                                        <FormControl>
-                                          <DatePicker
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                          />
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                
-                                  <FormField
-                                    control={form.control}
-                                    name="certificate.expiryDate"
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Expiry Date (Optional)</FormLabel>
-                                        <FormControl>
-                                          <DatePicker
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                          />
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                </div>
+                  <FormField
+                    control={form.control}
+                    name="certificate.issueDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Issue Date (Optional)</FormLabel>
+                        <FormControl>
+                          <DatePicker
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="certificate.expiryDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Expiry Date (Optional)</FormLabel>
+                        <FormControl>
+                          <DatePicker
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 {/* Certificate Template Upload */}
                 <div>
@@ -419,7 +439,7 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                           )}
                         />
 
-                        <FormField
+                        {/* <FormField
                           control={form.control}
                           name={`courseHighlights.${index}.type`}
                           render={({ field }) => (
@@ -446,10 +466,10 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                               </Select>
                             </FormItem>
                           )}
-                        />
+                        /> */}
                       </div>
 
-                      <FormField
+                      {/* <FormField
                         control={form.control}
                         name={`courseHighlights.${index}.value`}
                         render={({ field }) => (
@@ -462,7 +482,7 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                             </FormControl>
                           </FormItem>
                         )}
-                      />
+                      /> */}
                     </div>
 
                     {highlightFields.length > 1 && (
@@ -521,7 +541,7 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                           )}
                         />
 
-                        <FormField
+                        {/* <FormField
                           control={form.control}
                           name={`studentBenefits.${index}.type`}
                           render={({ field }) => (
@@ -548,10 +568,10 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                               </Select>
                             </FormItem>
                           )}
-                        />
+                        /> */}
                       </div>
 
-                      <FormField
+                      {/* <FormField
                         control={form.control}
                         name={`studentBenefits.${index}.value`}
                         render={({ field }) => (
@@ -564,7 +584,7 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                             </FormControl>
                           </FormItem>
                         )}
-                      />
+                      /> */}
                     </div>
 
                     {benefitFields.length > 1 && (

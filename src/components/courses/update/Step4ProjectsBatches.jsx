@@ -42,6 +42,8 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
       batches: [
         {
           name: "",
+          image: "",
+          imagePreview: "",
           startDate: null,
           endDate: null,
           schedule: {
@@ -70,6 +72,9 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
           ...batch,
           startDate: batch.startDate ? new Date(batch.startDate) : "",
           endDate: batch.endDate ? new Date(batch.endDate) : "",
+          image: null,
+          imagePreview: batch.image || "",
+          batchHighlights: batch.batchHighlights.map((text) => ({ text })),
         })),
       });
       setProjectFiles(projects.map((project) => project.icon));
@@ -101,6 +106,7 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
   } = useApiMutation({
     url: `/admin/courses/${params.courseId}/extras`,
     method: PATCH,
+    invalidateKey: "course",
   });
 
   const handleProjectFileChange = (projectIndex, event) => {
@@ -152,6 +158,8 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
     // Create FormData for file uploads
     const submitData = new FormData();
 
+    console.log("formData", formData);
+
     // Add projects data
     if (formData.projects && formData.projects.length > 0) {
       if (Array.isArray(projectFiles)) {
@@ -179,9 +187,24 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
       }
     }
 
-    // Add batches data
     if (formData.batches && formData.batches.length > 0) {
-      submitData.append("batches", JSON.stringify(formData.batches));
+      formData.batches.forEach((batch) => {
+        console.log("batch", batch);
+        if (batch.image?.[0] instanceof File) {
+          submitData.append("batchImages", batch.image?.[0]);
+        }
+      });
+
+      const batchesWithoutPreview = formData.batches.map((batch) => {
+        const batchHighlights = batch.batchHighlights.map(
+          (highlight) => highlight.text
+        );
+        const { imagePreview, image, ...rest } = batch;
+        return { ...rest, batchHighlights };
+      });
+      submitData.append("batches", JSON.stringify(batchesWithoutPreview));
+
+      // Add batch images separately
     }
 
     await updateExtras(submitData);
@@ -386,8 +409,8 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
                   onClick={() =>
                     appendBatch({
                       name: "",
-                      startDate: "",
-                      endDate: "",
+                      startDate: null,
+                      endDate: null,
                       schedule: {
                         days: [],
                         time: { start: "", end: "" },

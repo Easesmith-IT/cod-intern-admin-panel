@@ -64,7 +64,7 @@ export const Sidebar = () => {
   return (
     <div
       className={cn(
-        "bg-white shadow-lg h-[100vh] sticky top-0 overflow-y-auto transition-all overflow-x-hidden duration-300 flex flex-col border-r",
+        "bg-white shadow-lg h-[100vh] shrink-0 sticky top-0 overflow-y-auto transition-all overflow-x-hidden duration-300 flex flex-col border-r",
         collapsed ? "w-20" : "w-64"
       )}
     >

@@ -346,13 +346,19 @@ const CourseDetails = () => {
                       <div className="text-sm font-medium text-gray-500">
                         Title
                       </div>
-                      <div>{course.certificate.title}</div>
+                      <div>{course.certificate.title || "NA"}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-gray-500">
+                        Description
+                      </div>
+                      <div>{course.certificate.description || "NA"}</div>
                     </div>
                     <div>
                       <div className="text-sm font-medium text-gray-500">
                         Provider
                       </div>
-                      <div>{course.certificate.provider}</div>
+                      <div>{course.certificate.provider || "NA"}</div>
                     </div>
                     {course.certificate.issueDate && (
                       <div>

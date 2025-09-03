@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { PATCH } from "@/constants/apiMethods";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { step2Schema } from "@/schemas/CourseSchema";
@@ -48,6 +49,7 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
       },
       certificate: {
         title: "",
+        description: "",
         provider: "CodIntern",
         issueDate: null,
         expiryDate: null,
@@ -303,6 +305,23 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="certificate.description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Certificate Description *</FormLabel>
+                      <FormControl>
+                        <Textarea
+                        className="resize-none h-48"
+                          placeholder="Certificate Description"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}
@@ -433,7 +452,7 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                           )}
                         />
 
-                        <FormField
+                        {/* <FormField
                           control={form.control}
                           name={`courseHighlights.${index}.type`}
                           render={({ field }) => (
@@ -460,10 +479,10 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                               </Select>
                             </FormItem>
                           )}
-                        />
+                        /> */}
                       </div>
 
-                      <FormField
+                      {/* <FormField
                         control={form.control}
                         name={`courseHighlights.${index}.value`}
                         render={({ field }) => (
@@ -476,7 +495,7 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                             </FormControl>
                           </FormItem>
                         )}
-                      />
+                      /> */}
                     </div>
 
                     {highlightFields.length > 1 && (
@@ -535,7 +554,7 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                           )}
                         />
 
-                        <FormField
+                        {/* <FormField
                           control={form.control}
                           name={`studentBenefits.${index}.type`}
                           render={({ field }) => (
@@ -562,10 +581,10 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                               </Select>
                             </FormItem>
                           )}
-                        />
+                        /> */}
                       </div>
 
-                      <FormField
+                      {/* <FormField
                         control={form.control}
                         name={`studentBenefits.${index}.value`}
                         render={({ field }) => (
@@ -578,7 +597,7 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                             </FormControl>
                           </FormItem>
                         )}
-                      />
+                      /> */}
                     </div>
 
                     {benefitFields.length > 1 && (
