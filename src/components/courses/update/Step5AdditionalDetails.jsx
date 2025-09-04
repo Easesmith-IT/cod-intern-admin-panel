@@ -822,7 +822,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
                   )}
                 />
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="onlinePlatform"
                   render={({ field }) => (
@@ -848,9 +848,9 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="meetingLink"
                   render={({ field }) => (
@@ -869,7 +869,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
               </CardContent>
             </Card>
           </div>

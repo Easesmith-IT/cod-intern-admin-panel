@@ -21,6 +21,10 @@ import { ImageUploadField } from "../../image-upload-field";
 import { TextField } from "./text-field";
 import { ButtonField } from "./button-field";
 import { TextField1 } from "./text-field1";
+import { POST } from "@/constants/apiMethods";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { useApiQuery } from "@/hooks/useApiQuery";
+import Spinner from "@/components/shared/Spinner";
 
 export const HeroSection = () => {
   const [api, setApi] = useState();
@@ -58,7 +62,7 @@ export const HeroSection = () => {
     },
   });
 
-  const { handleSubmit, watch, setValue } = form;
+  const { handleSubmit, watch, setValue, reset } = form;
 
   const image1 = watch("image1");
   const image2 = watch("image2");
@@ -82,10 +86,52 @@ export const HeroSection = () => {
     });
   }, [api]);
 
+  const { data: heroSectionData } = useApiQuery({
+    url: "/admin/content/hero-section",
+    queryKeys: ["hero-section"],
+  });
+
+  console.log("heroSectionData", heroSectionData);
+
+  useEffect(() => {
+    if (heroSectionData?.data) {
+      const { image1, image2, image3 } = heroSectionData?.data;
+
+      reset({
+        ...heroSectionData.data,
+        image1: null,
+        image2: null,
+        image3: null,
+        image1Preview: image1,
+        image2Preview: image2,
+        image3Preview: image3,
+      });
+    }
+  }, [heroSectionData, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content/hero-section?id=${heroSectionData?.data?._id || ""}`,
+    method: POST,
+    invalidateKey: ["hero-section"],
+  });
+
+  console.log("result", result);
+
   const onSubmit = async (data) => {
     console.log("data", data);
     const formData = new FormData();
-    formData.append("image", data.image1[0]);
+    data.image1?.[0] && formData.append("image1", data.image1?.[0]);
+    data.image2?.[0] && formData.append("image2", data.image2?.[0]);
+    data.image3?.[0] && formData.append("image3", data.image3?.[0]);
+    formData.append("banner1", JSON.stringify(data.banner1));
+    formData.append("banner2", JSON.stringify(data.banner2));
+    formData.append("banner3", JSON.stringify(data.banner3));
+
+    submitForm(formData);
   };
 
   return (
@@ -199,7 +245,7 @@ export const HeroSection = () => {
 
           <div className="flex justify-end">
             <Button variant="codIntern">
-              Submit
+              {isSubmitFormLoading ? <Spinner /> : "Submit"}
             </Button>
           </div>
         </form>

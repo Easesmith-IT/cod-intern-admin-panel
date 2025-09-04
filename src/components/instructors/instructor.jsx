@@ -19,21 +19,20 @@ export const Instructor = ({ instructor }) => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [isActive, setIsActive] = useState(instructor.isActive || false);
 
-  const {
-    mutateAsync: toggleStatus,
-    isPending,
-  } = useApiMutation({
+  const { mutateAsync: toggleStatus, isPending } = useApiMutation({
     url: `/admin/instructors/${instructor?._id}/toggle-status`,
     method: PATCH,
     invalidateKey: ["instructors"],
   });
 
-  const { mutateAsync: deleteInstructor, isPending: isDeleteInstructorLoading } =
-    useApiMutation({
-      url: `/admin/instructors/${instructor?._id}`,
-      method: DELETE,
-      invalidateKey: ["instructors"],
-    });
+  const {
+    mutateAsync: deleteInstructor,
+    isPending: isDeleteInstructorLoading,
+  } = useApiMutation({
+    url: `/admin/instructors/${instructor?._id}`,
+    method: DELETE,
+    invalidateKey: ["instructors"],
+  });
 
   const handleDeleteInstructor = async () => {
     await deleteInstructor();
@@ -51,7 +50,7 @@ export const Instructor = ({ instructor }) => {
   const onDelete = () => {
     setIsAlertModalOpen(true);
   };
-  
+
   const onView = () => {
     router.push(`/admin/instructors/${instructor?._id}`);
   };
@@ -72,25 +71,32 @@ export const Instructor = ({ instructor }) => {
                 className="object-cover"
               />
               <AvatarFallback>
-                {instructor.firstName?.charAt(0)}{instructor.lastName?.charAt(0)}
+                {instructor.firstName?.charAt(0)}
+                {instructor.lastName?.charAt(0)}
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium">{instructor.firstName} {instructor.lastName}</p>
-              <p className="text-sm text-muted-foreground">{instructor.email}</p>
+              <p className="font-medium">
+                {instructor.firstName} {instructor.lastName}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {instructor.email || "NA"}
+              </p>
             </div>
           </div>
         </TableCell>
-        
-        <TableCell>{instructor.phone || "N/A"}</TableCell>
-        
+
+        <TableCell>{instructor.phone || "NA"}</TableCell>
+
         <TableCell>
           <div className="flex flex-wrap gap-1 max-w-32">
-            {instructor.expertise?.slice(0, 2).map((skill, index) => (
-              <Badge key={index} variant="secondary" className="text-xs">
-                {skill}
-              </Badge>
-            ))}
+            {instructor.expertise.length > 0
+              ? instructor.expertise?.slice(0, 2).map((skill, index) => (
+                  <Badge key={index} variant="secondary" className="text-xs">
+                    {skill}
+                  </Badge>
+                ))
+              : "NA"}
             {instructor.expertise?.length > 2 && (
               <Badge variant="outline" className="text-xs">
                 +{instructor.expertise.length - 2}
@@ -98,7 +104,7 @@ export const Instructor = ({ instructor }) => {
             )}
           </div>
         </TableCell>
-        
+
         <TableCell>
           <div className="flex items-center space-x-1">
             <Star className="h-4 w-4 text-yellow-500" />
@@ -108,15 +114,24 @@ export const Instructor = ({ instructor }) => {
             </span>
           </div>
         </TableCell>
-        
+
         <TableCell>{instructor.courses?.length || 0}</TableCell>
-        
+
         <TableCell>{instructor.certifications?.length || 0}</TableCell>
-        
+
         <TableCell>
           <div className="flex flex-col gap-2 items-start justify-center">
-            <Badge className="capitalize h-6" variant={isActive ? "success" : "secondary"}>
-              {isPending ? <Spinner spinnerClassName="size-4" /> : (isActive ? "Active" : "Inactive")}
+            <Badge
+              className="capitalize h-6"
+              variant={isActive ? "success" : "secondary"}
+            >
+              {isPending ? (
+                <Spinner spinnerClassName="size-4" />
+              ) : isActive ? (
+                "Active"
+              ) : (
+                "Inactive"
+              )}
             </Badge>
             <Switch
               checked={isActive}
@@ -125,7 +140,7 @@ export const Instructor = ({ instructor }) => {
             />
           </div>
         </TableCell>
-        
+
         <TableCell className="text-right">
           <Actions onDelete={onDelete} onEdit={onEdit} onView={onView} />
         </TableCell>

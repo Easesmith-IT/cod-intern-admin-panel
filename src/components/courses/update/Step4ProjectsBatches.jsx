@@ -64,11 +64,11 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
 
   useEffect(() => {
     if (data?.extras) {
-      const { projects = [], batches } = data.extras;
+      const { projects = [], batches = [] } = data.extras;
 
       reset({
         projects,
-        batches: batches.map((batch) => ({
+        batches: batches?.map((batch) => ({
           ...batch,
           startDate: batch.startDate ? new Date(batch.startDate) : "",
           endDate: batch.endDate ? new Date(batch.endDate) : "",
@@ -189,8 +189,8 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
 
     if (formData.batches && formData.batches.length > 0) {
       formData.batches.forEach((batch) => {
-        console.log("batch", batch);
-        if (batch.image?.[0] instanceof File) {
+        if (batch.image && batch.image?.[0] instanceof File) {
+          console.log("batch", batch);
           submitData.append("batchImages", batch.image?.[0]);
         }
       });
@@ -200,7 +200,7 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
           (highlight) => highlight.text
         );
         const { imagePreview, image, ...rest } = batch;
-        return { ...rest, batchHighlights };
+        return { ...rest, batchHighlights, image: imagePreview };
       });
       submitData.append("batches", JSON.stringify(batchesWithoutPreview));
 

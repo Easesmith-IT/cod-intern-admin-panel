@@ -814,7 +814,7 @@ export const InstructorUpdateClient = ({ instructorId }) => {
                   <Label className="text-muted-foreground">
                     Instructor ID (Read-only)
                   </Label>
-                  <Input value={instructor._id || "N/A"} disabled />
+                  <Input value={instructor._id || "NA"} disabled />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-muted-foreground">

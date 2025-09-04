@@ -90,7 +90,7 @@ export const Student = ({ student }) => {
         </TableCell>
         {/* <TableCell></TableCell> */}
         <TableCell>{student.emailId}</TableCell>
-        <TableCell>{student.phone || "N/A"}</TableCell>
+        <TableCell>{student.phone || "NA"}</TableCell>
         <TableCell>
           <Badge className="capitalize" variant="secondary">
             {student.authProvider}

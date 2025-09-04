@@ -43,6 +43,10 @@ export function useApiQuery({
   return useQuery({
     queryKey: [params, ...queryKeys], // Ensures caching based on query params
     queryFn: () => fetchApi({ url, params, axiosOptions }),
+    staleTime: 1000 * 60 * 5, // cache stays fresh for 5 min
+    refetchOnWindowFocus: false, // prevent auto refetch on tab switch
+    refetchOnMount: false, // don’t refetch immediately on mount
+    retry: 1, // retry once (instead of infinite retries)
     ...options, // Allows passing additional options like staleTime, enabled, etc.
   });
 }
