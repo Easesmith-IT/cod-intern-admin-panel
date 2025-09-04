@@ -301,9 +301,6 @@ export const BatchCard = ({
                     type="number"
                     placeholder="50"
                     {...field}
-                    onChange={(e) =>
-                      field.onChange(Number(e.target.value) || 0)
-                    }
                   />
                   <Users className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
                 </div>
@@ -327,9 +324,6 @@ export const BatchCard = ({
                     placeholder="29999"
                     className="pl-10"
                     {...field}
-                    onChange={(e) =>
-                      field.onChange(Number(e.target.value) || 0)
-                    }
                   />
                 </div>
               </FormControl>
@@ -352,9 +346,6 @@ export const BatchCard = ({
                     placeholder="19999"
                     className="pl-10"
                     {...field}
-                    onChange={(e) =>
-                      field.onChange(Number(e.target.value) || 0)
-                    }
                   />
                 </div>
               </FormControl>
