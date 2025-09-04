@@ -37,8 +37,8 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
     resolver: zodResolver(step2Schema),
     defaultValues: {
       pricing: {
-        price: 0,
-        discountPrice: 0,
+        // price: 0,
+        // discountPrice: 0,
         currency: "INR",
         isFree: false,
       },
@@ -205,9 +205,6 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                                 placeholder="29999"
                                 className="pl-10"
                                 {...field}
-                                onChange={(e) =>
-                                  field.onChange(Number(e.target.value))
-                                }
                               />
                             </div>
                           </FormControl>
@@ -230,9 +227,6 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                                 placeholder="19999"
                                 className="pl-10"
                                 {...field}
-                                onChange={(e) =>
-                                  field.onChange(Number(e.target.value) || 0)
-                                }
                               />
                             </div>
                           </FormControl>
@@ -315,7 +309,9 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                   name="certificate.provider"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Certification Provider</FormLabel>
+                      <FormLabel>
+                        Certification Provider (Not using on website)
+                      </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="e.g., CodIntern, NASSCOM"
@@ -333,7 +329,9 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                     name="certificate.issueDate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Issue Date (Optional)</FormLabel>
+                        <FormLabel>
+                          Issue Date (Optional) (Not using on website)
+                        </FormLabel>
                         <FormControl>
                           <DatePicker
                             value={field.value}
@@ -350,7 +348,9 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
                     name="certificate.expiryDate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Expiry Date (Optional)</FormLabel>
+                        <FormLabel>
+                          Expiry Date (Optional) (Not using on website)
+                        </FormLabel>
                         <FormControl>
                           <DatePicker
                             value={field.value}
@@ -365,7 +365,9 @@ const Step2CourseDetails = ({ data, updateData, onNext, onPrevious }) => {
 
                 {/* Certificate Template Upload */}
                 <div>
-                  <FormLabel>Certificate Template (Optional)</FormLabel>
+                  <FormLabel>
+                    Certificate Template (Not using on website)
+                  </FormLabel>
                   <div className="mt-2">
                     {certificatePreview ? (
                       <div className="relative inline-block">

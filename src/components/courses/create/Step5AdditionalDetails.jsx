@@ -52,7 +52,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
     defaultValues: {
       courseDuration: "",
       classTiming: "",
-      totalSeats: 100,
+      // totalSeats: 100,
       interviews: 0,
       integratedInternship: {
         hasInternship: false,
@@ -141,7 +141,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
 
   const onSubmit = async (formData) => {
     console.log("formData", formData);
-    
+
     // Create FormData for file uploads
     const submitData = new FormData();
 
@@ -313,14 +313,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
                       <FormLabel>Total Seats *</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Input
-                            type="number"
-                            placeholder="100"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value) || 0)
-                            }
-                          />
+                          <Input type="number" placeholder="100" {...field} />
                           <Users className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
                         </div>
                       </FormControl>

@@ -49,7 +49,7 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
       language: "English",
       introVideo: "",
       isFastTrack: false,
-      studentCount: 0,
+      // studentCount: 0,
       ...data.basicInfo,
     },
   });
@@ -231,7 +231,9 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
                     name="subCategory"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Sub Category</FormLabel>
+                        <FormLabel>
+                          Sub Category (Not using on website)
+                        </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -260,7 +262,9 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
                   name="level"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Course Level *</FormLabel>
+                      <FormLabel>
+                        Course Level * (Not using on website)
+                      </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -288,7 +292,7 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
                   name="language"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Language</FormLabel>
+                      <FormLabel>Language (Not using on website)</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -406,7 +410,9 @@ const Step1BasicInfo = ({ data, updateData, onNext, currentStep }) => {
                   name="introVideo"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Intro Video URL (Optional)</FormLabel>
+                      <FormLabel>
+                        Intro Video URL (Optional) (Not using on website)
+                      </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="https://youtube.com/watch?v=..."

@@ -55,7 +55,7 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
     defaultValues: {
       courseDuration: "",
       classTiming: "",
-      totalSeats: 100,
+      // totalSeats: 100,
       interviews: 0,
       integratedInternship: {
         hasInternship: false,
@@ -373,9 +373,6 @@ const Step5AdditionalDetails = ({ data, updateData, onNext, onPrevious }) => {
                             type="number"
                             placeholder="100"
                             {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value) || 0)
-                            }
                           />
                           <Users className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
                         </div>

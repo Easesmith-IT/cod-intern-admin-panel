@@ -109,7 +109,9 @@ export const ModuleCard = ({
                 name={`modules.${moduleIndex}.description`}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Module Description *</FormLabel>
+                    <FormLabel>
+                      Module Description * (Not using on website)
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Brief description of this module"

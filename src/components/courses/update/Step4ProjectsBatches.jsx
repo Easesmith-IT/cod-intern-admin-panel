@@ -70,8 +70,8 @@ const Step4ProjectsBatches = ({ data, updateData, onNext, onPrevious }) => {
         projects,
         batches: batches?.map((batch) => ({
           ...batch,
-          startDate: batch.startDate ? new Date(batch.startDate) : "",
-          endDate: batch.endDate ? new Date(batch.endDate) : "",
+          startDate: batch.startDate ? new Date(batch.startDate) : null,
+          endDate: batch.endDate ? new Date(batch.endDate) : null,
           image: null,
           imagePreview: batch.image || "",
           batchHighlights: batch.batchHighlights.map((text) => ({ text })),

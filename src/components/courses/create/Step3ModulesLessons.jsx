@@ -73,16 +73,16 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
     },
   });
 
-  const {reset} = form;
+  const { reset } = form;
 
   useEffect(() => {
-      if (data?.modules.length > 0) {
-        reset({ modules: data.modules });
-        // setCertificatePreview(
-        //   data?.courseDetails?.certificate?.certificateLink || null
-        // );
-      }
-    }, [data.modules]);
+    if (data?.modules.length > 0) {
+      reset({ modules: data.modules });
+      // setCertificatePreview(
+      //   data?.courseDetails?.certificate?.certificateLink || null
+      // );
+    }
+  }, [data.modules]);
 
   const {
     fields: moduleFields,

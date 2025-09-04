@@ -214,7 +214,7 @@ export const BatchCard = ({
           name={`batches.${batchIndex}.endDate`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>End Date</FormLabel>
+              <FormLabel>End Date (Not using on website)</FormLabel>
               <FormControl>
                 <DatePicker value={field.value} onChange={field.onChange} />
               </FormControl>
@@ -226,7 +226,7 @@ export const BatchCard = ({
 
       {/* Schedule */}
       <div>
-        <FormLabel>Class Schedule *</FormLabel>
+        <FormLabel>Class Schedule * (Not using on website)</FormLabel>
         <div className="mt-2 space-y-3">
           {/* Days Selection */}
           <div>
@@ -261,7 +261,7 @@ export const BatchCard = ({
               name={`batches.${batchIndex}.schedule.time.start`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Start Time *</FormLabel>
+                  <FormLabel>Start Time * (Not using on website)</FormLabel>
                   <FormControl>
                     <Input type="time" {...field} />
                   </FormControl>
@@ -275,7 +275,7 @@ export const BatchCard = ({
               name={`batches.${batchIndex}.schedule.time.end`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>End Time *</FormLabel>
+                  <FormLabel>End Time * (Not using on website)</FormLabel>
                   <FormControl>
                     <Input type="time" {...field} />
                   </FormControl>

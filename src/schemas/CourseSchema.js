@@ -10,13 +10,13 @@ export const step1Schema = z.object({
   language: z.string().default("English"),
   introVideo: z.url().optional().or(z.literal("")),
   isFastTrack: z.boolean().default(false),
-  studentCount: z.coerce.number().default(0),
+  studentCount: z.coerce.number(),
 });
 
 export const step2Schema = z.object({
   pricing: z.object({
-    price: z.number().min(0),
-    discountPrice: z.number().min(0).optional(),
+    price: z.coerce.number(),
+    discountPrice: z.coerce.number().optional(),
     currency: z.string().default("INR"),
     isFree: z.boolean().default(false),
   }),
@@ -52,7 +52,7 @@ const lessonSchema = z.object({
   title: z.string().min(1, "Lesson title is required"),
   contentType: z.enum(["video", "article", "quiz", "assignment"]),
   contentUrl: z.url(),
-  duration: z.number().min(1).optional(),
+  duration: z.coerce.number().optional(),
   isPreviewFree: z.boolean().default(false),
 });
 
@@ -74,11 +74,10 @@ const projectSchema = z.object({
 
 const batchSchema = z.object({
   name: z.string().min(1, "Batch name is required"),
-  image: z
-    .any(),
-    // .refine((files) => files instanceof FileList && files.length > 0, {
-    //   message: "Batch image is required",
-    // }),
+  image: z.any(),
+  // .refine((files) => files instanceof FileList && files.length > 0, {
+  //   message: "Batch image is required",
+  // }),
   imagePreview: z.string().optional(),
   startDate: z.date({
     required_error: "Start date is required",
@@ -92,9 +91,9 @@ const batchSchema = z.object({
       end: z.string().min(1, "End time is required"),
     }),
   }),
-  seatsLimit: z.number().min(1, "Seats limit is required"),
-  price: z.number().min(0, "Price is required"),
-  offerPrice: z.number().min(0).optional(),
+  seatsLimit: z.coerce.number(),
+  price: z.coerce.number(),
+  offerPrice: z.coerce.number().optional(),
   status: z.enum(["upcoming", "ongoing", "completed"]).default("upcoming"),
   batchHighlights: z
     .array(
@@ -113,7 +112,7 @@ export const step4Schema = z.object({
 export const step5Schema = z.object({
   courseDuration: z.string().min(1, "Course duration is required"),
   classTiming: z.string().min(1, "Class timing is required"),
-  totalSeats: z.number().min(1, "Total seats is required"),
+  totalSeats: z.coerce.number(),
   interviews: z
     .union([
       z.coerce.number().int().min(0), // coerces string → number
