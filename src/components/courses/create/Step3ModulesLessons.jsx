@@ -229,7 +229,7 @@ const Step3ModulesLessons = ({ data, updateData, onNext, onPrevious }) => {
                   title: "",
                   contentType: "video",
                   contentUrl: "",
-                  duration: 0,
+                  // duration: 0,
                   isPreviewFree: false,
                 },
               ],
