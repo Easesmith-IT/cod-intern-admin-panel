@@ -91,7 +91,6 @@ export const HeroSection = () => {
     queryKeys: ["hero-section"],
   });
 
-  console.log("heroSectionData", heroSectionData);
 
   useEffect(() => {
     if (heroSectionData?.data) {
@@ -119,7 +118,7 @@ export const HeroSection = () => {
     invalidateKey: ["hero-section"],
   });
 
-  console.log("result", result);
+  // console.log("result", result);
 
   const onSubmit = async (data) => {
     console.log("data", data);

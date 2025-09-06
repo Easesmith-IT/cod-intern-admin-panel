@@ -24,8 +24,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CourseCard } from "./course-card";
 import { CourseCategory } from "./course-category";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
+import Spinner from "@/components/shared/Spinner";
 
-export const PopularCourses = () => {
+export const PopularCourses = ({ data }) => {
   const [selectedCategory, setSelectedCategory] = useState("web_development");
   const form = useForm({
     resolver: zodResolver(PopularCoursesSchema),
@@ -38,21 +41,50 @@ export const PopularCourses = () => {
   const {
     handleSubmit,
     watch,
-    setValue,
+    reset,
     control,
+    getValues,
     formState: { isSubmitted, submitCount },
   } = form;
 
+  // useEffect(() => {
+  //   if (isSubmitted) {
+  //     setIsDescEdit(false);
+  //   }
+  // }, [submitCount]);
+
+  const { _id = "", content = {} } = data || {};
+
   useEffect(() => {
-    if (isSubmitted) {
-      setIsDescEdit(false);
+    if (data) {
+      reset({
+        desc:
+          content.desc ||
+          "Provides a range of AI-powered courses created especially to prepare students for the demands of the tech-driven workforce. These programs use intelligent systems to offer individualized learning paths, guaranteeing that participants acquire state-of-the-art, industry-relevant AI skills and get ready for positions in a workplace that is becoming more automated and data-driven.",
+      });
     }
-  }, [submitCount]);
+  }, [data, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "home", "popular-courses"],
+  });
 
   const onSubmit = (values) => {
     console.log("Steps Data:", values);
-    // send to backend (save to DB)
+    const apiData = {
+      pageName: "home",
+      sectionName: "popular-courses",
+      content: values,
+    };
+    submitForm(apiData);
   };
+
 
   return (
     <section className="section-container max-w-6xl">
@@ -69,50 +101,55 @@ export const PopularCourses = () => {
         </h2>
       </div>
 
-      <div className="relative max-w-4xl mx-auto">
-        <button
-          onClick={() => setIsDescEdit((prev) => !prev)}
-          className="size-7 absolute shadow -top-4 -right-4 p-1.5 rounded-full bg-white flex justify-center items-center"
-        >
-          {isDescEdit ? (
-            <X className="size-5" />
-          ) : (
-            <Pencil className="size-5" />
-          )}
-        </button>
-        {isDescEdit ? (
-          <Form {...form}>
-            <form
-              className="flex flex-col items-end"
-              onSubmit={handleSubmit(onSubmit)}
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="relative max-w-4xl w-full mx-auto">
+            <button
+              type="button"
+              onClick={() => setIsDescEdit((prev) => !prev)}
+              className="size-7 absolute shadow -top-4 -right-4 p-1.5 rounded-full bg-white flex justify-center items-center"
             >
-              <FormField
-                control={control}
-                name="desc"
-                render={({ field }) => (
-                  <FormItem className="mt-4">
-                    <FormControl>
-                      <Textarea
-                        className="h-32 !text-base resize-none"
-                        placeholder="Enter Description"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button className="mt-4" variant="codIntern">
-                Submit
-              </Button>
-            </form>
-          </Form>
-        ) : (
-          <p className="text-center text-xs lg:text-base font-stolzl font-book text-para mt-4">
-            {watch("desc")}
-          </p>
-        )}
-      </div>
+              {isDescEdit ? (
+                <X className="size-5" />
+              ) : (
+                <Pencil className="size-5" />
+              )}
+            </button>
+            {isDescEdit ? (
+              <div className="flex flex-col items-end">
+                <FormField
+                  control={control}
+                  name="desc"
+                  render={({ field }) => (
+                    <FormItem className="mt-4 w-full">
+                      <FormControl>
+                        <Textarea
+                          className="h-32 !text-base resize-none"
+                          placeholder="Enter Description"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            ) : (
+              <p className="text-center text-xs lg:text-base font-stolzl font-book text-para mt-4">
+                {watch("desc")}
+              </p>
+            )}
+          </div>
+          <div className="flex justify-end mt-4">
+            <Button
+              disabled={isSubmitFormLoading}
+              variant="codIntern"
+            >
+              {isSubmitFormLoading ? <Spinner /> : "Submit"}
+            </Button>
+          </div>
+        </form>
+      </Form>
 
       <Carousel
         opts={{

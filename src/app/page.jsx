@@ -72,7 +72,7 @@ const Login = () => {
       });
       // login();
 
-      console.log("userInfo", userInfo);
+      // console.log("userInfo", userInfo);
 
       reset();
       router.push("/admin/dashboard");

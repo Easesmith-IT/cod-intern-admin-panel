@@ -74,10 +74,10 @@ export const PopularCoursesSchema = z.object({
 
 export const SharpenYourSkillSchema = z.object({
   image: z
-    .any()
-    .refine((files) => files instanceof FileList && files.length > 0, {
-      message: "Image is required",
-    }),
+    .any(),
+    // .refine((files) => files instanceof FileList && files.length > 0, {
+    //   message: "Image is required",
+    // }),
   imagePreview: z.string().optional(),
   desc: z.string().min(1, "Required"),
 });

@@ -57,7 +57,7 @@ const Admins = () => {
     }
   }, [data]);
 
-  console.log("data", data);
+  // console.log("data", data);
 
   return (
     <div className="space-y-6">

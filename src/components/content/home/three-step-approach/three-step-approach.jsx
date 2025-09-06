@@ -8,8 +8,12 @@ import { Step } from "./step";
 import { StepForm } from "./step-form";
 import { ThreeStepApproachSchema } from "@/schemas/ContentSchema";
 import { Button } from "@/components/ui/button";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
+import Spinner from "@/components/shared/Spinner";
+import { useEffect } from "react";
 
-export const ThreeStepApproach = () => {
+export const ThreeStepApproach = ({ data }) => {
   const form = useForm({
     resolver: zodResolver(ThreeStepApproachSchema),
     defaultValues: {
@@ -42,12 +46,38 @@ export const ThreeStepApproach = () => {
     },
   });
 
-  const { handleSubmit, watch, setValue } = form;
+  const { handleSubmit, watch, getValues, reset } = form;
 
   const steps = watch("steps");
+  const { _id, content } = data || {};
 
+useEffect(() => {
+  // Only reset if the incoming data is actually different
+  if (data) {
+    reset(content);
+  }
+}, [data, reset]);
+
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "home", "three-step-approach"],
+  });
+
+  console.log("Steps get data:", data);
   const onSubmit = (values) => {
     console.log("Steps Data:", values);
+    const apiData = {
+      pageName: "home",
+      sectionName: "three-step-approach",
+      content: values,
+    };
+    submitForm(apiData);
     // send to backend (save to DB)
   };
 
@@ -80,8 +110,12 @@ export const ThreeStepApproach = () => {
             ))}
           </div>
           <div className="flex justify-end">
-            <Button className="mt-5" variant="codIntern">
-              Submit
+            <Button
+              disabled={isSubmitFormLoading}
+              className="mt-5"
+              variant="codIntern"
+            >
+              {isSubmitFormLoading ? <Spinner /> : "Submit"}
             </Button>
           </div>
         </form>

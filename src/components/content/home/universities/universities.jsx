@@ -11,8 +11,11 @@ import { ImageUploadField } from "../../image-upload-field";
 import { useEffect } from "react";
 import { updatePreview } from "@/lib/updatePreview";
 import { Trash } from "lucide-react";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
+import Spinner from "@/components/shared/Spinner";
 
-export const Universities = () => {
+export const Universities = ({ data }) => {
   const form = useForm({
     resolver: zodResolver(UniversitiesSchema),
     defaultValues: {
@@ -25,7 +28,7 @@ export const Universities = () => {
     },
   });
 
-  const { handleSubmit, control, watch, setValue } = form;
+  const { handleSubmit, control, watch, setValue, reset, getValues } = form;
 
   // ✅ For dynamic fields
   const { fields, append, remove } = useFieldArray({
@@ -33,34 +36,67 @@ export const Universities = () => {
     name: "icons",
   });
 
+  // console.log("fields", fields);
+
   const icons = watch("icons");
+  console.log("getValues", getValues());
 
-useEffect(() => {
-  const subscription = watch((value, { name }) => {
-    if (name?.includes("icons") && name.endsWith("image")) {
-      const index = parseInt(name.split(".")[1], 10);
-      const fileList = value.icons?.[index]?.image;
+  useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      if (name?.includes("icons") && name.endsWith("image")) {
+        const index = parseInt(name.split(".")[1], 10);
+        const fileList = value.icons?.[index]?.image;
 
-      if (fileList instanceof FileList && fileList.length > 0) {
-        updatePreview(fileList, `icons.${index}.preview`, setValue);
+        if (fileList instanceof FileList && fileList.length > 0) {
+          console.log("update preview for index:", index, fileList);
+
+          updatePreview(fileList, `icons.${index}.preview`, setValue);
+        }
       }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, setValue]);
+
+  const { _id = "", images = [] } = data || {};
+
+  console.log(
+    "images[index]",
+    images?.map((item) => ({ preview: item.image }))
+  );
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        icons: images?.map((item) => ({ image: "", preview: item.image })),
+      });
     }
+  }, [data, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "home", "universities"],
   });
-  return () => subscription.unsubscribe();
-}, [watch, setValue]);
 
-
-  console.log("icons", icons);
-
-  const onSubmit = async (data) => {
-    console.log("data", data);
-
+  const onSubmit = (values) => {
+    console.log("Steps Data:", values);
     const formData = new FormData();
-    // data.icons.forEach((icon, index) => {
-    //   if (icon.image?.[0]) {
-    //     formData.append(`image${index + 1}`, icon.image[0]);
-    //   }
-    // });
+
+    formData.append("pageName", "home");
+    formData.append("sectionName", "universities");
+    if (values.icons.length > 0) {
+      values.icons.forEach((icon) => {
+        if (icon.image[0] instanceof File) {
+          formData.append("images", icon.image[0]);
+        }
+      });
+    }
+
+    submitForm(formData);
   };
 
   return (
@@ -85,16 +121,21 @@ useEffect(() => {
             gradientColor="#2C1D43"
             gradientWidth={200}
           >
-            {fields.map((field) => (
-              <Image
-                key={field.id}
-                src={field.preview}
-                className="px-5"
-                width={100}
-                height={30}
-                alt="entity"
-              />
-            ))}
+            {icons.map((field, index) => {
+              console.log("field", field.preview);
+
+              return (
+                <Image
+                  // key={field.id}
+                  key={index}
+                  src={field.preview}
+                  className="px-5"
+                  width={100}
+                  height={30}
+                  alt="entity"
+                />
+              );
+            })}
           </Marquee>
         </div>
       </section>
@@ -145,8 +186,12 @@ useEffect(() => {
             >
               Add Image
             </Button>
-            <Button variant="codIntern" type="submit">
-              Submit
+            <Button
+              disabled={isSubmitFormLoading}
+              variant="codIntern"
+              type="submit"
+            >
+              {isSubmitFormLoading ? <Spinner /> : "Submit"}
             </Button>
           </div>
         </form>

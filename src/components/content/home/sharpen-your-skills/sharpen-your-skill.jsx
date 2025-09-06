@@ -18,8 +18,11 @@ import { Pencil, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { updatePreview } from "@/lib/updatePreview";
 import { ImageUploadField } from "../../image-upload-field";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
+import Spinner from "@/components/shared/Spinner";
 
-export const SharpenYourSkill = () => {
+export const SharpenYourSkill = ({ data }) => {
   const form = useForm({
     resolver: zodResolver(SharpenYourSkillSchema),
     defaultValues: {
@@ -35,6 +38,7 @@ export const SharpenYourSkill = () => {
     watch,
     setValue,
     control,
+    reset,
     formState: { isSubmitted, submitCount },
   } = form;
 
@@ -50,9 +54,41 @@ export const SharpenYourSkill = () => {
     }
   }, [submitCount]);
 
+  const { _id = "", content = {},images={} } = data || {};
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        desc: content?.desc,
+        imagePreview:
+          images?.[0]?.image ||
+          "/sharpenYourSkill/sharpen-your-skill-img.jpg",
+      });
+    }
+  }, [data, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "home", "sharpen-your-skill"],
+  });
+
   const onSubmit = (values) => {
     console.log("Steps Data:", values);
-    // send to backend (save to DB)
+    const formData = new FormData();
+
+    formData.append("pageName", "home");
+    formData.append("sectionName", "sharpen-your-skill");
+    formData.append("content", JSON.stringify({ desc: values.desc }));
+    if (values.image[0] instanceof File) {
+      formData.append("images", values.image[0]);
+    }
+
+    submitForm(formData);
   };
 
   return (
@@ -104,9 +140,9 @@ export const SharpenYourSkill = () => {
                         </FormItem>
                       )}
                     />
-                    <Button className="mt-4" variant="codIntern">
+                    {/* <Button className="mt-4" variant="codIntern">
                       Submit
-                    </Button>
+                    </Button> */}
                   </>
                 ) : (
                   <p className="font-stolzl font-book text-para max-w-[590px] text-xs sm:text-base mt-5">
@@ -164,8 +200,12 @@ export const SharpenYourSkill = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <Button className="mt-4" variant="codIntern">
-              Submit
+            <Button
+              disabled={isSubmitFormLoading}
+              className="mt-4"
+              variant="codIntern"
+            >
+              {isSubmitFormLoading ? <Spinner /> : "Submit"}
             </Button>
           </div>
         </form>
