@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useScrollToTop } from "@/hooks/use-scroll-to-top";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -40,6 +41,9 @@ const Reviews = () => {
       setPageCount(() => data?.pagination?.totalPages);
     }
   }, [data]);
+
+  useScrollToTop(page);
+
   return (
     <section className="space-y-6">
       <div className="flex justify-between items-center">
@@ -75,7 +79,7 @@ const Reviews = () => {
           {data?.reviews?.map((review) => (
             <Review key={review._id} review={review} />
           ))}
-          
+
           {isLoading &&
             Array.from({ length: 5 }).map((_, index) => (
               <Review.Skeleton key={index} />
