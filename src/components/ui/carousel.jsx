@@ -169,6 +169,7 @@ function CarouselPrevious({
         className
       )}
       disabled={!canScrollPrev}
+      type="button"
       onClick={scrollPrev}
       {...props}
     >
@@ -200,6 +201,7 @@ function CarouselNext({
         className
       )}
       disabled={!canScrollNext}
+      type="button"
       onClick={scrollNext}
       {...props}
     >

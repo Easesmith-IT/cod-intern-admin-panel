@@ -2,8 +2,11 @@
 
 import { EditableTextarea } from "@/components/content/EditableTextarea";
 import { ImageUploadField } from "@/components/content/image-upload-field";
+import Spinner from "@/components/shared/Spinner";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { POST } from "@/constants/apiMethods";
+import { useApiMutation } from "@/hooks/useApiMutation";
 import { updatePreview } from "@/lib/updatePreview";
 import { WeJustKeepGrowingSchema } from "@/schemas/ContentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,7 +14,7 @@ import Image from "next/image";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-export const WeJustKeepGrowing = () => {
+export const WeJustKeepGrowing = ({ data }) => {
   const form = useForm({
     resolver: zodResolver(WeJustKeepGrowingSchema),
     defaultValues: {
@@ -26,6 +29,7 @@ export const WeJustKeepGrowing = () => {
     watch,
     setValue,
     formState: { isSubmitted, submitCount },
+    reset,
   } = form;
 
   const image = watch("image");
@@ -34,9 +38,39 @@ export const WeJustKeepGrowing = () => {
     updatePreview(image, "imagePreview", setValue);
   }, [form, image]);
 
+  const { _id = "", images = [], content } = data || {};
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        desc: content?.desc || "",
+        imagePreview: images?.[0]?.image || "",
+      });
+    }
+  }, [data, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "home", "we-just-keep-growing"],
+  });
+
   const onSubmit = (values) => {
     console.log("Steps Data:", values);
-    // send to backend (save to DB)
+    const formData = new FormData();
+
+    formData.append("pageName", "home");
+    formData.append("sectionName", "we-just-keep-growing");
+    formData.append("content", JSON.stringify({ desc: values.desc }));
+    if (values.image?.[0] instanceof File) {
+      formData.append("images", values.image?.[0]);
+    }
+
+    submitForm(formData);
   };
 
   return (
@@ -56,8 +90,14 @@ export const WeJustKeepGrowing = () => {
               alt="Ellipse"
             />
           </h2>
-          <Button className="mt-4 ml-auto w-20" variant="codIntern">
-            Submit
+          
+          <Button
+            disabled={isSubmitFormLoading}
+            variant="codIntern"
+            className="mt-4 ml-auto w-20"
+            type="submit"
+          >
+            {isSubmitFormLoading ? <Spinner /> : "Submit"}
           </Button>
 
           {/* <p className="text-para text-center mt-4 text-xs lg:text-base font-stolzl font-book max-w-[814px] mx-auto">

@@ -54,7 +54,9 @@ const Faqs = () => {
       <div className="flex justify-between items-center">
         <div>
           <TypographyH2 heading="FAQ Management" />
-          <p className="text-muted-foreground">Manage frequently asked questions</p>
+          <p className="text-muted-foreground">
+            Manage frequently asked questions
+          </p>
         </div>
 
         <Button variant="codIntern" asChild className="bg-main">
@@ -76,7 +78,10 @@ const Faqs = () => {
           />
         </div>
         <div className="flex gap-4 items-center">
-          <Select value={category} onValueChange={(value) => setCategory(value)}>
+          <Select
+            value={category}
+            onValueChange={(value) => setCategory(value)}
+          >
             <SelectTrigger className="flex justify-between bg-white w-32 items-center h-10 text-sm font-normal font-sans border">
               <SelectValue placeholder="Category" />
             </SelectTrigger>

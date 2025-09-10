@@ -11,8 +11,11 @@ import { Form } from "@/components/ui/form";
 import { EditableTextarea } from "../../EditableTextarea";
 import { StepCard } from "./step-card";
 import { Button } from "@/components/ui/button";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
+import Spinner from "@/components/shared/Spinner";
 
-export const LearningToCareer = ({ className }) => {
+export const LearningToCareer = ({ className, data }) => {
   const form = useForm({
     resolver: zodResolver(LearningToCareerSchema),
     defaultValues: {
@@ -73,11 +76,36 @@ export const LearningToCareer = ({ className }) => {
     },
   });
 
-  const { handleSubmit,watch } = form;
+  const { handleSubmit, watch, reset } = form;
   const steps = watch("steps");
+
+  const { _id = "", content } = data || {};
+
+  useEffect(() => {
+    // Only reset if the incoming data is actually different
+    if (data) {
+      reset(content);
+    }
+  }, [data, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "home", "learning-to-career"],
+  });
 
   const onSubmit = (values) => {
     console.log("Steps Data:", values);
+    const apiData = {
+      pageName: "home",
+      sectionName: "learning-to-career",
+      content: values,
+    };
+    submitForm(apiData);
     // send to backend (save to DB)
   };
 
@@ -109,7 +137,7 @@ export const LearningToCareer = ({ className }) => {
           </p> */}
 
           <EditableTextarea
-            className="max-w-5xl text-center"
+            className="max-w-5xl mx-auto text-center"
             textareaClassName="h-32"
             isSubmitBtn={false}
           />
@@ -204,9 +232,9 @@ export const LearningToCareer = ({ className }) => {
             </LearningStep>
           </div>
 
-          <div className="flex justify-end">
-            <Button className="mt-6" variant="codIntern">
-              Submit
+          <div className="flex justify-end mt-4">
+            <Button disabled={isSubmitFormLoading} variant="codIntern">
+              {isSubmitFormLoading ? <Spinner /> : "Submit"}
             </Button>
           </div>
         </form>

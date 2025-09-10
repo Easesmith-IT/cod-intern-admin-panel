@@ -29,9 +29,10 @@ const Home = () => {
 
   console.log("contentData", contentData);
 
-  const getDataBySection = (sectionName) => {
+  const getDataBySection = (sectionName, pageName ="home") => {
     return contentData?.data?.find(
-      (section) => section.sectionName === sectionName
+      (section) =>
+        section.pageName === pageName && section.sectionName === sectionName
     );
   };
 
@@ -51,6 +52,28 @@ const Home = () => {
   );
   const universitiesData = useMemo(
     () => getDataBySection("universities"),
+    [contentData] // only recompute when contentData changes
+  );
+  const whyCodInternsData = useMemo(
+    () => getDataBySection("why-cod-interns"),
+    [contentData] // only recompute when contentData changes
+  );
+  const learningToCareerData = useMemo(
+    () => getDataBySection("learning-to-career"),
+    [contentData] // only recompute when contentData changes
+  );
+
+  const connectWithUsData = useMemo(
+    () => getDataBySection("connect-with-us"),
+    [contentData] // only recompute when contentData changes
+  );
+
+  const weJustKeepGrowingData = useMemo(
+    () => getDataBySection("we-just-keep-growing"),
+    [contentData] // only recompute when contentData changes
+  );
+  const mentorsData = useMemo(
+    () => getDataBySection("mentors"),
     [contentData] // only recompute when contentData changes
   );
 
@@ -73,12 +96,12 @@ const Home = () => {
         <PopularCourses data={popularCoursesData} />
         <SharpenYourSkill data={sharpenYourSkillData} />
         <Universities data={universitiesData} />
-        <WhyCodInterns />
-        <LearningToCareer />
-        <ConnectWithUs />
-        <WeJustKeepGrowing />
-        <LearnersStories />
-        <Mentors />
+        <WhyCodInterns data={whyCodInternsData} />
+        <LearningToCareer data={learningToCareerData} />
+        <ConnectWithUs data={connectWithUsData} />
+        <WeJustKeepGrowing data={weJustKeepGrowingData} />
+        {/* <LearnersStories /> */}
+        <Mentors data={mentorsData} />
       </div>
     </div>
   );

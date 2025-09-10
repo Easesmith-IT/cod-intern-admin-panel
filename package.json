@@ -52,6 +52,7 @@
     "react-fast-marquee": "^1.6.5",
     "react-hook-form": "^7.62.0",
     "react-quill": "^2.0.0",
+    "react-stars": "^2.2.5",
     "react-timer-hook": "^4.0.5",
     "recharts": "2.15.4",
     "sonner": "^2.0.7",

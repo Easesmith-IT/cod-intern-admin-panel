@@ -95,6 +95,12 @@ export const UniversitiesSchema = z.object({
 
 export const WhyCodInternsSchema = z.object({
   desc: z.string().min(1, "Required"),
+  features: z.array(
+    z.object({
+      title: z.string().min(1, "Title is required"),
+      desc: z.string().min(1, "Description is required"),
+    })
+  ),
 });
 
 export const LearningToCareerSchema = z.object({
@@ -112,20 +118,20 @@ export const LearningToCareerSchema = z.object({
 
 export const ConnectWithUsSchema = z.object({
   image: z
-    .any()
-    .refine((files) => files instanceof FileList && files.length > 0, {
-      message: "Image is required",
-    }),
+    .any(),
+    // .refine((files) => files instanceof FileList && files.length > 0, {
+    //   message: "Image is required",
+    // }),
   imagePreview: z.string().optional(),
   desc: z.string().min(1, "Required"),
 });
 
 export const WeJustKeepGrowingSchema = z.object({
   image: z
-    .any()
-    .refine((files) => files instanceof FileList && files.length > 0, {
-      message: "Image is required",
-    }),
+    .any(),
+    // .refine((files) => files instanceof FileList && files.length > 0, {
+    //   message: "Image is required",
+    // }),
   imagePreview: z.string().optional(),
   desc: z.string().min(1, "Required"),
 });

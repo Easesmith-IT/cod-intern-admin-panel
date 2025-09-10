@@ -10,8 +10,11 @@ import { Form } from "@/components/ui/form";
 import { EditableTextarea } from "@/components/content/EditableTextarea";
 import { ImageUploadField } from "@/components/content/image-upload-field";
 import { updatePreview } from "@/lib/updatePreview";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
+import Spinner from "@/components/shared/Spinner";
 
-export const ConnectWithUs = () => {
+export const ConnectWithUs = ({ data }) => {
   const form = useForm({
     resolver: zodResolver(ConnectWithUsSchema),
     defaultValues: {
@@ -26,6 +29,7 @@ export const ConnectWithUs = () => {
     watch,
     setValue,
     formState: { isSubmitted, submitCount },
+    reset,
   } = form;
 
   const image = watch("image");
@@ -34,9 +38,39 @@ export const ConnectWithUs = () => {
     updatePreview(image, "imagePreview", setValue);
   }, [form, image]);
 
+  const { _id = "", images = [], content } = data || {};
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        desc: content?.desc || "",
+        imagePreview: images?.[0]?.image || "",
+      });
+    }
+  }, [data, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "home", "connect-with-us"],
+  });
+
   const onSubmit = (values) => {
     console.log("Steps Data:", values);
-    // send to backend (save to DB)
+    const formData = new FormData();
+
+    formData.append("pageName", "home");
+    formData.append("sectionName", "connect-with-us");
+    formData.append("content", JSON.stringify({ desc: values.desc }));
+    if (values.image?.[0] instanceof File) {
+      formData.append("images", values.image?.[0]);
+    }
+
+    submitForm(formData);
   };
 
   return (
@@ -64,14 +98,18 @@ export const ConnectWithUs = () => {
                 pClassName="text-[#FFFFFFCC] max-w-[710px]"
                 isSubmitBtn={false}
               />
-              <div className="flex flex-col max-w-[710px] justify-between items-end">
-                <Button className="" variant="">
-                  Submit
+              <div className="flex max-w-[710px] justify-between">
+                <Button className="rounded-md text-xs md:text-sm">
+                  Read More
+                </Button>
+                <Button
+                  disabled={isSubmitFormLoading}
+                  // variant="codIntern"
+                  type="submit"
+                >
+                  {isSubmitFormLoading ? <Spinner /> : "Submit"}
                 </Button>
               </div>
-              <Button className="rounded-md text-xs md:text-sm">
-                Read More
-              </Button>
             </div>
             <div className="hidden md:block">
               {/* <Image

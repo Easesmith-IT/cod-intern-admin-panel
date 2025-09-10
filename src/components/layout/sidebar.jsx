@@ -19,6 +19,7 @@ import {
   PanelLeft,
   Settings,
   ShieldCheck,
+  Star,
   UserRound,
   UserRoundCheck,
 } from "lucide-react"; // Added UserRound and UserRoundCheck icons
@@ -45,6 +46,7 @@ const menuItems = [
     label: "Workshop Feedbacks",
     icon: MessageSquareText,
   },
+  { id: "reviews", label: "Reviews", icon: Star },
 ];
 
 export const Sidebar = () => {

@@ -59,11 +59,6 @@ export const Universities = ({ data }) => {
 
   const { _id = "", images = [] } = data || {};
 
-  console.log(
-    "images[index]",
-    images?.map((item) => ({ preview: item.image }))
-  );
-
   useEffect(() => {
     if (data) {
       reset({

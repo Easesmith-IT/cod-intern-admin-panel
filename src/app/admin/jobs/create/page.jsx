@@ -469,7 +469,13 @@ const CreateJob = () => {
           />
 
           <div className="flex justify-end mt-10">
-            <Button type="submit" variant="codIntern" size="" className="px-10">
+            <Button
+              disabled={isSubmitFormLoading}
+              type="submit"
+              variant="codIntern"
+              size=""
+              className="px-10"
+            >
               {isSubmitFormLoading ? (
                 <Spinner spinnerClassName="size-6" />
               ) : (
