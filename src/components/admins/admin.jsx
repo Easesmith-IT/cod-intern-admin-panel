@@ -52,6 +52,7 @@ export const Admin = ({ admin }) => {
   const onDelete = () => {
     setIsAlertModalOpen(true);
   };
+  
   const onView = () => {
     router.push(`/admin/admins/${admin?._id}`);
   };

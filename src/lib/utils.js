@@ -1,14 +1,11 @@
 import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge"
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-export function previewImage(
-  image,
-  placeholder = "/user-placeholder.png"
-) {
+export function previewImage(image, placeholder = "/user-placeholder.png") {
   return image ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${image}` : placeholder;
 }
 
@@ -29,3 +26,18 @@ export function getStatusColorCode(status) {
   }
 }
 
+export function getImageByPlatform(value) {
+  switch (value) {
+    case "LinkedIn":
+      return "/linkedin.svg";
+
+    case "Google":
+      return "/google.svg";
+
+    case "Website":
+      return "/logo.svg";
+
+    default:
+      return "/user-placeholder.png";
+  }
+}

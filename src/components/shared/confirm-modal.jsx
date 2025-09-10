@@ -11,6 +11,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "../ui/button";
+import Spinner from "./Spinner";
 
 export const ConfirmModal = ({
   children,
@@ -35,13 +37,13 @@ export const ConfirmModal = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
+          <Button
             className="bg-main hover:bg-main/90"
             disabled={disabled}
             onClick={handleConfirm}
           >
-            Confirm
-          </AlertDialogAction>
+            {disabled ? <Spinner /> : "Confirm"}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

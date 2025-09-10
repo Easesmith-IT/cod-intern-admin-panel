@@ -32,20 +32,22 @@ import {
 } from "@/components/ui/select";
 import { reviewSchema } from "@/schemas/ReviewSchema";
 import { useApiMutation } from "@/hooks/useApiMutation";
-import { POST } from "@/constants/apiMethods";
+import { PATCH, POST } from "@/constants/apiMethods";
 import Spinner from "../shared/Spinner";
+import ReactStars from "react-stars";
+import { useEffect } from "react";
 
-export const AddReviewModal = ({ isModalOpen, setIsModalOpen }) => {
+export const AddReviewModal = ({ isModalOpen, setIsModalOpen, review }) => {
   const form = useForm({
     resolver: zodResolver(reviewSchema),
     defaultValues: {
-      platform: "Google",
-      rating: 5,
-      reviewerRole: "Student",
-      category: "General",
-      status: "active",
-      reviewerName: "",
-      reviewText: "",
+      platform: review?.platform || "Google",
+      rating: review?.rating || 5,
+      reviewerRole: review?.reviewerRole || "Student",
+      category: review?.category || "General",
+      status: review?.status || "active",
+      reviewerName: review?.reviewerName || "",
+      reviewText: review?.reviewText || "",
     },
   });
 
@@ -60,18 +62,33 @@ export const AddReviewModal = ({ isModalOpen, setIsModalOpen }) => {
     // isToast: false,
   });
 
+  const {
+    mutateAsync: updateReview,
+    isPending,
+    data,
+  } = useApiMutation({
+    url: `/admin/reviews/update/${review._id}`,
+    method: PATCH,
+    invalidateKey: ["review"],
+    // isToast: false,
+  });
+
   const onSubmit = async (data) => {
     console.log("Form Data:", data);
     // Call your API here, e.g., axios.post("/api/reviews", data)
-    await submitForm(data);
+
+    if (review) {
+      await updateReview(data);
+    } else {
+      await submitForm(data);
+    }
   };
 
-  React.useEffect(() => {
-    if (result) {
-      console.log("result", result);
+  useEffect(() => {
+    if (result || data) {
       setIsModalOpen(false);
     }
-  }, [result]);
+  }, [result, data]);
 
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -112,7 +129,15 @@ export const AddReviewModal = ({ isModalOpen, setIsModalOpen }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Rating (0-5)</FormLabel>
-                    <Input type="number" min={0} max={5} {...field} />
+                    {/* <Input type="number" min={0} max={5} {...field} /> */}
+                    <ReactStars
+                      count={5}
+                      size={24}
+                      color2={"#ffd700"}
+                      edit={true}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -194,7 +219,7 @@ export const AddReviewModal = ({ isModalOpen, setIsModalOpen }) => {
                 type="submit"
                 variant="codIntern"
               >
-                {isSubmitFormLoading ? (
+                {isSubmitFormLoading || isPending ? (
                   <Spinner spinnerClassName="size-6" />
                 ) : (
                   "Submit Review"
