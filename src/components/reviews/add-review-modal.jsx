@@ -67,7 +67,7 @@ export const AddReviewModal = ({ isModalOpen, setIsModalOpen, review }) => {
     isPending,
     data,
   } = useApiMutation({
-    url: `/admin/reviews/update/${review._id}`,
+    url: `/admin/reviews/update/${review?._id}`,
     method: PATCH,
     invalidateKey: ["review"],
     // isToast: false,
