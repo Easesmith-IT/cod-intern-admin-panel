@@ -40,7 +40,7 @@ const menuItems = [
   // { id: "analytics", label: "Analytics", icon: BarChart3 },
   // { id: "payments", label: "Payments", icon: CreditCard },
   // { id: "settings", label: "Settings", icon: Settings },
-  { id: "workshops", label: "Workshop Registration", icon: CalendarDays },
+  { id: "workshops", label: "Workshops", icon: CalendarDays },
   {
     id: "workshopFeedbacks",
     label: "Workshop Feedbacks",
@@ -61,7 +61,7 @@ export const Sidebar = () => {
     setPermissions(userInfo?.permissions || {});
   }, []);
 
-  console.log("userInfo", userInfo);
+  // console.log("userInfo", userInfo);
 
   return (
     <div

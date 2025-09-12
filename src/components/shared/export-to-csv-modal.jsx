@@ -28,6 +28,7 @@ export const ExportToCsvModal = ({
   isModalOpen,
   setIsModalOpen,
   queryKey = "course-applications",
+  type = "",
 }) => {
   const params = useParams();
   const [url, setUrl] = useState("");
@@ -69,7 +70,7 @@ export const ExportToCsvModal = ({
     refetchResult = refetch;
   } else {
     const { data, isLoading, error, refetch, isSuccess } = useApiQuery({
-      url: `/admin/${queryKey}/export?from=${fromDate}&to=${toDate}`,
+      url: `/admin/${queryKey}/export?from=${fromDate}&to=${toDate}&type=${type}`,
       queryKeys: [queryKey, fromDate, toDate],
       options: {
         enabled: false,

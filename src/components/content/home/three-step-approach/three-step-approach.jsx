@@ -69,7 +69,6 @@ useEffect(() => {
     invalidateKey: ["content", "home", "three-step-approach"],
   });
 
-  console.log("Steps get data:", data);
   const onSubmit = (values) => {
     console.log("Steps Data:", values);
     const apiData = {

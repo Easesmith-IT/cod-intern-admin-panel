@@ -79,7 +79,6 @@ export const WhyCodInterns = ({ data }) => {
     invalidateKey: ["content", "home", "why-cod-interns"],
   });
 
-  console.log("Steps get data:", data);
   const onSubmit = (values) => {
     console.log("Steps Data:", values);
     const apiData = {

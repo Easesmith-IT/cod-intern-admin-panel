@@ -50,8 +50,11 @@ export const Mentors = ({ data }) => {
   useEffect(() => {
     if (data) {
       reset({
-        mentors: content?.mentors || "",
-        imagePreview: images?.[0]?.image || "",
+        mentors:
+          content?.mentors.map((mentor, i) => ({
+            ...mentor,
+            imagePreview: images?.[i]?.image,
+          })) || "",
       });
     }
   }, [data, reset]);
@@ -70,19 +73,23 @@ export const Mentors = ({ data }) => {
     console.log("Mentors Data:", values);
 
     const formData = new FormData();
-    let images =[]
-    let mentors =[]
+    let mentors = [];
 
-    values.mentors.forEach(mentor => {
-      
+    values.mentors.forEach((mentor) => {
+      mentors.push({
+        name: mentor.name,
+        position: mentor.position,
+        arr: mentor.arr,
+      });
+
+      if (mentor.image instanceof File) {
+        formData.append("images", mentor.image);
+      }
     });
 
     formData.append("pageName", "home");
     formData.append("sectionName", "mentors");
-    formData.append("content", JSON.stringify({ mentors: values.mentors }));
-    if (values.image?.[0] instanceof File) {
-      formData.append("images", values.image?.[0]);
-    }
+    formData.append("content", JSON.stringify({ mentors: mentors }));
 
     submitForm(formData);
   };

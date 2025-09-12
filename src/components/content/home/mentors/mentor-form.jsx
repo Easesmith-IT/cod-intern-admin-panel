@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2, Upload } from "lucide-react";
 import Image from "next/image";
+import { updatePreview } from "@/lib/updatePreview";
 
 export const MentorForm = ({ name }) => {
   const { control, setValue, watch } = useFormContext();

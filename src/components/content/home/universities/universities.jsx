@@ -39,7 +39,7 @@ export const Universities = ({ data }) => {
   // console.log("fields", fields);
 
   const icons = watch("icons");
-  console.log("getValues", getValues());
+  // console.log("getValues", getValues());
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
@@ -48,8 +48,6 @@ export const Universities = ({ data }) => {
         const fileList = value.icons?.[index]?.image;
 
         if (fileList instanceof FileList && fileList.length > 0) {
-          console.log("update preview for index:", index, fileList);
-
           updatePreview(fileList, `icons.${index}.preview`, setValue);
         }
       }
@@ -117,7 +115,6 @@ export const Universities = ({ data }) => {
             gradientWidth={200}
           >
             {icons.map((field, index) => {
-              console.log("field", field.preview);
 
               return (
                 <Image
