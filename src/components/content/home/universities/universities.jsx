@@ -156,7 +156,7 @@ export const Universities = ({ data }) => {
                 <ImageUploadField
                   name={`icons.${index}.image`}
                   previewName={`icons.${index}.preview`}
-                  imgClassName="shadow-none"
+                  imgClassName="shadow-none object-contain"
                 />
                 <Button
                   type="button"

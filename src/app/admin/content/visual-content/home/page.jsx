@@ -50,14 +50,17 @@ const Home = () => {
     () => getDataBySection("sharpen-your-skill"),
     [contentData] // only recompute when contentData changes
   );
+
   const universitiesData = useMemo(
     () => getDataBySection("universities"),
     [contentData] // only recompute when contentData changes
   );
+
   const whyCodInternsData = useMemo(
     () => getDataBySection("why-cod-interns"),
     [contentData] // only recompute when contentData changes
   );
+
   const learningToCareerData = useMemo(
     () => getDataBySection("learning-to-career"),
     [contentData] // only recompute when contentData changes
@@ -72,6 +75,7 @@ const Home = () => {
     () => getDataBySection("we-just-keep-growing"),
     [contentData] // only recompute when contentData changes
   );
+  
   const mentorsData = useMemo(
     () => getDataBySection("mentors"),
     [contentData] // only recompute when contentData changes
