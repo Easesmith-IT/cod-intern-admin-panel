@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useForm, useFieldArray } from "react-hook-form";
 import {
@@ -20,8 +20,13 @@ import { InfoCard } from "./info-card";
 import { ShapingFuturesSchema } from "@/schemas/ContentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EditableTextarea } from "../../EditableTextarea";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
+import Spinner from "@/components/shared/Spinner";
 
-export const ShapingFutures = ({ className }) => {
+export const ShapingFutures = ({ className, data }) => {
+  console.log("ShapingFutures data", data);
+
   const form = useForm({
     resolver: zodResolver(ShapingFuturesSchema),
     defaultValues: {
@@ -52,14 +57,55 @@ export const ShapingFutures = ({ className }) => {
     },
   });
 
+  const { reset, handleSubmit, control } = form;
+
   const { fields, append, remove } = useFieldArray({
-    control: form.control,
+    control: control,
     name: "infos",
   });
 
-  const onSubmit=(values)=> {
+  const { _id = "", content, images } = data || {};
+
+  useEffect(() => {
+    // Only reset if the incoming data is actually different
+    if (data) {
+      reset({
+        ...content,
+        infos: content.infos.map((info, index) => ({
+          ...info,
+          imagePreview: images?.[index]?.image,
+        })),
+      });
+    }
+  }, [data, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "about-us", "shaping-futures"],
+  });
+
+  const onSubmit = (values) => {
     console.log("Saved content:", values);
-  }
+
+    const formData = new FormData();
+    const infos = values.infos.map(({ imagePreview, image, ...rest }) => rest);
+
+    values.infos.forEach((item) => {
+      if (item.image instanceof File) {
+        formData.append("images", item.image);
+      }
+    });
+
+    formData.append("pageName", "about-us");
+    formData.append("sectionName", "shaping-futures");
+    formData.append("content", JSON.stringify({ ...values, infos }));
+    submitForm(formData);
+  };
 
   return (
     <section className={cn("section-container pb-12 md:pb-24", className)}>
@@ -75,7 +121,7 @@ export const ShapingFutures = ({ className }) => {
       </h2>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-6">
           {/* Subheading */}
           <EditableTextarea
             name="subheading"
@@ -103,7 +149,7 @@ export const ShapingFutures = ({ className }) => {
 
           <div className="flex gap-2 justify-end">
             <Button variant="codIntern" type="submit">
-              Save
+              {isSubmitFormLoading ? <Spinner /> : "Save"}
             </Button>
           </div>
         </form>

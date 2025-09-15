@@ -77,7 +77,6 @@ useEffect(() => {
       content: values,
     };
     submitForm(apiData);
-    // send to backend (save to DB)
   };
 
   return (

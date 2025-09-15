@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { GenerativeAIWorkshopComp } from "@/components/workshops/generative-ai-workshop";
 import { Workshop } from "@/components/workshops/workshop";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import { ArrowLeft, Search } from "lucide-react";
@@ -120,6 +121,7 @@ const GenerativeAIWorkshop = () => {
               <TableHead>Mobile</TableHead>
               <TableHead>Gender</TableHead>
               <TableHead>Date of Birth</TableHead>
+              <TableHead>Payment Status</TableHead>
               <TableHead>College</TableHead>
               <TableHead>Branch</TableHead>
               <TableHead>Year</TableHead>
@@ -129,12 +131,15 @@ const GenerativeAIWorkshop = () => {
           </TableHeader>
           <TableBody>
             {data?.workshops?.map((workshop) => (
-              <Workshop key={workshop._id} workshop={workshop} />
+              <GenerativeAIWorkshopComp
+                key={workshop._id}
+                workshop={workshop}
+              />
             ))}
 
             {isLoading &&
               Array.from({ length: 5 }).map((_, index) => (
-                <Workshop.Skeleton key={index} />
+                <GenerativeAIWorkshopComp.Skeleton key={index} />
               ))}
           </TableBody>
         </Table>

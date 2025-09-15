@@ -3,13 +3,16 @@
 import { StartYourCourseSchema } from "@/schemas/ContentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import Info from "./info";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
+import Spinner from "@/components/shared/Spinner";
 
-export const StartYourCourse = () => {
+export const StartYourCourse = ({ data }) => {
   const form = useForm({
     resolver: zodResolver(StartYourCourseSchema),
     defaultValues: {
@@ -36,13 +39,52 @@ export const StartYourCourse = () => {
     },
   });
 
+  const { reset, handleSubmit, control } = form;
   const { fields, append, remove } = useFieldArray({
-    control: form.control,
+    control: control,
     name: "stats",
   });
 
+  const { _id = "", content, images } = data || {};
+
+  useEffect(() => {
+    // Only reset if the incoming data is actually different
+    if (data) {
+      reset({
+        stats: content.stats.map((item, index) => ({
+          ...item,
+          iconPreview: images?.[index]?.image,
+        })),
+      });
+    }
+  }, [data, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "about-us", "start-your-course"],
+  });
+
   const onSubmit = (values) => {
-    console.log("Updated Stats:", values);
+    console.log("Saved content:", values);
+
+    const formData = new FormData();
+    const stats = values.stats.map(({ iconPreview, icon, ...rest }) => rest);
+
+    values.stats.forEach((item) => {
+      if (item.icon instanceof File) {
+        formData.append("images", item.icon);
+      }
+    });
+
+    formData.append("pageName", "about-us");
+    formData.append("sectionName", "start-your-course");
+    formData.append("content", JSON.stringify({ stats }));
+    submitForm(formData);
   };
 
   const onError = (error) => {
@@ -63,7 +105,7 @@ export const StartYourCourse = () => {
           Lets Start Your Course With Us?
         </h3>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit, onError)}>
+          <form onSubmit={handleSubmit(onSubmit, onError)}>
             <div className="flex gap-4 sm:gap-10 md:gap-20 lg:gap-32">
               {fields.map((field, index) => (
                 <Info key={field.id} index={index} item={field} />
@@ -71,7 +113,7 @@ export const StartYourCourse = () => {
             </div>
             <div className="flex gap-2 justify-end mt-5 relative z-10">
               <Button variant="codIntern" type="submit">
-                Save
+                {isSubmitFormLoading ? <Spinner /> : "Save"}
               </Button>
             </div>
           </form>

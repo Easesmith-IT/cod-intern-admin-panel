@@ -22,8 +22,11 @@ import { updatePreview } from "@/lib/updatePreview";
 import { RichTextEditor } from "@/components/tiptap-editor";
 import parse from "html-react-parser";
 import { options } from "@/constants/constants";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
+import Spinner from "@/components/shared/Spinner";
 
-export const ExpertInstructorLiveClasses = () => {
+export const ExpertInstructorLiveClasses = ({ data }) => {
   const form = useForm({
     resolver: zodResolver(ExpertInstructorLiveClassesSchema),
     defaultValues: {
@@ -38,6 +41,7 @@ export const ExpertInstructorLiveClasses = () => {
     watch,
     control,
     setValue,
+    reset,
     formState: { isSubmitted, submitCount },
   } = form;
 
@@ -55,8 +59,38 @@ export const ExpertInstructorLiveClasses = () => {
     updatePreview(image, "imagePreview", setValue);
   }, [form, image]);
 
+  const { _id = "", images = [], content } = data || {};
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        desc: content?.desc || "",
+        imagePreview: images?.[0]?.image || "",
+      });
+    }
+  }, [data, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "about-us", "expert-instructor-live-classes"],
+  });
+
   const onSubmit = (values) => {
-    console.log("Saved content:", values);
+    const formData = new FormData();
+
+    formData.append("pageName", "about-us");
+    formData.append("sectionName", "expert-instructor-live-classes");
+    formData.append("content", JSON.stringify({ desc: values.desc }));
+    if (values.image?.[0] instanceof File) {
+      formData.append("images", values.image?.[0]);
+    }
+
+    submitForm(formData);
   };
 
   return (
@@ -160,7 +194,7 @@ export const ExpertInstructorLiveClasses = () => {
           <Info title="24/7 Support" /> */}
               </div>
               <Button variant="codIntern" type="submit">
-                Save
+                {isSubmitFormLoading ? <Spinner /> : "Save"}
               </Button>
             </div>
           </div>

@@ -19,8 +19,11 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AchieveYourGoalsSchema } from "@/schemas/ContentSchema";
 import { EditableTextarea } from "../EditableTextarea";
+import Spinner from "@/components/shared/Spinner";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { POST } from "@/constants/apiMethods";
 
-export const AchieveYourGoals = () => {
+export const AchieveYourGoals = ({ data }) => {
   const form = useForm({
     resolver: zodResolver(AchieveYourGoalsSchema),
     defaultValues: {
@@ -54,21 +57,44 @@ export const AchieveYourGoals = () => {
 
   const {
     handleSubmit,
-    watch,
-    setValue,
-    control,
+    reset,
     formState: { isSubmitted, submitCount },
   } = form;
 
+  const { _id = "", content } = data || {};
+
   useEffect(() => {
-    if (isSubmitted) {
+    // Only reset if the incoming data is actually different
+    if (data) {
+      reset(content);
+    }
+  }, [data, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "about-us", "achieve-your-goals"],
+  });
+
+  useEffect(() => {
+    if (isSubmitted && result) {
       setIsDescEdit(false);
     }
   }, [submitCount]);
 
   const onSubmit = (values) => {
     console.log("Data:", values);
-    // send to backend (save to DB)
+
+    const apiData = {
+      pageName: "about-us",
+      sectionName: "achieve-your-goals",
+      content: values,
+    };
+    submitForm(apiData);
   };
 
   return (
@@ -215,7 +241,7 @@ export const AchieveYourGoals = () => {
               </Button>
 
               <Button type="submit" variant="codIntern">
-                Save
+                {isSubmitFormLoading ? <Spinner /> : "Save"}
               </Button>
             </div>
           </form>

@@ -15,7 +15,7 @@ import { useApiMutation } from "@/hooks/useApiMutation";
 import { POST } from "@/constants/apiMethods";
 import Spinner from "@/components/shared/Spinner";
 
-export const LearningToCareer = ({ className, data }) => {
+export const LearningToCareer = ({ className, data, pageName="home" }) => {
   const form = useForm({
     resolver: zodResolver(LearningToCareerSchema),
     defaultValues: {
@@ -95,13 +95,13 @@ export const LearningToCareer = ({ className, data }) => {
   } = useApiMutation({
     url: `/admin/content?id=${_id}`,
     method: POST,
-    invalidateKey: ["content", "home", "learning-to-career"],
+    invalidateKey: ["content", pageName, "learning-to-career"],
   });
 
   const onSubmit = (values) => {
     console.log("Steps Data:", values);
     const apiData = {
-      pageName: "home",
+      pageName: pageName,
       sectionName: "learning-to-career",
       content: values,
     };
@@ -113,7 +113,7 @@ export const LearningToCareer = ({ className, data }) => {
     <div className={cn("section-container", className)}>
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <h2 className="text-2xl font-stolzl leading-9 lg:leading-14 md:text-4xl  font-medium text-center capitalize w-full">
+          <h2 className="text-2xl font-stolzl leading-9 lg:leading-14 md:text-4xl font-medium text-center capitalize w-full">
             <span className="text-main">Transform Learning</span> into a Proud
             Career
             <Image

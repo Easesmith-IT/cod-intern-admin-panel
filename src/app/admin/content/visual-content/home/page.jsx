@@ -29,7 +29,7 @@ const Home = () => {
 
   console.log("contentData", contentData);
 
-  const getDataBySection = (sectionName, pageName ="home") => {
+  const getDataBySection = (sectionName, pageName = "home") => {
     return contentData?.data?.find(
       (section) =>
         section.pageName === pageName && section.sectionName === sectionName
@@ -75,7 +75,7 @@ const Home = () => {
     () => getDataBySection("we-just-keep-growing"),
     [contentData] // only recompute when contentData changes
   );
-  
+
   const mentorsData = useMemo(
     () => getDataBySection("mentors"),
     [contentData] // only recompute when contentData changes

@@ -11,6 +11,7 @@ import { Pencil, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+import Spinner from "../shared/Spinner";
 
 export const EditableTextarea = ({
   className,
@@ -18,6 +19,7 @@ export const EditableTextarea = ({
   textareaClassName,
   pClassName,
   isSubmitBtn = true,
+  isloading = false,
 }) => {
   const {
     control,
@@ -64,8 +66,8 @@ export const EditableTextarea = ({
           />
           {isSubmitBtn && (
             <div className="flex justify-end">
-              <Button className="mt-4" variant="codIntern">
-                Submit
+              <Button disabled={isloading} className="mt-4" variant="codIntern">
+                {isloading ? <Spinner /> : "Submit"}
               </Button>
             </div>
           )}

@@ -73,11 +73,10 @@ export const PopularCoursesSchema = z.object({
 });
 
 export const SharpenYourSkillSchema = z.object({
-  image: z
-    .any(),
-    // .refine((files) => files instanceof FileList && files.length > 0, {
-    //   message: "Image is required",
-    // }),
+  image: z.any(),
+  // .refine((files) => files instanceof FileList && files.length > 0, {
+  //   message: "Image is required",
+  // }),
   imagePreview: z.string().optional(),
   desc: z.string().min(1, "Required"),
 });
@@ -117,21 +116,19 @@ export const LearningToCareerSchema = z.object({
 });
 
 export const ConnectWithUsSchema = z.object({
-  image: z
-    .any(),
-    // .refine((files) => files instanceof FileList && files.length > 0, {
-    //   message: "Image is required",
-    // }),
+  image: z.any(),
+  // .refine((files) => files instanceof FileList && files.length > 0, {
+  //   message: "Image is required",
+  // }),
   imagePreview: z.string().optional(),
   desc: z.string().min(1, "Required"),
 });
 
 export const WeJustKeepGrowingSchema = z.object({
-  image: z
-    .any(),
-    // .refine((files) => files instanceof FileList && files.length > 0, {
-    //   message: "Image is required",
-    // }),
+  image: z.any(),
+  // .refine((files) => files instanceof FileList && files.length > 0, {
+  //   message: "Image is required",
+  // }),
   imagePreview: z.string().optional(),
   desc: z.string().min(1, "Required"),
 });
@@ -196,4 +193,19 @@ export const ExpertInstructorLiveClassesSchema = z.object({
   image: z.any(),
   imagePreview: z.string().optional(),
   desc: z.string().min(1, "Required"),
+});
+
+export const MentorsSchema1 = z.object({
+  mentors: z
+    .array(
+      z.object({
+        image: z.any(),
+        imagePreview: z.string().optional(),
+        name: z.string().min(1, "Name required"),
+        position: z.string().min(1, "Position required"),
+        about: z.string().min(1, "About required"),
+        experience: z.string().min(1, "Experience required"),
+      })
+    )
+    .length(3, "Exactly 3 steps are required"),
 });

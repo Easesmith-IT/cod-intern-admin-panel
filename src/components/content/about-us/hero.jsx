@@ -15,8 +15,10 @@ import { Pencil, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { EditableTextarea } from "../EditableTextarea";
+import { POST } from "@/constants/apiMethods";
+import { useApiMutation } from "@/hooks/useApiMutation";
 
-export const HeroSection = () => {
+export const HeroSection = ({ data }) => {
   const form = useForm({
     resolver: zodResolver(HeroSectionSchema),
     defaultValues: {
@@ -30,18 +32,44 @@ export const HeroSection = () => {
     watch,
     setValue,
     control,
+    reset,
     formState: { isSubmitted, submitCount },
   } = form;
 
+  const { _id = "", content } = data || {};
+
   useEffect(() => {
-    if (isSubmitted) {
+    // Only reset if the incoming data is actually different
+    if (data) {
+      reset(content);
+    }
+  }, [data, reset]);
+
+  const {
+    mutateAsync: submitForm,
+    isPending: isSubmitFormLoading,
+    data: result,
+  } = useApiMutation({
+    url: `/admin/content?id=${_id}`,
+    method: POST,
+    invalidateKey: ["content", "about-us", "hero"],
+  });
+
+  useEffect(() => {
+    if (isSubmitted && result) {
       setIsDescEdit(false);
     }
   }, [submitCount]);
 
   const onSubmit = (values) => {
     console.log("Data:", values);
-    // send to backend (save to DB)
+
+    const apiData = {
+      pageName: "about-us",
+      sectionName: "hero",
+      content: values,
+    };
+    submitForm(apiData);
   };
 
   return (
@@ -69,6 +97,7 @@ export const HeroSection = () => {
               className="relative max-w-[970px] mx-auto"
               textareaClassName="h-20 max-w-[970px]"
               pClassName="max-w-[970px]"
+              isloading={isSubmitFormLoading}
             />
           </div>
         </form>
