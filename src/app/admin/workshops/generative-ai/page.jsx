@@ -116,12 +116,14 @@ const GenerativeAIWorkshop = () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Date</TableHead>
               <TableHead>Full Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Mobile</TableHead>
               <TableHead>Gender</TableHead>
               <TableHead>Date of Birth</TableHead>
               <TableHead>Payment Status</TableHead>
+              <TableHead>Amount</TableHead>
               <TableHead>College</TableHead>
               <TableHead>Branch</TableHead>
               <TableHead>Year</TableHead>

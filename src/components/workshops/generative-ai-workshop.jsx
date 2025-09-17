@@ -7,6 +7,10 @@ import { cn } from "@/lib/utils";
 export const GenerativeAIWorkshopComp = ({ workshop }) => {
   return (
     <TableRow>
+      <TableCell>
+        {workshop.createdAt &&
+          format(new Date(workshop.createdAt), "dd-MM-yyyy")}
+      </TableCell>
       <TableCell>{workshop.fullName}</TableCell>
       <TableCell>{workshop.email}</TableCell>
       <TableCell>{workshop.mobileNumber}</TableCell>
@@ -27,6 +31,7 @@ export const GenerativeAIWorkshopComp = ({ workshop }) => {
           {workshop.status}
         </span>
       </TableCell>
+      <TableCell>₹{workshop?.paymentInfo?.amount || 0}</TableCell>
       <TableCell>{workshop.collegeName}</TableCell>
       <TableCell>{workshop.branch}</TableCell>
       <TableCell>{workshop.year}</TableCell>
@@ -39,6 +44,9 @@ export const GenerativeAIWorkshopComp = ({ workshop }) => {
 GenerativeAIWorkshopComp.Skeleton = function WorkshopSkeleton() {
   return (
     <TableRow>
+      <TableCell>
+        <Skeleton className="w-full h-5" />
+      </TableCell>
       <TableCell>
         <Skeleton className="w-full h-5" />
       </TableCell>
