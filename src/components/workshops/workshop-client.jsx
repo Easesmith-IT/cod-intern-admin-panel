@@ -110,6 +110,7 @@ export const WorkshopClient = ({ setIsOpen }) => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Date</TableHead>
               <TableHead>Full Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Mobile</TableHead>
@@ -150,6 +151,7 @@ export const WorkshopClient = ({ setIsOpen }) => {
           queryKey="workshops"
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
+          type="workshop"
         />
       )}
     </div>

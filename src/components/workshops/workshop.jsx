@@ -6,12 +6,17 @@ import { format } from "date-fns/format";
 export const Workshop = ({ workshop }) => {
   return (
     <TableRow>
+      <TableCell>
+        {workshop.createdAt &&
+          format(new Date(workshop.createdAt), "dd-MM-yyyy")}
+      </TableCell>
       <TableCell>{workshop.fullName}</TableCell>
       <TableCell>{workshop.email}</TableCell>
       <TableCell>{workshop.mobileNumber}</TableCell>
       <TableCell className="capitalize">{workshop.gender}</TableCell>
       <TableCell>
-        {workshop.dateOfBirth && format(new Date(workshop.dateOfBirth),"dd/MM/yyyy")}
+        {workshop.dateOfBirth &&
+          format(new Date(workshop.dateOfBirth), "dd/MM/yyyy")}
       </TableCell>
       <TableCell>{workshop.collegeName}</TableCell>
       <TableCell>{workshop.branch}</TableCell>

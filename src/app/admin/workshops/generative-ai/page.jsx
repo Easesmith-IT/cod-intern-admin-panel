@@ -159,7 +159,7 @@ const GenerativeAIWorkshop = () => {
       </div>
       {isModalOpen && (
         <ExportToCsvModal
-          queryKey="workshops"
+          queryKey="workshops/generative-ai"
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           type="generative-ai"

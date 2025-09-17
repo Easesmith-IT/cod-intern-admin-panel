@@ -96,9 +96,6 @@ export const ExportToCsvModal = ({
         setUrl(downloadUrl);
         console.log("downloadUrl", downloadUrl);
       }
-      //   const csvBlob = new Blob([result], { type: "text/csv" });
-      //   const downloadUrl = URL.createObjectURL(csvBlob);
-      //   setUrl(downloadUrl);
     }
   }, [result]);
 
