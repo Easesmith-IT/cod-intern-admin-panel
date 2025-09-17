@@ -68,7 +68,7 @@ const GenerativeAIWorkshop = () => {
       <div className="flex justify-between items-center">
         <Link href="/admin/workshops" className="flex gap-1 items-center mb-4">
           <ArrowLeft className="text-3xl cursor-pointer" />
-          <TypographyH2 heading="Generative AI Workshop Registrations" />
+          <TypographyH2 heading="Prompt Engineering Workshop Registrations" />
         </Link>
       </div>
 

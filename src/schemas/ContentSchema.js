@@ -209,3 +209,22 @@ export const MentorsSchema1 = z.object({
     )
     .length(3, "Exactly 3 steps are required"),
 });
+
+export const SendUsMessageSchema = z.object({
+  phone: z
+    .string()
+    .min(10, "Phone number must be at least 10 digits")
+    .max(15, "Phone number must be at most 15 digits")
+    .regex(/^[0-9]+$/, "Phone number must contain only digits"),
+
+  email: z.email("Invalid email address"),
+
+  location: z
+    .string()
+    .min(3, "Location must be at least 3 characters")
+    .max(100, "Location must be at most 100 characters"),
+});
+
+export const MapSchema = z.object({
+  address: z.string().min(1, "Address is required"),
+});

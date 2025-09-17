@@ -11,28 +11,30 @@ const Workshops = () => {
 
   return (
     <div className="space-y-5">
-      {!isOpen && <>
-        <TypographyH2 heading="Workshops" />
+      {!isOpen && (
+        <>
+          <TypographyH2 heading="Workshops" />
 
-        <div className="grid grid-cols-2 gap-10 shadow-md bg-white p-5 rounded-sm">
-          <Button
-            onClick={() => setIsOpen(true)}
-            variant="codIntern"
-            className="h-12"
-          >
-            <h2 className="text-base font-inter font-semibold">
-              Workshop Registrations
-            </h2>
-          </Button>
-          <Button asChild variant="codIntern" className="h-12">
-            <Link href="/admin/workshops/generative-ai">
+          <div className="grid grid-cols-2 gap-10 shadow-md bg-white p-5 rounded-sm">
+            <Button
+              onClick={() => setIsOpen(true)}
+              variant="codIntern"
+              className="h-12"
+            >
               <h2 className="text-base font-inter font-semibold">
-                Generative AI Workshop Registrations
+                Workshop Registrations
               </h2>
-            </Link>
-          </Button>
-        </div>
-      </>}
+            </Button>
+            <Button asChild variant="codIntern" className="h-12">
+              <Link href="/admin/workshops/generative-ai">
+                <h2 className="text-base font-inter font-semibold">
+                  Prompt Engineering Workshop Registrations
+                </h2>
+              </Link>
+            </Button>
+          </div>
+        </>
+      )}
 
       {isOpen && <WorkshopClient setIsOpen={setIsOpen} />}
     </div>

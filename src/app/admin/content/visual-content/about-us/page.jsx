@@ -20,7 +20,7 @@ const AboutUs = () => {
     isLoading,
     isError,
   } = useApiQuery({
-    url: "/admin/content/about-us", // pageName = "home"
+    url: "/admin/content/about-us", // pageName = "about-us"
     queryKeys: ["content", "about-us"],
   });
 
