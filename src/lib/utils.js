@@ -41,3 +41,11 @@ export function getImageByPlatform(value) {
       return "/user-placeholder.png";
   }
 }
+
+
+export function toTitleCase(str) {
+  return str
+    .split(/[-_]/) // split on hyphen or underscore
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
