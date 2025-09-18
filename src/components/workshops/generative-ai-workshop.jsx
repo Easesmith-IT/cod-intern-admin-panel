@@ -36,7 +36,7 @@ export const GenerativeAIWorkshopComp = ({ workshop }) => {
       <TableCell>{workshop.collegeName || "NA"}</TableCell>
       <TableCell>{workshop.branch || "NA"}</TableCell>
       <TableCell>{workshop.year || "NA"}</TableCell>
-      <TableCell>{toTitleCase(workshop.grade) || "NA"}</TableCell>
+      <TableCell>{toTitleCase(workshop.grade || "") || "NA"}</TableCell>
       <TableCell>{workshop.universityRollNo || "NA"}</TableCell>
       {/* <TableCell className="text-right"></TableCell> */}
     </TableRow>
