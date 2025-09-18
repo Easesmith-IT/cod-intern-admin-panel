@@ -11,13 +11,14 @@ export const GenerativeAIWorkshopComp = ({ workshop }) => {
         {workshop.createdAt &&
           format(new Date(workshop.createdAt), "dd-MM-yyyy")}
       </TableCell>
-      <TableCell>{workshop.fullName}</TableCell>
-      <TableCell>{workshop.email}</TableCell>
-      <TableCell>{workshop.mobileNumber}</TableCell>
-      <TableCell className="capitalize">{workshop.gender}</TableCell>
+      <TableCell>{workshop.fullName || "NA"}</TableCell>
+      <TableCell>{workshop.email || "NA"}</TableCell>
+      <TableCell>{workshop.mobileNumber || "NA"}</TableCell>
+      <TableCell className="capitalize">{workshop.gender || "NA"}</TableCell>
       <TableCell>
-        {workshop.dateOfBirth &&
-          format(new Date(workshop.dateOfBirth), "dd/MM/yyyy")}
+        {(workshop.dateOfBirth &&
+          format(new Date(workshop.dateOfBirth), "dd/MM/yyyy")) ||
+          "NA"}
       </TableCell>
       <TableCell>
         <span
@@ -32,10 +33,11 @@ export const GenerativeAIWorkshopComp = ({ workshop }) => {
         </span>
       </TableCell>
       <TableCell>₹{workshop?.paymentInfo?.amount || 0}</TableCell>
-      <TableCell>{workshop.collegeName}</TableCell>
-      <TableCell>{workshop.branch}</TableCell>
-      <TableCell>{workshop.year}</TableCell>
-      <TableCell>{workshop.universityRollNo}</TableCell>
+      <TableCell>{workshop.collegeName || "NA"}</TableCell>
+      <TableCell>{workshop.branch || "NA"}</TableCell>
+      <TableCell>{workshop.year || "NA"}</TableCell>
+      <TableCell>{workshop.grade || "NA"}</TableCell>
+      <TableCell>{workshop.universityRollNo || "NA"}</TableCell>
       {/* <TableCell className="text-right"></TableCell> */}
     </TableRow>
   );

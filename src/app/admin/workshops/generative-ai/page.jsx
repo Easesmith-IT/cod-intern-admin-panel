@@ -127,6 +127,7 @@ const GenerativeAIWorkshop = () => {
               <TableHead>College</TableHead>
               <TableHead>Branch</TableHead>
               <TableHead>Year</TableHead>
+              <TableHead>Grade</TableHead>
               <TableHead>University Roll No</TableHead>
               {/* <TableHead className="text-right">Actions</TableHead> */}
             </TableRow>
