@@ -2,7 +2,7 @@ import React from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Skeleton } from "../ui/skeleton";
 import { format } from "date-fns/format";
-import { cn } from "@/lib/utils";
+import { cn, toTitleCase } from "@/lib/utils";
 
 export const GenerativeAIWorkshopComp = ({ workshop }) => {
   return (
@@ -36,7 +36,7 @@ export const GenerativeAIWorkshopComp = ({ workshop }) => {
       <TableCell>{workshop.collegeName || "NA"}</TableCell>
       <TableCell>{workshop.branch || "NA"}</TableCell>
       <TableCell>{workshop.year || "NA"}</TableCell>
-      <TableCell>{workshop.grade || "NA"}</TableCell>
+      <TableCell>{toTitleCase(workshop.grade) || "NA"}</TableCell>
       <TableCell>{workshop.universityRollNo || "NA"}</TableCell>
       {/* <TableCell className="text-right"></TableCell> */}
     </TableRow>
