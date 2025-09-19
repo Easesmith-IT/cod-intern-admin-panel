@@ -84,7 +84,7 @@ useEffect(() => {
       <div className="flex justify-center text-center section-container px-0 max-w-[900px]">
         <h2 className="text-2xl font-stolzl leading-9 lg:leading-14 md:text-4xl  font-medium">
           <span className="text-main">Our 3-Step </span> AI-Enhanced Recruitment
-          Approach
+          Approach (Will also showing on course details page)
           <Image
             src="/ellipse-group.svg"
             className="inline-block ml-2"

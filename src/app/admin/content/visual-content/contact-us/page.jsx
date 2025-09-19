@@ -44,7 +44,7 @@ const ContactUs = () => {
     <section>
       <Link
         href="/admin/content/visual-content"
-        className="flex gap-1 items-center mb-4"
+        className="inline-flex gap-1 items-center mb-4"
       >
         <ArrowLeft className="text-3xl cursor-pointer" />
         <TypographyH2 heading="Contact Us Page" />

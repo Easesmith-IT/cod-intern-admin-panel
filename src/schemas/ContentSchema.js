@@ -228,3 +228,10 @@ export const SendUsMessageSchema = z.object({
 export const MapSchema = z.object({
   address: z.string().min(1, "Address is required"),
 });
+
+// SEO
+export const AddSeoSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  keywords: z.array(z.string().min(1, "Keyword is required")),
+});

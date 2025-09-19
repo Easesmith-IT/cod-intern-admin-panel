@@ -29,7 +29,10 @@ const options = [
 const VisualContent = () => {
   return (
     <div className="space-y-5">
-      <Link href="/admin/content" className="flex gap-1 items-center mb-4">
+      <Link
+        href="/admin/content"
+        className="inline-flex gap-1 items-center mb-4"
+      >
         <ArrowLeft className="text-3xl cursor-pointer" />
         <TypographyH2 heading="All Pages" />
       </Link>
