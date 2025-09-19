@@ -36,7 +36,7 @@ const ContactUs = () => {
   );
   const mapData = useMemo(() => getDataBySection("map"), [contentData]);
   const getMoreInformationData = useMemo(
-    () => getDataBySection("GetMoreInformation"),
+    () => getDataBySection("get-more-information"),
     [contentData]
   );
 
@@ -54,7 +54,10 @@ const ContactUs = () => {
         <HeroSection data={heroData} isLoading={isLoading} />
         <SendUsMessage data={sendUsMessageData} isLoading={isLoading} />
         <Map data={mapData} isDataLoading={isLoading} />
-        <GetMoreInformation />
+        <GetMoreInformation
+          data={getMoreInformationData}
+          isLoading={isLoading}
+        />
       </div>
     </section>
   );
